@@ -5,9 +5,16 @@
 using namespace hgl;
 using namespace std;
 
-void out(const Collection<uint32> &c)
+using               TEST_TYPE   =uint32;
+using               MyEnumerator=ElementEnumerator<TEST_TYPE>;
+using               MyOperator  =ElementOperatorRawtype<TEST_TYPE>;
+constexpr   size_t  UNIT_BYTES  =sizeof(TEST_TYPE);
+
+void out(const Collection &c)
 {
-    for(const uint32 &value:c)
+    MyEnumerator me(&c);
+
+    for(const TEST_TYPE &value:me)
         std::cout<<value<<" ";
 
     std::cout<<std::endl;
@@ -15,16 +22,15 @@ void out(const Collection<uint32> &c)
 
 void main(int,char **)
 {
+    MyOperator my_operator;
+    MemoryAllocator *ma=new MemoryAllocator;
+
+    ma->Alloc(1024*UNIT_BYTES);
+    
+    MemoryBlock *mb=new MemoryBlock(ma);
+
     {
-        MemoryAllocator *ma=new MemoryAllocator;
-
-        ma->Alloc(1024);
-
-        MemoryBlock mb(ma);
-    }
-
-    {
-        Collection<uint32> cu;
+        Collection cu(UNIT_BYTES,mb,&my_operator);
 
         for(uint i=0;i<20;i++)
         {
