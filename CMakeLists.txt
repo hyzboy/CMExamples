@@ -19,3 +19,6 @@ cm_example_project(GetCpuInfo)
 
 add_executable(CollectionTest CollectionTest.cpp)
 cm_example_project(CollectionTest)
+
+add_executable(FixFilenameTest FixFilenameTest.cpp)
+cm_example_project(FixFilenameTest)
