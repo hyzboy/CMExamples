@@ -8,6 +8,8 @@ macro(cm_example_project project_name)
 
     IF(WIN32)
         set_debugger_directory(${project_name} ${CMAKE_CURRENT_SOURCE_DIR})
+
+        target_sources(${project_name} PRIVATE ${CM_MANIFEST})
     ENDIF()
 
     set_property(TARGET ${project_name} PROPERTY FOLDER "CM/Examples")
@@ -22,3 +24,10 @@ cm_example_project(CollectionTest)
 
 add_executable(FixFilenameTest FixFilenameTest.cpp)
 cm_example_project(FixFilenameTest)
+
+IF(WIN32)
+
+    add_executable(EnumVolumeTest EnumVolumeTest.cpp)
+    cm_example_project(EnumVolumeTest)
+
+ENDIF(WIN32)
