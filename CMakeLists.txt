@@ -31,3 +31,6 @@ IF(WIN32)
     cm_example_project(EnumVolumeTest)
 
 ENDIF(WIN32)
+
+add_executable(SplitStringTest SplitStringTest.cpp)
+cm_example_project(SplitStringTest)
