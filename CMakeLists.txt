@@ -34,3 +34,6 @@ ENDIF(WIN32)
 
 add_executable(SplitStringTest SplitStringTest.cpp)
 cm_example_project(SplitStringTest)
+
+add_executable(CreateBinaryH CreateBinaryH.cpp)
+cm_example_project(CreateBinaryH)
