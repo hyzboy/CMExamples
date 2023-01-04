@@ -21,6 +21,16 @@ int main(int,char **)
     UTF8StringList sl;
 
     UTF8String str="hello game world!";
+    
+    {
+        UTF8String left,right;
+
+        SpliteByString(str, UTF8String("game"), &left, &right);
+
+        cout<<"SpliteByString"<<endl;
+        cout << "left: \"" << left.c_str() <<"\"" << endl;
+        cout << "right: \""<<right.c_str() <<"\"" << endl;
+    }
 
     {
         SplitToStringListBySpace(sl,str);
