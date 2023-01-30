@@ -7,6 +7,8 @@ macro(cm_example_project project_name)
     endif()
 
     IF(WIN32)
+        target_link_libraries(${project_name} PRIVATE ${HGL_MATH_LIB})
+
         set_debugger_directory(${project_name} ${CMAKE_CURRENT_SOURCE_DIR})
 
         target_sources(${project_name} PRIVATE ${CM_MANIFEST})
