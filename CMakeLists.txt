@@ -15,6 +15,8 @@ macro(cm_example_project project_name)
     set_property(TARGET ${project_name} PROPERTY FOLDER "CM/Examples")
 endmacro()
 
+add_executable(ColorTest ColorTest.cpp)
+cm_example_project(ColorTest)
 
 add_executable(GetCpuInfo GetCpuInfo.cpp)
 cm_example_project(GetCpuInfo)
