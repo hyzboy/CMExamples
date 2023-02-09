@@ -53,9 +53,29 @@ void half_float_test()
     OutputHalfFloat("std ",hf_std);
 }
 
+void split_float_test()
+{
+    bool sign_bit;
+    uint exponent;
+    uint mantissa;
+
+    float result;
+
+    for(uint i=0;i<4;i++)
+    {
+        SplitFloat32(sign_bit,exponent,mantissa,origin_float[i]);
+
+        result=MergeFloat32(sign_bit,exponent,mantissa);
+
+        cout<<"origin: "<<origin_float[i]<<" result: "<<result<<" sign_bit:"<<sign_bit<<" exponent:"<<exponent<<" mantissa:"<<mantissa<<endl;
+    }
+}
+
 void main(int,char **)
 {
     InitFloat4();
 
     half_float_test();
+
+    split_float_test();
 }
