@@ -39,3 +39,6 @@ cm_example_project(SplitStringTest)
 
 add_executable(CreateBinaryH CreateBinaryH.cpp)
 cm_example_project(CreateBinaryH)
+
+add_executable(NormalCompressTest NormalCompressTest.cpp)
+CM_EXAMPLE_PROJECT(NormalCompressTest)
