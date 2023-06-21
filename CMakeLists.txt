@@ -52,3 +52,5 @@ add_executable(OSFontList OSFontList.cpp)
 cm_example_project(OSFontList)
 target_link_libraries(OSFontList PRIVATE CMUtil)
 
+add_executable(RuntimeAssetManagerTest RuntimeAssetManagerTest.cpp RuntimeAssetManager.h RAM_TestClass.h RAM_TestClass.cpp)
+cm_example_project(RuntimeAssetManagerTest)
