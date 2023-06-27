@@ -15,6 +15,11 @@ public:
 
     using RuntimeAsset::RuntimeAsset;
 
+    ~Instance()
+    {
+        std::cout<<"~Instance("<<GetID()<<")"<<std::endl;
+    }
+
     void AddPhysicalDevice(PhysicalDeviceID pd_id)
     {
         physical_devices.Add(pd_id);
@@ -32,6 +37,11 @@ struct PhysicalDevice:public RuntimeAsset<PhysicalDeviceID,PhysicalDevice>
 public:
 
     using RuntimeAsset::RuntimeAsset;
+
+    ~PhysicalDevice()
+    {
+        std::cout<<"~PhysicalDevice("<<GetID()<<")"<<std::endl;
+    }
 
     bool Init(const AnsiString &name,const InstanceID &iid)
     {

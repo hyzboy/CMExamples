@@ -1,6 +1,6 @@
 
 macro(cm_example_project project_name)
-    target_link_libraries(${project_name} PRIVATE CMCore CMPlatform)
+    target_link_libraries(${project_name} PRIVATE CMCore CMPlatform CMUtil)
 
     if(UNIX)
         target_link_libraries(${project_name} PRIVATE dl)
@@ -54,3 +54,6 @@ target_link_libraries(OSFontList PRIVATE CMUtil)
 
 add_executable(RuntimeAssetManagerTest RuntimeAssetManagerTest.cpp RuntimeAssetManager.h RAM_TestClass.h RAM_TestClass.cpp)
 cm_example_project(RuntimeAssetManagerTest)
+
+add_executable(DistributionChart2D DistributionChart2D.cpp)
+cm_example_project(DistributionChart2D)

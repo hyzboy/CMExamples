@@ -80,9 +80,9 @@ public:
     static V *GetInstance(const K &id)
     {
         return RAM.Get(id);
-    }  
+    }
 
-    void Release()
+    void ReleaseInstance()
     {
         RAM.Release(RuntimeAssetID);
         delete this;
