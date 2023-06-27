@@ -7,6 +7,84 @@
 
 using namespace hgl;
 
+constexpr const uint CHAR_BITMAP_WIDTH=3;
+constexpr const uint CHAR_BITMAP_HEIGHT=5;
+constexpr const uint CHAR_BITMAP_SCALE=4;
+
+constexpr const uint8 bitmap_font[10][15]=
+{
+    {
+        1,1,1,
+        1,0,1,
+        1,0,1,
+        1,0,1,
+        1,1,1
+    },
+    {
+        0,1,0,
+        1,1,0,
+        0,1,0,
+        0,1,0,
+        1,1,1
+    },
+    {
+        1,1,1,
+        0,0,1,
+        1,1,1,
+        1,0,0,
+        1,1,1
+    },
+    {
+        1,1,1,
+        0,0,1,
+        1,1,1,
+        0,0,1,
+        1,1,1
+    },
+    {
+        1,0,1,
+        1,0,1,
+        1,1,1,
+        0,0,1,
+        0,0,1
+    },
+    {
+        1,1,1,
+        1,0,0,
+        1,1,1,
+        0,0,1,
+        1,1,1
+    },
+    {
+        1,1,1,
+        1,0,0,
+        1,1,1,
+        1,0,1,
+        1,1,1
+    },
+    {
+        1,1,1,
+        0,0,1,
+        0,0,1,
+        0,0,1,
+        0,0,1
+    },
+    {
+        1,1,1,
+        1,0,1,
+        1,1,1,
+        1,0,1,
+        1,1,1
+    },
+    {
+        1,1,1,
+        1,0,1,
+        1,1,1,
+        0,0,1,
+        1,1,1
+    }
+};
+
 bool ParseLine(Vector2i *result,const UTF8String &str)
 {
     if(!result)return(false);
@@ -100,16 +178,19 @@ PositionStat *ToVector2i(const UTF8StringList &sl)
         //std::cout<<"X="<<p->x<<",Y="<<p->y<<std::endl;
 
 //        if(p->x<ps->minp.x)ps->minp.x=p->x;
-        if(p->x>ps->maxp.x)ps->maxp.x=p->x;
+//        if(p->x>ps->maxp.x)ps->maxp.x=p->x;
 //        if(p->y<ps->minp.y)ps->minp.y=p->y;
-        if(p->y>ps->maxp.y)ps->maxp.y=p->y;
+//        if(p->y>ps->maxp.y)ps->maxp.y=p->y;
         
         ++result;
         ++p;
     }
 
     //std::cout<<"minp: "<<ps->minp.x<<","<<ps->minp.y<<std::endl;
-    std::cout<<"maxp: "<<ps->maxp.x<<","<<ps->maxp.y<<std::endl;
+    //std::cout<<"maxp: "<<ps->maxp.x<<","<<ps->maxp.y<<std::endl;
+
+    ps->maxp.x=1023;
+    ps->maxp.y=1023;
 
     ps->count=result;
 
@@ -120,9 +201,7 @@ struct Chart
 {
     uint width,height;
 
-    uint min_count;
     uint max_count;
-    uint gap;
 
     uint32 *count_data;
     uint32 *circle_data;
@@ -143,9 +222,7 @@ public:
         hgl_zero(circle_data,width*height);
         hgl_zero(chart_data,width*height*4);
 
-        min_count=0;
         max_count=0;
-        gap=0;
     }
 
     ~Chart()
@@ -173,6 +250,65 @@ public:
                 if(length<=r2)
                     ++circle_data[col+row*width];
             }
+        }
+    }
+
+    void DrawBar(const uint x,const uint y,const uint size,const Vector3u8 &color,const uint8 alpha)
+    {
+        uint8 *tp=chart_data+(x+y*width)*4;
+        uint line_bytes=(width-size)*4;
+
+        for(uint row=0;row<size;row++)
+        {
+            for(uint col=0;col<size;col++)
+            {
+                tp[0]=color.b;
+                tp[1]=color.g;
+                tp[2]=color.r;
+                tp[3]=alpha;
+
+                tp+=4;
+            }
+
+            tp+=line_bytes;
+        }
+    }
+
+    void DrawChar(const uint ch,const uint x,const uint y,const Vector3u8 &color,const uint8 alpha)
+    {
+        const uint8 *sp=bitmap_font[ch];
+
+        for(uint row=0;row<CHAR_BITMAP_HEIGHT;row++)
+        {
+            for(uint col=0;col<CHAR_BITMAP_WIDTH;col++)
+            {
+                if(*sp)
+                    DrawBar(x+col*CHAR_BITMAP_SCALE,
+                            y+row*CHAR_BITMAP_SCALE,
+                            CHAR_BITMAP_SCALE,
+                            color,
+                            alpha);
+
+                ++sp;
+            }
+        }
+    }
+
+    void DrawNumber(const uint number,const uint x,const uint y,const Vector3u8 &color,const uint8 alpha)
+    {
+        AnsiString str=AnsiString::numberOf(number);
+
+        const char *sp=str.c_str();
+        const uint len=str.Length();
+        
+        uint pos=x;
+
+        for(uint i=0;i<len;i++)
+        {
+            DrawChar((*sp)-'0',pos,y,color,alpha);
+
+            pos+=CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE+1;
+            ++sp;
         }
     }
 };
@@ -223,21 +359,18 @@ Chart *ToChart32(const PositionStat *ps)
         }
     }
 
-    //统计最小值、最大值
+    //统计最大值
     {
         uint32 *cp32=chart->circle_data;
 
         for(uint i=0;i<width*height;i++)
         {
-            if(*cp32<chart->min_count)chart->min_count=*cp32;
             if(*cp32>chart->max_count)chart->max_count=*cp32;
 
             ++cp32;
         }
 
-        chart->gap=chart->max_count-chart->min_count;
-
-        std::cout<<"min_count: "<<chart->min_count<<",max_count: "<<chart->max_count<<",gap: "<<chart->gap<<std::endl;
+        std::cout<<"max_count: "<<chart->max_count<<std::endl;
     }
 
     //生成权重图
@@ -257,7 +390,7 @@ Chart *ToChart32(const PositionStat *ps)
 
         for(uint i=0;i<width*height;i++)
         {
-            result=float((*cp32)-chart->min_count)/float(chart->gap);
+            result=float(*cp32)/float(chart->max_count);
 
             if(result>=0.8f)       //0.8 - 1.0
             {
@@ -307,6 +440,24 @@ Chart *ToChart32(const PositionStat *ps)
         }
     }
 
+    //写入数值
+    {
+        const Vector3u8 color[6]=
+        {
+            {255,0,0},
+            {255,255,0},
+            {0,255,0},
+            {0,255,255},
+            {0,0,255},
+            {0,0,0},
+        };
+
+        uint num=chart->max_count;
+
+        for(uint i=0;i<6;i++)
+            chart->DrawNumber(float(num)*(1.0f-float(i)*0.2f),10,10+i*(CHAR_BITMAP_HEIGHT*CHAR_BITMAP_SCALE+1),color[i],255);
+    }
+
     return chart;
 }
 
@@ -335,7 +486,6 @@ int os_main(int argc,os_char **argv)
     AutoDelete<PositionStat> ps=ToVector2i(sl);
 
     AutoDelete<Chart> chart=ToChart32(ps);
-
 
     {
         util::TGAHeader tga_header;
