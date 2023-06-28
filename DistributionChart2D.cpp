@@ -308,7 +308,7 @@ public:
 
         for(uint i=0;i<h;i++)
         {
-            ColorGradient.Get(color,(1.0f-float(i)/float(h))*gap+low);
+            ColorGradient.Get(color,(1.0f-float(i)/float(h))*float(gap)+float(low));
 
             for(uint j=0;j<w;j++)
             {
@@ -390,7 +390,7 @@ Chart *ToChart32(const PositionStat *ps)
             for(uint x=0;x<width;x++)
             {
                 if(*cp32>0)
-                    chart->DrawCircle(x,y,*cp32);
+                    chart->DrawCircle(x,y,(*cp32));
 
                 ++cp32;
             }
@@ -459,24 +459,28 @@ Chart *ToChart32(const PositionStat *ps)
     {
         uint col=10;
         uint row=10;
+        uint stop_str_width=0;
 
         AnsiString str;
         AnsiString num_str;
         const AnsiString str_total=AnsiString::numberOf(ps->count);
 
-        AnsiString step_str[6]=
+        AnsiString step_str[STOP_COUNT]=
         {
             AnsiString::numberOf(max_count),
             AnsiString::numberOf(uint(max_count*0.8f)),
             AnsiString::numberOf(uint(max_count*0.6f)),
             AnsiString::numberOf(uint(max_count*0.4f)),
             AnsiString::numberOf(uint(max_count*0.2f)),
-            AnsiString::numberOf(0),
         };
 
         char space[32];
 
         memset(space,' ',32);
+
+        for(uint i=0;i<STOP_COUNT;i++)
+            if(stop_str_width<step_str[i].Length())
+                stop_str_width=step_str[i].Length();
         
         str=AnsiString("TOTAL - ")+str_total;
 
@@ -487,24 +491,29 @@ Chart *ToChart32(const PositionStat *ps)
 
         col+=CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE*2;
 
+        chart->DrawGradient(col+(stop_str_width+1)*CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,
+                            row,CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,CHAR_LINE_HEIGHT*STOP_COUNT);
+
+        chart->DrawGradient(col+(str_total.Length()+stop_str_width+4)*CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,
+                            row,CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,CHAR_LINE_HEIGHT*STOP_COUNT);
+
         for(uint i=0;i<STOP_COUNT;i++)
         {
-            str=step_str[i];
+            str.Strcpy(space,stop_str_width-step_str[i].Length());
 
-            if(i<STOP_COUNT-1)
+            str+=step_str[i];
+
+            num_str=AnsiString::numberOf(step_count[i]);
+
+            str.Strcat(space,str_total.Length()-num_str.Length()+3);
+
+            str+=num_str;
+
+            if(step_count[i]>0)
             {
-                num_str=AnsiString::numberOf(step_count[i]);
-
-                str.Strcat(space,str_total.Length()-num_str.Length());
-
-                str+=num_str;
-
-                if(step_count[i]>0)
-                {
-                    str+=" - ";
-                    str+=AnsiString::numberOf(float(step_count[i])*100.0f/float(ps->count));
-                    str+="%";
-                }
+                str+="   ";
+                str+=AnsiString::numberOf(float(step_count[i])*100.0f/float(ps->count));
+                str+="%";
             }
 
             chart->DrawString(str,col,row,stop_color[i],255);
