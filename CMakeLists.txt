@@ -55,5 +55,5 @@ target_link_libraries(OSFontList PRIVATE CMUtil)
 add_executable(RuntimeAssetManagerTest RuntimeAssetManagerTest.cpp RuntimeAssetManager.h RAM_TestClass.h RAM_TestClass.cpp)
 cm_example_project(RuntimeAssetManagerTest)
 
-add_executable(DistributionChart2D DistributionChart2D.cpp)
+add_executable(DistributionChart2D DistributionChart2D.cpp BitmapFont.cpp BitmapFont.h)
 cm_example_project(DistributionChart2D)

@@ -1,89 +1,60 @@
 #include<hgl/type/StringList.h>
 #include<hgl/type/LoadStringList.h>
+#include<hgl/type/Gradient.h>
 #include<hgl/math/Vector.h>
 #include<hgl/util/imgfmt/tga.h>
 #include<hgl/io/FileOutputStream.h>
 #include<iostream>
+#include"BitmapFont.h"
 
 using namespace hgl;
 
-constexpr const uint CHAR_BITMAP_WIDTH=3;
-constexpr const uint CHAR_BITMAP_HEIGHT=5;
-constexpr const uint CHAR_BITMAP_SCALE=4;
+uint CHAR_BITMAP_WIDTH=0;
+uint CHAR_BITMAP_HEIGHT=0;
+uint CHAR_BITMAP_SCALE=0;
+uint CHAR_LINE_HEIGHT=0;
 
-constexpr const uint8 bitmap_font[10][15]=
+bool InitBitmapFont()
 {
-    {
-        1,1,1,
-        1,0,1,
-        1,0,1,
-        1,0,1,
-        1,1,1
-    },
-    {
-        0,1,0,
-        1,1,0,
-        0,1,0,
-        0,1,0,
-        1,1,1
-    },
-    {
-        1,1,1,
-        0,0,1,
-        1,1,1,
-        1,0,0,
-        1,1,1
-    },
-    {
-        1,1,1,
-        0,0,1,
-        1,1,1,
-        0,0,1,
-        1,1,1
-    },
-    {
-        1,0,1,
-        1,0,1,
-        1,1,1,
-        0,0,1,
-        0,0,1
-    },
-    {
-        1,1,1,
-        1,0,0,
-        1,1,1,
-        0,0,1,
-        1,1,1
-    },
-    {
-        1,1,1,
-        1,0,0,
-        1,1,1,
-        1,0,1,
-        1,1,1
-    },
-    {
-        1,1,1,
-        0,0,1,
-        0,0,1,
-        0,0,1,
-        0,0,1
-    },
-    {
-        1,1,1,
-        1,0,1,
-        1,1,1,
-        1,0,1,
-        1,1,1
-    },
-    {
-        1,1,1,
-        1,0,1,
-        1,1,1,
-        0,0,1,
-        1,1,1
-    }
+    if(!LoadBitmapFont())
+        return(false);
+
+    CHAR_BITMAP_WIDTH=GetCharWidth();
+    CHAR_BITMAP_HEIGHT=GetCharHeight();
+
+    CHAR_BITMAP_SCALE=1;
+    CHAR_LINE_HEIGHT=CHAR_BITMAP_HEIGHT*CHAR_BITMAP_SCALE;
+
+    return(true);
+}
+
+constexpr const Vector3u8 white_color={255,255,255};
+
+constexpr const uint STOP_COUNT=5;
+
+constexpr const Vector3u8 stop_color[STOP_COUNT]=
+{
+    {255,0,0},
+    {255,255,0},
+    {0,255,0},
+    {0,255,255},
+    {0,0,255},
 };
+
+HGL_GRADIENT_DEFINE(GradientColor3u8,uint,Vector3u8)
+{
+    result.r=start.r+float(end.r-start.r)*pos;
+    result.g=start.g+float(end.g-start.g)*pos;
+    result.b=start.b+float(end.b-start.b)*pos;
+}
+
+GradientColor3u8 ColorGradient;
+
+void InitGradient(uint max_count)
+{
+    for(uint i=0;i<STOP_COUNT;i++)
+        ColorGradient.Add(max_count*(1.0-float(i)/float(STOP_COUNT-1)),stop_color[i]);
+}
 
 bool ParseLine(Vector2i *result,const UTF8String &str)
 {
@@ -232,7 +203,12 @@ public:
         delete[] chart_data;
     }
 
-    void Circle(uint x,uint y,uint radius)
+    void DrawPoint(uint x,uint y,uint strong)
+    {
+        circle_data[x+y*width]+=strong;
+    }
+
+    void DrawCircle(uint x,uint y,uint radius)
     {
         uint r2=radius*radius;
         uint length;
@@ -248,12 +224,14 @@ public:
                 length=(col-x)*(col-x)+(row-y)*(row-y);
                 
                 if(length<=r2)
+                {
                     ++circle_data[col+row*width];
+                }
             }
         }
     }
 
-    void DrawBar(const uint x,const uint y,const uint size,const Vector3u8 &color,const uint8 alpha)
+    void DrawBar(const uint x,const uint y,const uint size,const Vector3u8 &stop_color,const uint8 alpha)
     {
         uint8 *tp=chart_data+(x+y*width)*4;
         uint line_bytes=(width-size)*4;
@@ -262,9 +240,9 @@ public:
         {
             for(uint col=0;col<size;col++)
             {
-                tp[0]=color.b;
-                tp[1]=color.g;
-                tp[2]=color.r;
+                tp[0]=stop_color.b;
+                tp[1]=stop_color.g;
+                tp[2]=stop_color.r;
                 tp[3]=alpha;
 
                 tp+=4;
@@ -274,30 +252,33 @@ public:
         }
     }
 
-    void DrawChar(const uint ch,const uint x,const uint y,const Vector3u8 &color,const uint8 alpha)
+    void DrawChar(const char ch,const uint x,const uint y,const Vector3u8 &stop_color,const uint8 alpha)
     {
-        const uint8 *sp=bitmap_font[ch];
+        const uint8 *sp=GetBitmapChar(ch);
+        uint8 bit;
 
         for(uint row=0;row<CHAR_BITMAP_HEIGHT;row++)
         {
+            bit=1<<7;
+
             for(uint col=0;col<CHAR_BITMAP_WIDTH;col++)
             {
-                if(*sp)
+                if(*sp&bit)                
                     DrawBar(x+col*CHAR_BITMAP_SCALE,
                             y+row*CHAR_BITMAP_SCALE,
                             CHAR_BITMAP_SCALE,
-                            color,
+                            stop_color,
                             alpha);
 
-                ++sp;
+                bit>>=1;
             }
+
+            ++sp;
         }
     }
 
-    void DrawNumber(const uint number,const uint x,const uint y,const Vector3u8 &color,const uint8 alpha)
+    void DrawString(const AnsiString &str,const uint x,const uint y,const Vector3u8 &stop_color,const uint8 alpha)
     {
-        AnsiString str=AnsiString::numberOf(number);
-
         const char *sp=str.c_str();
         const uint len=str.Length();
         
@@ -305,10 +286,41 @@ public:
 
         for(uint i=0;i<len;i++)
         {
-            DrawChar((*sp)-'0',pos,y,color,alpha);
+            if(*sp!=' ')
+                DrawChar(*sp,pos,y,stop_color,alpha);
 
-            pos+=CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE+1;
+            pos+=CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE;
             ++sp;
+        }
+    }
+
+    void DrawGradient(const uint left,const uint top,const uint w,const uint h)
+    {
+        uint8 *tp=chart_data+(left+top*width)*4;
+        Vector3u8 color;
+
+        uint low,high,gap;
+        
+        ColorGradient.GetLowest(low);
+        ColorGradient.GetHighest(high);
+
+        gap=high-low;
+
+        for(uint i=0;i<h;i++)
+        {
+            ColorGradient.Get(color,(1.0f-float(i)/float(h))*gap+low);
+
+            for(uint j=0;j<w;j++)
+            {
+                tp[0]=color.b;
+                tp[1]=color.g;
+                tp[2]=color.r;
+                tp[3]=255;
+
+                tp+=4;
+            }
+
+            tp+=(width-w)*4;
         }
     }
 };
@@ -321,6 +333,8 @@ Chart *ToChart32(const PositionStat *ps)
     std::cout<<"width: "<<width<<",height: "<<height<<std::endl;    
 
     Chart *chart=new Chart(width,height);
+    uint max_count=0;
+    uint step_count[5];
 
     //统计每个格子数据数量
     {
@@ -336,10 +350,34 @@ Chart *ToChart32(const PositionStat *ps)
 
             cp32=chart->count_data+(x+y*width);
 
-            if(*cp32<0xFFFFFFFF)
-                ++(*cp32);
+            ++(*cp32);
+
+            if(*cp32>max_count)max_count=*cp32;
 
             ++p;
+        }
+    }
+
+    //统计占比
+    {
+        uint32 *cp32=chart->count_data;
+
+        hgl_zero(step_count);
+
+        for(uint y=0;y<height;y++)
+        {
+            for(uint x=0;x<width;x++)
+            {
+                if(*cp32>0)
+                for(uint i=0;i<STOP_COUNT;i++)
+                    if(*cp32>max_count*(STOP_COUNT-1-i)/STOP_COUNT)
+                    {
+                        step_count[i]+=*cp32;
+                        break;
+                    }
+
+                ++cp32;
+            }
         }
     }
 
@@ -352,7 +390,7 @@ Chart *ToChart32(const PositionStat *ps)
             for(uint x=0;x<width;x++)
             {
                 if(*cp32>0)
-                    chart->Circle(x,y,(*cp32)*10);
+                    chart->DrawCircle(x,y,*cp32);
 
                 ++cp32;
             }
@@ -373,13 +411,15 @@ Chart *ToChart32(const PositionStat *ps)
         std::cout<<"max_count: "<<chart->max_count<<std::endl;
     }
 
+    InitGradient(chart->max_count);
+
     //生成权重图
     {
         uint32 *cp32=chart->circle_data;
         uint8 *cp8=chart->chart_data;
 
-        float result;
-        float r,g,b;
+        float alpha;
+        Vector3u8 final_color;
 
         //1.0   1 0 0
         //0.8   1 1 0
@@ -390,72 +430,86 @@ Chart *ToChart32(const PositionStat *ps)
 
         for(uint i=0;i<width*height;i++)
         {
-            result=float(*cp32)/float(chart->max_count);
+            alpha=float(*cp32)/float(chart->max_count);
 
-            if(result>=0.8f)       //0.8 - 1.0
+            ColorGradient.Get(final_color,*cp32);
+
+            if(*cp32>0)                 //为了避免最后什么都看不见，所以把没数据的挑出来，剩下的透明度全部加0.25
             {
-                r=1.0f;
-                g=1.0f-(result-0.8f)*5.0f;
-                b=0.0f;
-            }
-            else
-            {
-                if(result>=0.6f)    //0.6 - 0.8
-                {
-                    r=(result-0.6f)*5.0f;
-                    g=1.0f;
-                    b=0;
-                }
-                else
-                {
-                    if(result>=0.4f)   //0.4 - 0.6
-                    {
-                        r=0.0f;
-                        g=1.0f;
-                        b=1.0f-(result-0.4f)*5.0f;
-                    }
-                    else
-                    if(result>=0.2f)    //0.2 - 0.4
-                    {
-                        r=0.0f;
-                        g=(result-0.2f)*5.0f;
-                        b=1.0f;
-                    }
-                    else                //0.0 - 0.25
-                    {
-                        r=0.0f;
-                        g=0.0f;
-                        b=result*5.0f;
-                    }
-                }
+                alpha+=0.25f;
+
+                if(alpha>1)
+                    alpha=1;
             }
 
-            cp8[0]=b*255.0f;
-            cp8[1]=g*255.0f;
-            cp8[2]=r*255.0f;
-            cp8[3]=result*255.0f;
+            cp8[0]=final_color.b;
+            cp8[1]=final_color.g;
+            cp8[2]=final_color.r;
+            cp8[3]=alpha*255.0f;
 
             ++cp32;
             cp8+=4;
         }
     }
 
+    if(CHAR_LINE_HEIGHT==0)
+        return chart;
+
     //写入数值
     {
-        const Vector3u8 color[6]=
+        uint col=10;
+        uint row=10;
+
+        AnsiString str;
+        AnsiString num_str;
+        const AnsiString str_total=AnsiString::numberOf(ps->count);
+
+        AnsiString step_str[6]=
         {
-            {255,0,0},
-            {255,255,0},
-            {0,255,0},
-            {0,255,255},
-            {0,0,255},
-            {0,0,0},
+            AnsiString::numberOf(max_count),
+            AnsiString::numberOf(uint(max_count*0.8f)),
+            AnsiString::numberOf(uint(max_count*0.6f)),
+            AnsiString::numberOf(uint(max_count*0.4f)),
+            AnsiString::numberOf(uint(max_count*0.2f)),
+            AnsiString::numberOf(0),
         };
 
-        uint num=chart->max_count;
+        char space[32];
 
-        for(uint i=0;i<6;i++)
-            chart->DrawNumber(float(num)*(1.0f-float(i)*0.2f),10,10+i*(CHAR_BITMAP_HEIGHT*CHAR_BITMAP_SCALE+1),color[i],255);
+        memset(space,' ',32);
+        
+        str=AnsiString("TOTAL - ")+str_total;
+
+        chart->DrawString(str,col,row,white_color,255);
+        row+=CHAR_LINE_HEIGHT;
+
+        chart->DrawGradient(col,row,CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,CHAR_LINE_HEIGHT*STOP_COUNT);
+
+        col+=CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE*2;
+
+        for(uint i=0;i<STOP_COUNT;i++)
+        {
+            str=step_str[i];
+
+            if(i<STOP_COUNT-1)
+            {
+                num_str=AnsiString::numberOf(step_count[i]);
+
+                str.Strcat(space,str_total.Length()-num_str.Length());
+
+                str+=num_str;
+
+                if(step_count[i]>0)
+                {
+                    str+=" - ";
+                    str+=AnsiString::numberOf(float(step_count[i])*100.0f/float(ps->count));
+                    str+="%";
+                }
+            }
+
+            chart->DrawString(str,col,row,stop_color[i],255);
+            row+=CHAR_LINE_HEIGHT;
+        }
     }
 
     return chart;
@@ -481,6 +535,8 @@ int os_main(int argc,os_char **argv)
         return(-1);
     }
 
+    bool font=InitBitmapFont();
+
     std::cout<<"file total line: "<<line_count<<std::endl;
 
     AutoDelete<PositionStat> ps=ToVector2i(sl);
@@ -494,17 +550,18 @@ int os_main(int argc,os_char **argv)
 
         io::OpenFileOutputStream fos(OS_TEXT("chart.tga"),io::FileOpenMode::CreateTrunc);
 
-        if(!fos)
+        if(fos)
         {
-            std::cerr<<"Create chart.tga failed!"<<std::endl;
-
-            return 1;
+            fos->Write(&tga_header,util::TGAHeaderSize);
+            fos->Write(chart->chart_data,chart->width*chart->height*4);
+            fos->Close();
         }
-
-        fos->Write(&tga_header,util::TGAHeaderSize);
-        fos->Write(chart->chart_data,chart->width*chart->height*4);
-        fos->Close();
+        else
+            std::cerr<<"Create chart.tga failed!"<<std::endl;
     }
+
+    if(font)
+       ClearBitmapFont();
 
     return 0;
 }
