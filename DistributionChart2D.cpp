@@ -3,11 +3,96 @@
 #include<hgl/type/Gradient.h>
 #include<hgl/math/Vector.h>
 #include<hgl/util/imgfmt/tga.h>
+#include<hgl/io/FileInputStream.h>
 #include<hgl/io/FileOutputStream.h>
+#include<hgl/filesystem/Filename.h>
 #include<iostream>
 #include"BitmapFont.h"
 
 using namespace hgl;
+
+OSString csv_filename;
+
+struct Bitmap
+{
+    uint width,height;
+    uint channels;
+
+    uint8 *data;
+
+public:
+
+    Bitmap()
+    {
+        data=nullptr;
+    }
+
+    ~Bitmap()
+    {
+        delete[] data;
+    }
+};
+
+Bitmap *BackgroundBitmap=nullptr;
+
+bool LoadBackgroundBitmap()
+{
+    io::OpenFileInputStream fis(OS_TEXT("mini_map.tga"));
+
+    if(!fis)
+        return(false);
+
+    util::TGAHeader tga_header;
+    util::TGAImageDesc tga_desc;
+
+    fis->Read(&tga_header,sizeof(util::TGAHeader));
+
+    if(tga_header.image_type!=util::TGA_IMAGE_TYPE_TRUE_COLOR)
+        return(false);
+
+    if(tga_header.bit!=24)
+        return(false);
+
+    tga_desc.image_desc=tga_header.image_desc;
+
+    BackgroundBitmap=new Bitmap;
+
+    BackgroundBitmap->width=tga_header.width;
+    BackgroundBitmap->height=tga_header.height;
+    BackgroundBitmap->channels=tga_header.bit/8;
+
+    uint total_bytes=BackgroundBitmap->width*BackgroundBitmap->height*BackgroundBitmap->channels;
+
+    BackgroundBitmap->data=new uint8[total_bytes];
+
+    if(fis->Read(BackgroundBitmap->data,total_bytes)!=total_bytes)
+    {
+        delete BackgroundBitmap;
+        BackgroundBitmap=nullptr;
+        return(false);
+    }
+
+    if(tga_desc.direction==util::TGA_DIRECTION_LOWER_LEFT)
+    {
+        uint line_bytes=tga_header.width*3;
+
+        uint8 *temp=new uint8[line_bytes];
+        uint8 *tp=BackgroundBitmap->data;
+        uint8 *bp=tp+line_bytes*(tga_header.height-1);
+
+        while(tp<bp)
+        {
+            memcpy(temp,tp,line_bytes);
+            memcpy(tp,bp,line_bytes);
+            memcpy(bp,temp,line_bytes);
+
+            tp+=line_bytes;
+            bp-=line_bytes;
+        }
+    }
+
+    return(true);
+}
 
 uint CHAR_BITMAP_WIDTH=0;
 uint CHAR_BITMAP_HEIGHT=0;
@@ -24,6 +109,7 @@ bool InitBitmapFont()
 }
 
 constexpr const float LOW_GAP=0.2f;
+constexpr const Vector3u8 black_color={0,0,0};
 constexpr const Vector3u8 white_color={255,255,255};
 
 constexpr const Vector3u8 stop_color[]=
@@ -137,8 +223,8 @@ PositionStat *ToVector2i(const UTF8StringList &sl)
         (*p)/=100;      //Unreal单位为cm,把单位缩到米
         (*p)/=4;
 
-        if(p->x>=1024
-         ||p->y>=1024)
+        if(p->x>=BackgroundBitmap->width
+         ||p->y>=BackgroundBitmap->height)
             continue;
 
         //std::cout<<"X="<<p->x<<",Y="<<p->y<<std::endl;
@@ -324,8 +410,8 @@ public:
 
 Chart *ToChart32(const PositionStat *ps)
 {
-    uint width=ps->maxp.x-ps->minp.x+1;
-    uint height=ps->maxp.y-ps->minp.y+1;
+    uint width=BackgroundBitmap->width;
+    uint height=BackgroundBitmap->height;
 
     std::cout<<"width: "<<width<<",height: "<<height<<std::endl;    
 
@@ -469,8 +555,14 @@ Chart *ToChart32(const PositionStat *ps)
             if(stop_str_width<step_str[i].Length())
                 stop_str_width=step_str[i].Length();
         }
+
+        str="Source: "+ToAnsiString(csv_filename);
+
+        chart->DrawString(str,col,row,black_color,255);
+
+        row+=CHAR_BITMAP_HEIGHT*2;
         
-        str=AnsiString("TOTAL - ")+str_total;
+        str=AnsiString("Total: ")+str_total;
 
         chart->DrawString(str,col,row,white_color,255);
         row+=CHAR_BITMAP_HEIGHT;
@@ -509,6 +601,30 @@ Chart *ToChart32(const PositionStat *ps)
         }
     }
 
+    //混合底图
+    if(BackgroundBitmap)
+    {
+        uint8 *p=chart->chart_data;
+        uint8 *bp=BackgroundBitmap->data;
+        uint8 alpha;
+
+        for(uint row=0;row<height;row++)
+        {
+            for(uint col=0;col<width;col++)
+            {
+                alpha=p[3];
+
+                p[0]=(p[0]*alpha+bp[0]*(255-alpha))/255;
+                p[1]=(p[1]*alpha+bp[1]*(255-alpha))/255;
+                p[2]=(p[2]*alpha+bp[2]*(255-alpha))/255;
+                p[3]=255;
+
+                p+=4;
+                bp+=3;
+            }
+        }
+    }
+
     return chart;
 }
 
@@ -522,17 +638,31 @@ int os_main(int argc,os_char **argv)
         return 0;
     }
 
+    if(!LoadBackgroundBitmap())
+    {
+        std::cerr<<"can't load background mini_map.tga !"<<std::endl;
+        return 1;
+    }
+
+    if(!InitBitmapFont())
+    {
+        std::cerr<<"can't load font file VGA8.F16 !"<<std::endl;
+        return 2;
+    }
+
     UTF8StringList sl;
 
-    int line_count=LoadStringListFromTextFile(sl,argv[1]);
+    csv_filename=argv[1];
+
+    int line_count=LoadStringListFromTextFile(sl,csv_filename);
     
     if(line_count<=1)
     {
-        std::cout<<"Load file "<<argv[1]<<" failed!"<<std::endl;
-        return(-1);
+        os_out<<OS_TEXT("Load file ")<<csv_filename.c_str()<<OS_TEXT(" failed!")<<std::endl;
+        return(3);
     }
 
-    bool font=InitBitmapFont();
+    os_out<<OS_TEXT("Load file ")<<csv_filename.c_str()<<OS_TEXT(" OK!")<<std::endl;
 
     std::cout<<"file total line: "<<line_count<<std::endl;
 
@@ -540,12 +670,19 @@ int os_main(int argc,os_char **argv)
 
     AutoDelete<Chart> chart=ToChart32(ps);
 
+    OSString tga_filename;
+    {
+        tga_filename=filesystem::ReplaceExtName(csv_filename,OSString(OS_TEXT(".tga")));
+
+        os_out<<OS_TEXT("output: ")<<tga_filename.c_str()<<std::endl;
+    }
+
     {
         util::TGAHeader tga_header;
 
         util::FillTGAHeader(&tga_header,chart->width,chart->height,4);
 
-        io::OpenFileOutputStream fos(OS_TEXT("chart.tga"),io::FileOpenMode::CreateTrunc);
+        io::OpenFileOutputStream fos(tga_filename.c_str(),io::FileOpenMode::CreateTrunc);
 
         if(fos)
         {
@@ -557,8 +694,8 @@ int os_main(int argc,os_char **argv)
             std::cerr<<"Create chart.tga failed!"<<std::endl;
     }
 
-    if(font)
-       ClearBitmapFont();
+    delete BackgroundBitmap;
+    ClearBitmapFont();
 
     return 0;
 }
