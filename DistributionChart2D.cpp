@@ -1,4 +1,4 @@
-#include<hgl/type/StringList.h>
+ï»¿#include<hgl/type/StringList.h>
 #include<hgl/type/LoadStringList.h>
 #include<hgl/type/Gradient.h>
 #include<hgl/math/Vector.h>
@@ -11,8 +11,6 @@ using namespace hgl;
 
 uint CHAR_BITMAP_WIDTH=0;
 uint CHAR_BITMAP_HEIGHT=0;
-uint CHAR_BITMAP_SCALE=0;
-uint CHAR_LINE_HEIGHT=0;
 
 bool InitBitmapFont()
 {
@@ -22,24 +20,22 @@ bool InitBitmapFont()
     CHAR_BITMAP_WIDTH=GetCharWidth();
     CHAR_BITMAP_HEIGHT=GetCharHeight();
 
-    CHAR_BITMAP_SCALE=1;
-    CHAR_LINE_HEIGHT=CHAR_BITMAP_HEIGHT*CHAR_BITMAP_SCALE;
-
     return(true);
 }
 
+constexpr const float LOW_GAP=0.2f;
 constexpr const Vector3u8 white_color={255,255,255};
 
-constexpr const uint STOP_COUNT=5;
-
-constexpr const Vector3u8 stop_color[STOP_COUNT]=
+constexpr const Vector3u8 stop_color[]=
 {
     {255,0,0},
     {255,255,0},
     {0,255,0},
     {0,255,255},
-    {0,0,255},
+    {0,0,255}
 };
+
+constexpr const uint STOP_COUNT=sizeof(stop_color)/sizeof(Vector3u8);
 
 HGL_GRADIENT_DEFINE(GradientColor3u8,uint,Vector3u8)
 {
@@ -138,13 +134,12 @@ PositionStat *ToVector2i(const UTF8StringList &sl)
         if(!ParseLine(p,str))
             continue;
 
-        (*p)/=100;      //Unrealµ¥Î»Îªcm,°Ñµ¥Î»Ëõµ½Ã×
-
-        if(p->x>4096
-         ||p->y>4096)
-            continue;
-
+        (*p)/=100;      //Unrealå•ä½ä¸ºcm,æŠŠå•ä½ç¼©åˆ°ç±³
         (*p)/=4;
+
+        if(p->x>=1024
+         ||p->y>=1024)
+            continue;
 
         //std::cout<<"X="<<p->x<<",Y="<<p->y<<std::endl;
 
@@ -203,11 +198,6 @@ public:
         delete[] chart_data;
     }
 
-    void DrawPoint(uint x,uint y,uint strong)
-    {
-        circle_data[x+y*width]+=strong;
-    }
-
     void DrawCircle(uint x,uint y,uint radius)
     {
         uint r2=radius*radius;
@@ -256,6 +246,9 @@ public:
     {
         const uint8 *sp=GetBitmapChar(ch);
         uint8 bit;
+        uint8 *tp=chart_data+(x+y*width)*4;
+
+        uint line_wrap_bytes=(width-CHAR_BITMAP_WIDTH)*4;
 
         for(uint row=0;row<CHAR_BITMAP_HEIGHT;row++)
         {
@@ -263,16 +256,20 @@ public:
 
             for(uint col=0;col<CHAR_BITMAP_WIDTH;col++)
             {
-                if(*sp&bit)                
-                    DrawBar(x+col*CHAR_BITMAP_SCALE,
-                            y+row*CHAR_BITMAP_SCALE,
-                            CHAR_BITMAP_SCALE,
-                            stop_color,
-                            alpha);
+                if(*sp&bit)
+                {
+                    tp[0]=stop_color.b;
+                    tp[1]=stop_color.g;
+                    tp[2]=stop_color.r;
+                    tp[3]=alpha;
+                }
+
+                tp+=4;                 
 
                 bit>>=1;
             }
 
+            tp+=line_wrap_bytes;
             ++sp;
         }
     }
@@ -289,7 +286,7 @@ public:
             if(*sp!=' ')
                 DrawChar(*sp,pos,y,stop_color,alpha);
 
-            pos+=CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE;
+            pos+=CHAR_BITMAP_WIDTH;
             ++sp;
         }
     }
@@ -334,9 +331,9 @@ Chart *ToChart32(const PositionStat *ps)
 
     Chart *chart=new Chart(width,height);
     uint max_count=0;
-    uint step_count[5];
+    uint step_count[STOP_COUNT];
 
-    //Í³¼ÆÃ¿¸ö¸ñ×ÓÊý¾ÝÊýÁ¿
+    //ç»Ÿè®¡æ¯ä¸ªæ ¼å­æ•°æ®æ•°é‡
     {
         uint x,y;
         uint32 *cp32=chart->count_data;
@@ -358,7 +355,7 @@ Chart *ToChart32(const PositionStat *ps)
         }
     }
 
-    //Í³¼ÆÕ¼±È
+    //ç»Ÿè®¡å æ¯”
     {
         uint32 *cp32=chart->count_data;
 
@@ -381,7 +378,7 @@ Chart *ToChart32(const PositionStat *ps)
         }
     }
 
-    //»­Ô²
+    //ç”»åœ†
     {
         uint32 *cp32=chart->count_data;
 
@@ -397,7 +394,7 @@ Chart *ToChart32(const PositionStat *ps)
         }
     }
 
-    //Í³¼Æ×î´óÖµ
+    //ç»Ÿè®¡æœ€å¤§å€¼
     {
         uint32 *cp32=chart->circle_data;
 
@@ -413,7 +410,7 @@ Chart *ToChart32(const PositionStat *ps)
 
     InitGradient(chart->max_count);
 
-    //Éú³ÉÈ¨ÖØÍ¼
+    //ç”Ÿæˆæƒé‡å›¾
     {
         uint32 *cp32=chart->circle_data;
         uint8 *cp8=chart->chart_data;
@@ -421,22 +418,15 @@ Chart *ToChart32(const PositionStat *ps)
         float alpha;
         Vector3u8 final_color;
 
-        //1.0   1 0 0
-        //0.8   1 1 0
-        //0.6   0 1 0
-        //0.4   0 1 1
-        //0.2   0 0 1
-        //0.0   0 0 0
-
         for(uint i=0;i<width*height;i++)
         {
             alpha=float(*cp32)/float(chart->max_count);
 
             ColorGradient.Get(final_color,*cp32);
 
-            if(*cp32>0)                 //ÎªÁË±ÜÃâ×îºóÊ²Ã´¶¼¿´²»¼û£¬ËùÒÔ°ÑÃ»Êý¾ÝµÄÌô³öÀ´£¬Ê£ÏÂµÄÍ¸Ã÷¶ÈÈ«²¿¼Ó0.25
+            if(*cp32>0)                 //ä¸ºäº†é¿å…æœ€åŽä»€ä¹ˆéƒ½çœ‹ä¸è§ï¼Œæ‰€ä»¥æŠŠæ²¡æ•°æ®çš„æŒ‘å‡ºæ¥ï¼Œå‰©ä¸‹çš„é€æ˜Žåº¦å…¨éƒ¨åŠ 0.25
             {
-                alpha+=0.25f;
+                alpha+=LOW_GAP;
 
                 if(alpha>1)
                     alpha=1;
@@ -452,10 +442,10 @@ Chart *ToChart32(const PositionStat *ps)
         }
     }
 
-    if(CHAR_LINE_HEIGHT==0)
+    if(CHAR_BITMAP_HEIGHT==0)
         return chart;
 
-    //Ð´ÈëÊýÖµ
+    //å†™å…¥æ•°å€¼
     {
         uint col=10;
         uint row=10;
@@ -465,37 +455,35 @@ Chart *ToChart32(const PositionStat *ps)
         AnsiString num_str;
         const AnsiString str_total=AnsiString::numberOf(ps->count);
 
-        AnsiString step_str[STOP_COUNT]=
-        {
-            AnsiString::numberOf(max_count),
-            AnsiString::numberOf(uint(max_count*0.8f)),
-            AnsiString::numberOf(uint(max_count*0.6f)),
-            AnsiString::numberOf(uint(max_count*0.4f)),
-            AnsiString::numberOf(uint(max_count*0.2f)),
-        };
+        AnsiString step_str[STOP_COUNT];
+        const uint dradient_bar_height=CHAR_BITMAP_HEIGHT*STOP_COUNT;
 
         char space[32];
 
         memset(space,' ',32);
 
         for(uint i=0;i<STOP_COUNT;i++)
+        {
+            step_str[i]=AnsiString::numberOf(uint(max_count*(1.0-float(i)/float(STOP_COUNT))));
+
             if(stop_str_width<step_str[i].Length())
                 stop_str_width=step_str[i].Length();
+        }
         
         str=AnsiString("TOTAL - ")+str_total;
 
         chart->DrawString(str,col,row,white_color,255);
-        row+=CHAR_LINE_HEIGHT;
+        row+=CHAR_BITMAP_HEIGHT;
 
-        chart->DrawGradient(col,row,CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,CHAR_LINE_HEIGHT*STOP_COUNT);
+        chart->DrawGradient(col,row,CHAR_BITMAP_WIDTH,dradient_bar_height);
 
-        col+=CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE*2;
+        col+=CHAR_BITMAP_WIDTH*2;
 
-        chart->DrawGradient(col+(stop_str_width+1)*CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,
-                            row,CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,CHAR_LINE_HEIGHT*STOP_COUNT);
+        chart->DrawGradient(col+(stop_str_width+1)*CHAR_BITMAP_WIDTH,
+                            row,CHAR_BITMAP_WIDTH,dradient_bar_height);
 
-        chart->DrawGradient(col+(str_total.Length()+stop_str_width+4)*CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,
-                            row,CHAR_BITMAP_WIDTH*CHAR_BITMAP_SCALE,CHAR_LINE_HEIGHT*STOP_COUNT);
+        chart->DrawGradient(col+(str_total.Length()+stop_str_width+4)*CHAR_BITMAP_WIDTH,
+                            row,CHAR_BITMAP_WIDTH,dradient_bar_height);
 
         for(uint i=0;i<STOP_COUNT;i++)
         {
@@ -517,7 +505,7 @@ Chart *ToChart32(const PositionStat *ps)
             }
 
             chart->DrawString(str,col,row,stop_color[i],255);
-            row+=CHAR_LINE_HEIGHT;
+            row+=CHAR_BITMAP_HEIGHT;
         }
     }
 
