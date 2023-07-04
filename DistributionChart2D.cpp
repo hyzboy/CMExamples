@@ -591,8 +591,10 @@ Chart *ToChart32(const PositionStat *ps)
 
             if(step_count[i]>0)
             {
-                str+="   ";
-                str+=AnsiString::numberOf(float(step_count[i])*100.0f/float(ps->count));
+                num_str=AnsiString::floatOf(float(step_count[i])*100.0f/float(ps->count),4);
+
+                str.Strcat(space,3+(8-num_str.Length()));
+                str+=num_str;
                 str+="%";
             }
 
