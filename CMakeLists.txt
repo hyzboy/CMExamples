@@ -57,3 +57,6 @@ cm_example_project(RuntimeAssetManagerTest)
 
 add_executable(DistributionChart2D DistributionChart2D.cpp BitmapFont.cpp BitmapFont.h)
 cm_example_project(DistributionChart2D)
+
+add_executable(Size2Test Size2Test.cpp)
+cm_example_project(Size2Test)
