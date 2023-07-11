@@ -45,9 +45,6 @@ cm_example_project(CreateBinaryH)
 add_executable(NormalCompressTest NormalCompressTest.cpp)
 CM_EXAMPLE_PROJECT(NormalCompressTest)
 
-add_executable(MultiMapTest MultiMapTest.cpp)
-cm_example_project(MultiMapTest)
-
 add_executable(OSFontList OSFontList.cpp)
 cm_example_project(OSFontList)
 target_link_libraries(OSFontList PRIVATE CMUtil)
