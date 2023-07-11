@@ -8,13 +8,14 @@
 #include<hgl/filesystem/Filename.h>
 #include<iostream>
 #include<hgl/2d/Bitmap.h>
+#include<hgl/2d/DrawGeometry.h>
 #include"BitmapFont.h"
 
 using namespace hgl;
 
 OSString csv_filename;
 
-using BitmapRGB8=hgl::Bitmap<uint8,3>;
+using BitmapRGB8=Bitmap<Vector3u8>;
 
 BitmapRGB8 *BackgroundBitmap=nullptr;
 
@@ -173,7 +174,7 @@ PositionStat *ToVector2i(const UTF8StringList &sl)
     UTF8String str;
     uint result=0;
 
-    for(int i=0;i<count;i++)
+    for(uint i=0;i<count;i++)
     {
         str=sl[i];
 
@@ -218,7 +219,8 @@ struct Chart
 
     uint max_count;
 
-    uint32 *count_data;
+    //uint32 *count_data;
+    Bitmap<uint32> count_bitmap;
     uint32 *circle_data;
     uint8 *chart_data;
 
@@ -229,11 +231,12 @@ public:
         width=w;
         height=h;
 
-        count_data=new uint32[width*height];
+        count_bitmap.Create(width,height);
         circle_data=new uint32[width*height];
         chart_data=new uint8[width*height*4];
 
-        hgl_zero(count_data,width*height);
+        count_bitmap.ClearColor(0);
+
         hgl_zero(circle_data,width*height);
         hgl_zero(chart_data,width*height*4);
 
@@ -242,7 +245,6 @@ public:
 
     ~Chart()
     {
-        delete[] count_data;
         delete[] circle_data;
         delete[] chart_data;
     }
@@ -252,11 +254,11 @@ public:
         uint r2=radius*radius;
         uint length;
 
-        for(int col=x-radius;col<=x+radius;col++)
+        for(uint col=x-radius;col<=x+radius;col++)
         {
             if(col<0||col>=width)continue;
 
-            for(int row=y-radius;row<=y+radius;row++)
+            for(uint row=y-radius;row<=y+radius;row++)
             {
                 if(row<0||row>=height)continue;
 
@@ -385,7 +387,7 @@ Chart *ToChart32(const PositionStat *ps)
     //统计每个格子数据数量
     {
         uint x,y;
-        uint32 *cp32=chart->count_data;
+        uint32 *cp32;
 
         const Vector2i *p=ps->data;
 
@@ -394,7 +396,7 @@ Chart *ToChart32(const PositionStat *ps)
             x=p->x-ps->minp.x;
             y=p->y-ps->minp.y;
 
-            cp32=chart->count_data+(x+y*width);
+            cp32=chart->count_bitmap.GetData(x,y);
 
             ++(*cp32);
 
@@ -406,7 +408,7 @@ Chart *ToChart32(const PositionStat *ps)
 
     //统计占比
     {
-        uint32 *cp32=chart->count_data;
+        uint32 *cp32=chart->count_bitmap.GetData();
 
         hgl_zero(step_count);
 
@@ -429,7 +431,7 @@ Chart *ToChart32(const PositionStat *ps)
 
     //画圆
     {
-        uint32 *cp32=chart->count_data;
+        uint32 *cp32=chart->count_bitmap.GetData();
 
         for(uint y=0;y<height;y++)
         {
@@ -496,9 +498,9 @@ Chart *ToChart32(const PositionStat *ps)
 
     //写入数值
     {
-        uint col=10;
-        uint row=10;
-        uint stop_str_width=0;
+        int col=10;
+        int row=10;
+        int stop_str_width=0;
 
         AnsiString str;
         AnsiString num_str;
@@ -570,7 +572,7 @@ Chart *ToChart32(const PositionStat *ps)
     if(BackgroundBitmap)
     {
         uint8 *p=chart->chart_data;
-        uint8 *bp=BackgroundBitmap->GetData();
+        Vector3u8 *bp=BackgroundBitmap->GetData();
         uint8 alpha;
 
         for(uint row=0;row<height;row++)
@@ -579,13 +581,13 @@ Chart *ToChart32(const PositionStat *ps)
             {
                 alpha=p[3];
 
-                p[0]=(p[0]*alpha+bp[0]*(255-alpha))/255;
-                p[1]=(p[1]*alpha+bp[1]*(255-alpha))/255;
-                p[2]=(p[2]*alpha+bp[2]*(255-alpha))/255;
+                p[0]=(p[0]*alpha+bp->x*(255-alpha))/255;
+                p[1]=(p[1]*alpha+bp->y*(255-alpha))/255;
+                p[2]=(p[2]*alpha+bp->z*(255-alpha))/255;
                 p[3]=255;
 
                 p+=4;
-                bp+=3;
+                ++bp;
             }
         }
     }
