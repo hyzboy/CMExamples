@@ -184,7 +184,30 @@ void InitGradient(uint max_count)
         ColorGradient.Add(max_count*(1.0-float(i)/float(STOP_COUNT-1)),stop_color[i]);
 }
 
-bool ParseLine(Vector2i *result,const UTF8String &str)
+enum class DataSourceType
+{
+    Error,
+
+    OnePosition,
+    TwoPosition,
+};
+
+DataSourceType CheckDataSourceType(const UTF8String &str)
+{
+    if(str.Length()<=11)return(DataSourceType::Error);
+
+    const char *sp=str.c_str();
+
+    if(*sp=='X')
+        return DataSourceType::OnePosition;
+
+    if(hgl::strchr(sp,',',str.Length())!=nullptr)
+        return DataSourceType::TwoPosition;
+
+    return(DataSourceType::Error);
+}
+
+bool ParsePosition(Vector2i *result,const UTF8String &str)
 {
     if(!result)return(false);
 
@@ -212,46 +235,75 @@ bool ParseLine(Vector2i *result,const UTF8String &str)
     if(!hgl::stoi(sp,result->y))
         return(false);
 
+    result->x/=400;     //Unreal单位为cm,把单位缩到米
+    result->y/=400;     //同时把4096的地图缩小到1024
+
+    if(result->x>=BackgroundBitmap->GetWidth()
+     ||result->y>=BackgroundBitmap->GetHeight()
+     ||result->x<0
+     ||result->y<0)
+        return(false);
+
     return(true);
 }
 
-struct PositionStat
+using OnePositionData=List<Vector2i>;
+
+struct LineSegment
 {
-    uint count;
-
-    Vector2i minp,maxp;
-    Vector2i gap;
-
-    Vector2i *data;
-
-public:
-
-    PositionStat(const uint c)
-    {
-        count=c;
-
-        hgl_zero(minp);
-        hgl_zero(maxp);
-        hgl_zero(gap);
-
-        data=new Vector2i[count];
-
-        hgl_zero(data,count);
-    }
-
-    ~PositionStat()
-    {
-        delete[] data;
-    }
+    Vector2i start;
+    Vector2i end;
 };
 
-PositionStat *ToVector2i(const UTF8StringList &sl)
+using LineSegmentData=List<LineSegment>;
+
+bool ParseLineSegment(LineSegment *result,const UTF8String &str)
+{
+    if(!result)return(false);
+
+    if(str.Length()<=0)return(false);
+
+    const char *start=str.c_str();
+    const char *end=start+str.Length();
+    const char *sp=start;
+
+    if(!hgl::stoi(sp,result->start.x))
+        return(false);
+
+    sp=hgl::strchr(sp,' ');
+    if(!sp)return(false);
+
+    if(!hgl::stoi(++sp,result->start.y))
+        return(false);
+
+    sp=hgl::strchr(sp,',');
+    if(!sp)return(false);
+
+    if(!hgl::stoi(++sp,result->end.x))
+        return(false);
+
+    sp=hgl::strchr(sp,' ');
+    if(!sp)return(false);
+
+    if(!hgl::stoi(++sp,result->end.y))
+        return(false);
+
+    result->start.x/=400;
+    result->start.y/=400;
+    result->end.x/=400;
+    result->end.y/=400;
+    
+    return(true);
+}
+
+template<typename T>
+void ParseStringList(List<T> &data_list,const UTF8StringList &sl,bool (*ParseLineFunc)(T *,const UTF8String &))
 {
     const uint count=sl.GetCount();
 
-    PositionStat *ps=new PositionStat(count);
+    data_list.SetCount(count);
 
-    Vector2i *p=ps->data;
+    T *p=data_list.GetData();
 
     UTF8String str;
     uint result=0;
@@ -263,36 +315,14 @@ PositionStat *ToVector2i(const UTF8StringList &sl)
         if(str.Length()<=0)
             continue;
 
-        if(!ParseLine(p,str))
+        if(!ParseLineFunc(p,str))
             continue;
-
-        (*p)/=100;      //Unreal单位为cm,把单位缩到米
-        (*p)/=4;
-
-        if(p->x>=BackgroundBitmap->GetWidth()
-         ||p->y>=BackgroundBitmap->GetHeight())
-            continue;
-
-        //std::cout<<"X="<<p->x<<",Y="<<p->y<<std::endl;
-
-//        if(p->x<ps->minp.x)ps->minp.x=p->x;
-//        if(p->x>ps->maxp.x)ps->maxp.x=p->x;
-//        if(p->y<ps->minp.y)ps->minp.y=p->y;
-//        if(p->y>ps->maxp.y)ps->maxp.y=p->y;
-        
+      
         ++result;
         ++p;
     }
 
-    //std::cout<<"minp: "<<ps->minp.x<<","<<ps->minp.y<<std::endl;
-    //std::cout<<"maxp: "<<ps->maxp.x<<","<<ps->maxp.y<<std::endl;
-
-    ps->maxp.x=1023;
-    ps->maxp.y=1023;
-
-    ps->count=result;
-
-    return ps;
+    data_list.SetCount(result);
 }
 
 struct Chart
@@ -417,23 +447,19 @@ Chart *CreateChart()
     return(new Chart(width,height));
 }
 
-void StatCount(BitmapU32 &count_bitmap,const PositionStat *ps)
+void StatData(BitmapU32 &count_bitmap,const OnePositionData &opd)
 {    
     top_count=0;
 
     //统计每个格子数据数量
     {
-        uint x,y;
         uint32 *cp32;
 
-        const Vector2i *p=ps->data;
+        const Vector2i *p=opd.GetData();
 
-        for(uint i=0;i<ps->count;i++)
+        for(int i=0;i<opd.GetCount();i++)
         {
-            x=p->x-ps->minp.x;
-            y=p->y-ps->minp.y;
-
-            cp32=count_bitmap.GetData(x,y);
+            cp32=count_bitmap.GetData(p->x,p->y);
 
             ++(*cp32);
 
@@ -444,49 +470,85 @@ void StatCount(BitmapU32 &count_bitmap,const PositionStat *ps)
     }
 }
 
+void StatData(BitmapU32 &count_bitmap,const LineSegmentData &lsd)
+{
+    {
+        BlendColorU32Additive blend_u32_additive;
+        DrawBitmapU32 draw_bitmap(&count_bitmap);
+        draw_bitmap.SetBlend(&blend_u32_additive);
+
+        draw_bitmap.SetDrawColor(1);
+
+        const LineSegment *p=lsd.GetData();
+
+        for(int i=0;i<lsd.GetCount();i++)
+        {
+            draw_bitmap.DrawLine(p->start.x,p->start.y,p->end.x,p->end.y);
+
+            ++p;
+        }
+    }
+
+    {
+        top_count=0;
+
+        uint32 *cp32=count_bitmap.GetData();
+
+        for(uint i=0;i<count_bitmap.GetTotalPixels();i++)
+        {
+            if(*cp32>top_count)top_count=*cp32;
+
+            ++cp32;
+        }
+    }
+}
+
+void StatStopCount(const BitmapU32 &count_bitmap)
+{
+    //统计占比
+    {
+        const uint32 *cp32=count_bitmap.GetData();
+
+        hgl_zero(stop_count);
+
+        for(uint i=0;i<count_bitmap.GetTotalPixels();i++)
+        {
+            if(*cp32>0)
+            for(uint i=0;i<STOP_COUNT;i++)
+                if(*cp32>top_count*(STOP_COUNT-1-i)/STOP_COUNT)
+                {
+                    stop_count[i]+=*cp32;
+                    break;
+                }
+
+            ++cp32;
+        }
+    }
+}
+
+void CountToCircle(Chart *chart)
+{
+    const uint32 *cp32=chart->count_bitmap.GetData();
+
+    const uint width=chart->width;
+    const uint height=chart->height;
+
+    for(uint y=0;y<height;y++)
+    {
+        for(uint x=0;x<width;x++)
+        {
+            if(*cp32>0)
+                chart->DrawCircle(x,y,(*cp32));
+
+            ++cp32;
+        }
+    }
+}
+
 void ChartStat(Chart *chart,const uint data_count)
 {
     const uint width=chart->width;
     const uint height=chart->height;
-
-    //统计占比
-    {
-        uint32 *cp32=chart->count_bitmap.GetData();
-
-        hgl_zero(stop_count);
-
-        for(uint y=0;y<height;y++)
-        {
-            for(uint x=0;x<width;x++)
-            {
-                if(*cp32>0)
-                for(uint i=0;i<STOP_COUNT;i++)
-                    if(*cp32>top_count*(STOP_COUNT-1-i)/STOP_COUNT)
-                    {
-                        stop_count[i]+=*cp32;
-                        break;
-                    }
-
-                ++cp32;
-            }
-        }
-    }
-
-    //画圆
-    {
-        uint32 *cp32=chart->count_bitmap.GetData();
-
-        for(uint y=0;y<height;y++)
-        {
-            for(uint x=0;x<width;x++)
-            {
-                if(*cp32>0)
-                    chart->DrawCircle(x,y,(*cp32));
-
-                ++cp32;
-            }
-        }
-    }
 
     //统计最大值
     {
@@ -658,13 +720,49 @@ int os_main(int argc,os_char **argv)
 
     std::cout<<"file total line: "<<line_count<<std::endl;
 
-    AutoDelete<PositionStat> ps=ToVector2i(sl);
+    const DataSourceType dst=CheckDataSourceType(sl[0]);
+
+    if(dst==DataSourceType::Error)
+    {
+        os_out<<OS_TEXT("Check data source type failed!")<<std::endl;
+        return(4);
+    }
 
     AutoDelete<Chart> chart=CreateChart();
+    uint data_count;
 
-    StatCount(chart->count_bitmap,ps);
+    if(dst==DataSourceType::OnePosition)
+    {
+        os_out<<OS_TEXT("Data source type: One Position")<<std::endl;
 
-    ChartStat(chart,ps->count);
+        OnePositionData opd;
+
+        ParseStringList<Vector2i>(opd,sl,ParsePosition);
+
+        StatStopCount(chart->count_bitmap);
+
+        StatData(chart->count_bitmap,opd);
+
+        CountToCircle(chart);
+
+        data_count=opd.GetCount();
+    }
+    else
+    {
+        os_out<<OS_TEXT("Data source type: Two Position")<<std::endl;
+
+        LineSegmentData lsd;
+
+        ParseStringList<LineSegment>(lsd,sl,ParseLineSegment);
+
+        StatStopCount(chart->circle_bitmap);
+
+        StatData(chart->circle_bitmap,lsd);
+
+        data_count=lsd.GetCount();        
+    }
+
+    ChartStat(chart,data_count);
 
     OSString tga_filename;
     {
