@@ -15,7 +15,54 @@ using namespace hgl;
 
 OSString csv_filename;
 
-using BitmapRGB8=Bitmap<Vector3u8>;
+using BitmapRGB8=bitmap::Bitmap<Vector3u8>;
+using BitmapRGBA8=bitmap::Bitmap<Vector4u8>;
+
+using BitmapU32=bitmap::Bitmap<uint32>;
+using DrawBitmapU32=bitmap::DrawGeometry<uint32>;
+
+using DrawBitmapRGBA8=bitmap::DrawGeometry<Vector4u8>;
+
+struct BlendColorU32Additive:public bitmap::BlendColor<uint32>
+{
+    const uint32 operator()(const uint32 &src,const uint32 &dst)const
+    {
+        uint64 result=src+dst;
+
+        return (result>HGL_U32_MAX)?HGL_U32_MAX:(result&HGL_U32_MAX);
+    }
+
+    const uint32 operator()(const uint32 &src,const uint32 &dst,const float &alpha)const
+    {
+        uint64 result=src*alpha+dst;
+
+        return (result>HGL_U32_MAX)?HGL_U32_MAX:(result&HGL_U32_MAX);
+    }
+};
+
+struct BlendColorRGBA8:public bitmap::BlendColor<Vector4u8>
+{
+    const Vector4u8 operator()(const Vector4u8 &src,const Vector4u8 &dst)const
+    {
+        uint8 na=255-src.a;
+
+        return Vector4u8((src.r*src.a+dst.r*na)/255,
+                         (src.g*src.a+dst.g*na)/255,
+                         (src.b*src.a+dst.b*na)/255,
+                         dst.a);
+    }
+
+    const Vector4u8 operator()(const Vector4u8 &src,const Vector4u8 &dst,const float &alpha)const
+    {
+        uint8 a=src.a*alpha;
+        uint8 na=255-src.a;
+
+        return Vector4u8((src.r*src.a+dst.r*na)/255,
+                         (src.g*src.a+dst.g*na)/255,
+                         (src.b*src.a+dst.b*na)/255,
+                         dst.a);
+    }
+};
 
 BitmapRGB8 *BackgroundBitmap=nullptr;
 
@@ -73,19 +120,19 @@ bool InitBitmapFont()
 }
 
 constexpr const float LOW_GAP=0.2f;
-constexpr const Vector3u8 black_color={0,0,0};
-constexpr const Vector3u8 white_color={255,255,255};
+constexpr const Vector4u8 black_color={0,0,0,255};
+constexpr const Vector4u8 white_color={255,255,255,255};
 
-constexpr const Vector3u8 stop_color[]=
+constexpr const Vector4u8 stop_color[]=
 {
-    {255,0,0},
-    {255,255,0},
-    {0,255,0},
-    {0,255,255},
-    {0,0,255}
+    {  0,  0,255,255},
+    {  0,255,255,255},
+    {  0,255,  0,255},
+    {255,255,  0,255},
+    {255,  0,  0,255}
 };
 
-constexpr const uint STOP_COUNT=sizeof(stop_color)/sizeof(Vector3u8);
+constexpr const uint STOP_COUNT=sizeof(stop_color)/sizeof(Vector4u8);
 
 HGL_GRADIENT_DEFINE(GradientColor3u8,uint,Vector3u8)
 {
@@ -219,10 +266,15 @@ struct Chart
 
     uint max_count;
 
-    //uint32 *count_data;
-    Bitmap<uint32> count_bitmap;
-    uint32 *circle_data;
-    uint8 *chart_data;
+    BitmapU32 count_bitmap;
+    BitmapU32 circle_bitmap;
+    BitmapRGBA8 chart_bitmap;
+
+    DrawBitmapU32 *draw_circle=nullptr;
+    BlendColorU32Additive blend_u32_additive;
+
+    DrawBitmapRGBA8 *draw_chart=nullptr;
+    BlendColorRGBA8 blend_rgba8;
 
 public:
 
@@ -232,74 +284,40 @@ public:
         height=h;
 
         count_bitmap.Create(width,height);
-        circle_data=new uint32[width*height];
-        chart_data=new uint8[width*height*4];
+        circle_bitmap.Create(width,height);
+        chart_bitmap.Create(width,height);
 
         count_bitmap.ClearColor(0);
+        circle_bitmap.ClearColor(0);
+        chart_bitmap.ClearColor(black_color);
 
-        hgl_zero(circle_data,width*height);
-        hgl_zero(chart_data,width*height*4);
+        draw_circle=new DrawBitmapU32(&circle_bitmap);
+        draw_circle->SetBlend(&blend_u32_additive);
+
+        draw_chart=new DrawBitmapRGBA8(&chart_bitmap);
+        draw_chart->SetBlend(&blend_rgba8);
 
         max_count=0;
     }
 
     ~Chart()
     {
-        delete[] circle_data;
-        delete[] chart_data;
+        delete draw_circle;
     }
 
     void DrawCircle(uint x,uint y,uint radius)
     {
-        uint r2=radius*radius;
-        uint length;
-
-        for(uint col=x-radius;col<=x+radius;col++)
-        {
-            if(col<0||col>=width)continue;
-
-            for(uint row=y-radius;row<=y+radius;row++)
-            {
-                if(row<0||row>=height)continue;
-
-                length=(col-x)*(col-x)+(row-y)*(row-y);
-                
-                if(length<=r2)
-                {
-                    ++circle_data[col+row*width];
-                }
-            }
-        }
-    }
-
-    void DrawBar(const uint x,const uint y,const uint size,const Vector3u8 &stop_color,const uint8 alpha)
-    {
-        uint8 *tp=chart_data+(x+y*width)*4;
-        uint line_bytes=(width-size)*4;
-
-        for(uint row=0;row<size;row++)
-        {
-            for(uint col=0;col<size;col++)
-            {
-                tp[0]=stop_color.b;
-                tp[1]=stop_color.g;
-                tp[2]=stop_color.r;
-                tp[3]=alpha;
-
-                tp+=4;
-            }
-
-            tp+=line_bytes;
-        }
+        draw_circle->SetDrawColor(1);
+        draw_circle->DrawSolidCircle(x,y,radius);
     }
 
     void DrawChar(const char ch,const uint x,const uint y,const Vector3u8 &stop_color,const uint8 alpha)
     {
         const uint8 *sp=GetBitmapChar(ch);
         uint8 bit;
-        uint8 *tp=chart_data+(x+y*width)*4;
+        Vector4u8 *tp=chart_bitmap.GetData(x,y);
 
-        uint line_wrap_bytes=(width-CHAR_BITMAP_WIDTH)*4;
+        const uint line_wrap=width-CHAR_BITMAP_WIDTH;
 
         for(uint row=0;row<CHAR_BITMAP_HEIGHT;row++)
         {
@@ -309,18 +327,18 @@ public:
             {
                 if(*sp&bit)
                 {
-                    tp[0]=stop_color.b;
-                    tp[1]=stop_color.g;
-                    tp[2]=stop_color.r;
-                    tp[3]=alpha;
+                    tp->r=stop_color.r;
+                    tp->g=stop_color.g;
+                    tp->b=stop_color.b;
+                    tp->a=255;
                 }
 
-                tp+=4;                 
+                ++tp;
 
                 bit>>=1;
             }
 
-            tp+=line_wrap_bytes;
+            tp+=line_wrap;
             ++sp;
         }
     }
@@ -344,8 +362,8 @@ public:
 
     void DrawGradient(const uint left,const uint top,const uint w,const uint h)
     {
-        uint8 *tp=chart_data+(left+top*width)*4;
-        Vector3u8 color;
+        Vector3u8 rgb;
+        Vector4u8 color;
 
         uint low,high,gap;
         
@@ -354,21 +372,16 @@ public:
 
         gap=high-low;
 
+        draw_chart->CloseBlend();
+
         for(uint i=0;i<h;i++)
         {
-            ColorGradient.Get(color,(1.0f-float(i)/float(h))*float(gap)+float(low));
+            ColorGradient.Get(rgb,(1.0f-float(i)/float(h))*float(gap)+float(low));
 
-            for(uint j=0;j<w;j++)
-            {
-                tp[0]=color.b;
-                tp[1]=color.g;
-                tp[2]=color.r;
-                tp[3]=255;
+            color=Vector4u8(rgb,255);
 
-                tp+=4;
-            }
-
-            tp+=(width-w)*4;
+            draw_chart->SetDrawColor(color);
+            draw_chart->DrawHLine(left,top+i,w);
         }
     }
 };
@@ -447,7 +460,7 @@ Chart *ToChart32(const PositionStat *ps)
 
     //统计最大值
     {
-        uint32 *cp32=chart->circle_data;
+        uint32 *cp32=chart->circle_bitmap.GetData();
 
         for(uint i=0;i<width*height;i++)
         {
@@ -463,8 +476,8 @@ Chart *ToChart32(const PositionStat *ps)
 
     //生成权重图
     {
-        uint32 *cp32=chart->circle_data;
-        uint8 *cp8=chart->chart_data;
+        uint32 *cp32=chart->circle_bitmap.GetData();
+        Vector4u8 *cp8=chart->chart_bitmap.GetData();
 
         float alpha;
         Vector3u8 final_color;
@@ -483,13 +496,13 @@ Chart *ToChart32(const PositionStat *ps)
                     alpha=1;
             }
 
-            cp8[0]=final_color.b;
-            cp8[1]=final_color.g;
-            cp8[2]=final_color.r;
-            cp8[3]=alpha*255.0f;
+            cp8->b=final_color.b;
+            cp8->g=final_color.g;
+            cp8->r=final_color.r;
+            cp8->a=alpha*255.0f;
 
             ++cp32;
-            cp8+=4;
+            ++cp8;
         }
     }
 
@@ -571,7 +584,7 @@ Chart *ToChart32(const PositionStat *ps)
     //混合底图
     if(BackgroundBitmap)
     {
-        uint8 *p=chart->chart_data;
+        Vector4u8 *p=chart->chart_bitmap.GetData();
         Vector3u8 *bp=BackgroundBitmap->GetData();
         uint8 alpha;
 
@@ -579,14 +592,14 @@ Chart *ToChart32(const PositionStat *ps)
         {
             for(uint col=0;col<width;col++)
             {
-                alpha=p[3];
+                alpha=p->a;
 
-                p[0]=(p[0]*alpha+bp->x*(255-alpha))/255;
-                p[1]=(p[1]*alpha+bp->y*(255-alpha))/255;
-                p[2]=(p[2]*alpha+bp->z*(255-alpha))/255;
-                p[3]=255;
+                p->r=(p->r*alpha+bp->r*(255-alpha))/255;
+                p->g=(p->g*alpha+bp->g*(255-alpha))/255;
+                p->b=(p->b*alpha+bp->b*(255-alpha))/255;
+                p->a=255;
 
-                p+=4;
+                ++p;
                 ++bp;
             }
         }
@@ -654,7 +667,7 @@ int os_main(int argc,os_char **argv)
         if(fos)
         {
             fos->Write(&tga_header,util::TGAHeaderSize);
-            fos->Write(chart->chart_data,chart->width*chart->height*4);
+            fos->Write(chart->chart_bitmap.GetData(),chart->chart_bitmap.GetTotalBytes());
             fos->Close();
         }
         else
