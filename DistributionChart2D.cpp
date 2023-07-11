@@ -166,6 +166,9 @@ constexpr const Vector4u8 stop_color[]=
 
 constexpr const uint STOP_COUNT=sizeof(stop_color)/sizeof(Vector4u8);
 
+uint stop_count[STOP_COUNT];
+uint top_count=0;
+
 HGL_GRADIENT_DEFINE(GradientColor3u8,uint,Vector3u8)
 {
     result.r=start.r+float(end.r-start.r)*pos;
@@ -404,16 +407,19 @@ public:
     }
 };
 
-Chart *ToChart32(const PositionStat *ps)
+Chart *CreateChart()
 {
     const uint width=BackgroundBitmap->GetWidth();
     const uint height=BackgroundBitmap->GetHeight();
 
     std::cout<<"width: "<<width<<",height: "<<height<<std::endl;    
 
-    Chart *chart=new Chart(width,height);
-    uint max_count=0;
-    uint step_count[STOP_COUNT];
+    return(new Chart(width,height));
+}
+
+void StatCount(BitmapU32 &count_bitmap,const PositionStat *ps)
+{    
+    top_count=0;
 
     //统计每个格子数据数量
     {
@@ -427,21 +433,27 @@ Chart *ToChart32(const PositionStat *ps)
             x=p->x-ps->minp.x;
             y=p->y-ps->minp.y;
 
-            cp32=chart->count_bitmap.GetData(x,y);
+            cp32=count_bitmap.GetData(x,y);
 
             ++(*cp32);
 
-            if(*cp32>max_count)max_count=*cp32;
+            if(*cp32>top_count)top_count=*cp32;
 
             ++p;
         }
     }
+}
+
+void ChartStat(Chart *chart,const uint data_count)
+{
+    const uint width=chart->width;
+    const uint height=chart->height;
 
     //统计占比
     {
         uint32 *cp32=chart->count_bitmap.GetData();
 
-        hgl_zero(step_count);
+        hgl_zero(stop_count);
 
         for(uint y=0;y<height;y++)
         {
@@ -449,9 +461,9 @@ Chart *ToChart32(const PositionStat *ps)
             {
                 if(*cp32>0)
                 for(uint i=0;i<STOP_COUNT;i++)
-                    if(*cp32>max_count*(STOP_COUNT-1-i)/STOP_COUNT)
+                    if(*cp32>top_count*(STOP_COUNT-1-i)/STOP_COUNT)
                     {
-                        step_count[i]+=*cp32;
+                        stop_count[i]+=*cp32;
                         break;
                     }
 
@@ -525,7 +537,7 @@ Chart *ToChart32(const PositionStat *ps)
     }
 
     if(CHAR_BITMAP_HEIGHT==0)
-        return chart;
+        return;
 
     //写入数值
     {
@@ -535,7 +547,7 @@ Chart *ToChart32(const PositionStat *ps)
 
         AnsiString str;
         AnsiString num_str;
-        const AnsiString str_total=AnsiString::numberOf(ps->count);
+        const AnsiString str_total=AnsiString::numberOf(data_count);
 
         AnsiString step_str[STOP_COUNT];
         const uint dradient_bar_height=CHAR_BITMAP_HEIGHT*STOP_COUNT;
@@ -546,7 +558,7 @@ Chart *ToChart32(const PositionStat *ps)
 
         for(uint i=0;i<STOP_COUNT;i++)
         {
-            step_str[i]=AnsiString::numberOf(uint(max_count*(1.0-float(i)/float(STOP_COUNT))));
+            step_str[i]=AnsiString::numberOf(uint(top_count*(1.0-float(i)/float(STOP_COUNT))));
 
             if(stop_str_width<step_str[i].Length())
                 stop_str_width=step_str[i].Length();
@@ -579,15 +591,15 @@ Chart *ToChart32(const PositionStat *ps)
 
             str+=step_str[i];
 
-            num_str=AnsiString::numberOf(step_count[i]);
+            num_str=AnsiString::numberOf(stop_count[i]);
 
             str.Strcat(space,str_total.Length()-num_str.Length()+3);
 
             str+=num_str;
 
-            if(step_count[i]>0)
+            if(stop_count[i]>0)
             {
-                num_str=AnsiString::floatOf(float(step_count[i])*100.0f/float(ps->count),4);
+                num_str=AnsiString::floatOf(float(stop_count[i])*100.0f/float(data_count),4);
 
                 str.Strcat(space,3+(8-num_str.Length()));
                 str+=num_str;
@@ -606,8 +618,6 @@ Chart *ToChart32(const PositionStat *ps)
 
         blend(&(chart->chart_bitmap),BackgroundBitmap,1.0);
     }
-
-    return chart;
 }
 
 int os_main(int argc,os_char **argv)
@@ -650,7 +660,11 @@ int os_main(int argc,os_char **argv)
 
     AutoDelete<PositionStat> ps=ToVector2i(sl);
 
-    AutoDelete<Chart> chart=ToChart32(ps);
+    AutoDelete<Chart> chart=CreateChart();
+
+    StatCount(chart->count_bitmap,ps);
+
+    ChartStat(chart,ps->count);
 
     OSString tga_filename;
     {
