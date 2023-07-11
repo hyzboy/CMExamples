@@ -64,7 +64,39 @@ struct BlendColorRGBA8:public bitmap::BlendColor<Vector4u8>
     }
 };
 
+template<> void bitmap::BlendBitmap<Vector4u8,Vector3u8>::operator()(const bitmap::Bitmap<Vector4u8> *src_bitmap,bitmap::Bitmap<Vector3u8> *dst_bitmap,const float alpha)const
+{
+    if(!src_bitmap||!dst_bitmap||alpha<=0)return;
+
+    const uint width=src_bitmap->GetWidth();
+    const uint height=src_bitmap->GetHeight();
+
+    if(width!=dst_bitmap->GetWidth()||height!=dst_bitmap->GetHeight())
+        return;
+
+          Vector3u8 *dst=dst_bitmap->GetData();
+    const Vector4u8 *src=src_bitmap->GetData();
+
+    float a;
+    float na;
+
+    for(uint i=0;i<width*height;i++)
+    {
+        a=src->a*alpha;
+        na=255-src->a;
+
+        dst->r=(src->r*a+dst->r*na)/255;
+        dst->g=(src->g*a+dst->g*na)/255;
+        dst->b=(src->b*a+dst->b*na)/255;
+
+        ++dst;
+        ++src;
+    }
+}
+
 BitmapRGB8 *BackgroundBitmap=nullptr;
+
+using BlendRGBA2RGB=bitmap::BlendBitmap<Vector4u8,Vector3u8>;
 
 bool LoadBackgroundBitmap()
 {
@@ -302,6 +334,7 @@ public:
 
     ~Chart()
     {
+        delete draw_chart;
         delete draw_circle;
     }
 
@@ -569,25 +602,9 @@ Chart *ToChart32(const PositionStat *ps)
     //混合底图
     if(BackgroundBitmap)
     {
-        Vector4u8 *p=chart->chart_bitmap.GetData();
-        Vector3u8 *bp=BackgroundBitmap->GetData();
-        uint8 alpha;
+        BlendRGBA2RGB blend;
 
-        for(uint row=0;row<height;row++)
-        {
-            for(uint col=0;col<width;col++)
-            {
-                alpha=p->a;
-
-                p->r=(p->r*alpha+bp->r*(255-alpha))/255;
-                p->g=(p->g*alpha+bp->g*(255-alpha))/255;
-                p->b=(p->b*alpha+bp->b*(255-alpha))/255;
-                p->a=255;
-
-                ++p;
-                ++bp;
-            }
-        }
+        blend(&(chart->chart_bitmap),BackgroundBitmap,1.0);
     }
 
     return chart;
@@ -645,14 +662,14 @@ int os_main(int argc,os_char **argv)
     {
         util::TGAHeader tga_header;
 
-        util::FillTGAHeader(&tga_header,chart->width,chart->height,4);
+        util::FillTGAHeader(&tga_header,chart->width,chart->height,3);
 
         io::OpenFileOutputStream fos(tga_filename.c_str(),io::FileOpenMode::CreateTrunc);
 
         if(fos)
         {
             fos->Write(&tga_header,util::TGAHeaderSize);
-            fos->Write(chart->chart_bitmap.GetData(),chart->chart_bitmap.GetTotalBytes());
+            fos->Write(BackgroundBitmap->GetData(),BackgroundBitmap->GetTotalBytes());
             fos->Close();
         }
         else
