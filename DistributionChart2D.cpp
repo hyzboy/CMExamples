@@ -7,33 +7,16 @@
 #include<hgl/io/FileOutputStream.h>
 #include<hgl/filesystem/Filename.h>
 #include<iostream>
+#include<hgl/2d/Bitmap.h>
 #include"BitmapFont.h"
 
 using namespace hgl;
 
 OSString csv_filename;
 
-struct Bitmap
-{
-    uint width,height;
-    uint channels;
+using BitmapRGB8=hgl::Bitmap<uint8,3>;
 
-    uint8 *data;
-
-public:
-
-    Bitmap()
-    {
-        data=nullptr;
-    }
-
-    ~Bitmap()
-    {
-        delete[] data;
-    }
-};
-
-Bitmap *BackgroundBitmap=nullptr;
+BitmapRGB8 *BackgroundBitmap=nullptr;
 
 bool LoadBackgroundBitmap()
 {
@@ -55,17 +38,13 @@ bool LoadBackgroundBitmap()
 
     tga_desc.image_desc=tga_header.image_desc;
 
-    BackgroundBitmap=new Bitmap;
+    BackgroundBitmap=new BitmapRGB8;
 
-    BackgroundBitmap->width=tga_header.width;
-    BackgroundBitmap->height=tga_header.height;
-    BackgroundBitmap->channels=tga_header.bit/8;
+    BackgroundBitmap->Create(tga_header.width,tga_header.height);
 
-    uint total_bytes=BackgroundBitmap->width*BackgroundBitmap->height*BackgroundBitmap->channels;
+    const uint total_bytes=BackgroundBitmap->GetTotalBytes();
 
-    BackgroundBitmap->data=new uint8[total_bytes];
-
-    if(fis->Read(BackgroundBitmap->data,total_bytes)!=total_bytes)
+    if(fis->Read(BackgroundBitmap->GetData(),total_bytes)!=total_bytes)
     {
         delete BackgroundBitmap;
         BackgroundBitmap=nullptr;
@@ -73,23 +52,7 @@ bool LoadBackgroundBitmap()
     }
 
     if(tga_desc.direction==util::TGA_DIRECTION_LOWER_LEFT)
-    {
-        uint line_bytes=tga_header.width*3;
-
-        uint8 *temp=new uint8[line_bytes];
-        uint8 *tp=BackgroundBitmap->data;
-        uint8 *bp=tp+line_bytes*(tga_header.height-1);
-
-        while(tp<bp)
-        {
-            memcpy(temp,tp,line_bytes);
-            memcpy(tp,bp,line_bytes);
-            memcpy(bp,temp,line_bytes);
-
-            tp+=line_bytes;
-            bp-=line_bytes;
-        }
-    }
+       BackgroundBitmap->Flip();
 
     return(true);
 }
@@ -223,8 +186,8 @@ PositionStat *ToVector2i(const UTF8StringList &sl)
         (*p)/=100;      //Unreal单位为cm,把单位缩到米
         (*p)/=4;
 
-        if(p->x>=BackgroundBitmap->width
-         ||p->y>=BackgroundBitmap->height)
+        if(p->x>=BackgroundBitmap->GetWidth()
+         ||p->y>=BackgroundBitmap->GetHeight())
             continue;
 
         //std::cout<<"X="<<p->x<<",Y="<<p->y<<std::endl;
@@ -410,8 +373,8 @@ public:
 
 Chart *ToChart32(const PositionStat *ps)
 {
-    uint width=BackgroundBitmap->width;
-    uint height=BackgroundBitmap->height;
+    const uint width=BackgroundBitmap->GetWidth();
+    const uint height=BackgroundBitmap->GetHeight();
 
     std::cout<<"width: "<<width<<",height: "<<height<<std::endl;    
 
@@ -607,7 +570,7 @@ Chart *ToChart32(const PositionStat *ps)
     if(BackgroundBitmap)
     {
         uint8 *p=chart->chart_data;
-        uint8 *bp=BackgroundBitmap->data;
+        uint8 *bp=BackgroundBitmap->GetData();
         uint8 alpha;
 
         for(uint row=0;row<height;row++)
