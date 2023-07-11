@@ -311,49 +311,34 @@ public:
         draw_circle->DrawSolidCircle(x,y,radius);
     }
 
-    void DrawChar(const char ch,const uint x,const uint y,const Vector3u8 &stop_color,const uint8 alpha)
+private:
+
+    void DrawChar(const char ch,const uint x,const uint y)
     {
         const uint8 *sp=GetBitmapChar(ch);
-        uint8 bit;
-        Vector4u8 *tp=chart_bitmap.GetData(x,y);
 
-        const uint line_wrap=width-CHAR_BITMAP_WIDTH;
+        if(!sp)return;
 
-        for(uint row=0;row<CHAR_BITMAP_HEIGHT;row++)
-        {
-            bit=1<<7;
-
-            for(uint col=0;col<CHAR_BITMAP_WIDTH;col++)
-            {
-                if(*sp&bit)
-                {
-                    tp->r=stop_color.r;
-                    tp->g=stop_color.g;
-                    tp->b=stop_color.b;
-                    tp->a=255;
-                }
-
-                ++tp;
-
-                bit>>=1;
-            }
-
-            tp+=line_wrap;
-            ++sp;
-        }
+        draw_chart->DrawMonoBitmap(x,y,sp,CHAR_BITMAP_WIDTH,CHAR_BITMAP_HEIGHT);
     }
 
-    void DrawString(const AnsiString &str,const uint x,const uint y,const Vector3u8 &stop_color,const uint8 alpha)
+public:
+
+    void DrawString(const AnsiString &str,const uint x,const uint y,const Vector3u8 &stop_color)
     {
         const char *sp=str.c_str();
         const uint len=str.Length();
         
         uint pos=x;
 
+        draw_chart->CloseBlend();
+
+        draw_chart->SetDrawColor(Vector4u8(stop_color,255));
+
         for(uint i=0;i<len;i++)
         {
             if(*sp!=' ')
-                DrawChar(*sp,pos,y,stop_color,alpha);
+                DrawChar(*sp,pos,y);
 
             pos+=CHAR_BITMAP_WIDTH;
             ++sp;
@@ -536,13 +521,13 @@ Chart *ToChart32(const PositionStat *ps)
 
         str="Source: "+ToAnsiString(csv_filename);
 
-        chart->DrawString(str,col,row,black_color,255);
+        chart->DrawString(str,col,row,black_color);
 
         row+=CHAR_BITMAP_HEIGHT*2;
         
         str=AnsiString("Total: ")+str_total;
 
-        chart->DrawString(str,col,row,white_color,255);
+        chart->DrawString(str,col,row,white_color);
         row+=CHAR_BITMAP_HEIGHT;
 
         chart->DrawGradient(col,row,CHAR_BITMAP_WIDTH,dradient_bar_height);
@@ -576,7 +561,7 @@ Chart *ToChart32(const PositionStat *ps)
                 str+="%";
             }
 
-            chart->DrawString(str,col,row,stop_color[i],255);
+            chart->DrawString(str,col,row,stop_color[i]);
             row+=CHAR_BITMAP_HEIGHT;
         }
     }
