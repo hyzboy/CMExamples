@@ -1,5 +1,5 @@
 ﻿#include<hgl/type/StringList.h>
-#include<hgl/type/LoadStringList.h>
+#include<hgl/io/LoadStringList.h>
 #include<hgl/type/Gradient.h>
 #include<hgl/math/Vector.h>
 #include<hgl/util/imgfmt/tga.h>
