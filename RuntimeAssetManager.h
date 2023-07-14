@@ -1,10 +1,10 @@
 #pragma once
 
-#include<hgl/type/ResManage.h>
+#include<hgl/type/ObjectManage.h>
 
 using namespace hgl;
 
-template<typename K,typename V> struct RuntimeAssetManager:public ResManage<K,V>
+template<typename K,typename V> struct RuntimeAssetManager:public ObjectManage<K,V>
 {
 public:
 
@@ -12,7 +12,7 @@ public:
     {
         if(!v)return(false);
 
-        return ResManage<K,V>::Add(v->GetID(),v);
+        return ObjectManage<K,V>::Add(v->GetID(),v);
     }
 };
 
@@ -89,4 +89,33 @@ public:
     }
 };
 
+#define HGL_RUNTIME_ASSET_CLASS(RA_ID_TYPE,_RA_CLASS)   
+
 #define HGL_RUNTIME_ASSET_DECLARATION(RA_ID_TYPE,RA_CLASS)  RuntimeAssetManager<RA_ID_TYPE,RA_CLASS> RuntimeAsset<RA_ID_TYPE,RA_CLASS>::RAM;
+
+/**
+ * ·¶Àý
+ *
+ * MyRuntimeAsset.h
+ * 
+ *      using MyAssetID=uint;
+ * 
+ *      struct MyRuntimeAsset:public RuntimeAsset<MyAssetID,MyRuntimeAsset>
+ *      {
+ *      public:
+ * 
+ *          using RuntimeAsset::RuntimeAsset;
+ *      };
+ * 
+ * MyRuntimeAsset.cpp
+ * 
+ *      #include"MyRuntimeAsset.h"
+ * 
+ *      HGL_RUNTIME_ASSET_DECLARATION(MyAssetID,MyRuntimeAsset);
+ * 
+ */
+
+
+
+
+
