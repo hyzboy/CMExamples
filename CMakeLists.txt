@@ -60,3 +60,17 @@ cm_example_project(DistributionChart2D)
 
 add_executable(Size2Test Size2Test.cpp)
 cm_example_project(Size2Test)
+
+add_executable(AndroidDeviceAnalysis    AndroidDeviceAnalysis/main.cpp
+					                    AndroidDeviceAnalysis/GameRecord.h
+                                        AndroidDeviceAnalysis/GameRecord.cpp
+                                        AndroidDeviceAnalysis/ParseDeviceID.cpp
+                                        AndroidDeviceAnalysis/ParseScreenSize.cpp
+                                        AndroidDeviceAnalysis/ParseDateTime.cpp
+                                        AndroidDeviceAnalysis/ParseAndroidVersion.cpp
+                                        AndroidDeviceAnalysis/ParseNumber.cpp
+                                        AndroidDeviceAnalysis/LoadRecordFile.cpp)
+cm_example_project(AndroidDeviceAnalysis)
+
+add_executable(DataArrayTest DataArrayTest.cpp)
+cm_example_project(DataArrayTest)
