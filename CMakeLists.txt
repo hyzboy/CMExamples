@@ -99,3 +99,7 @@ add_executable(AndroidDeviceAnalysis    android/AndroidDeviceAnalysis/main.cpp
                                         android/AndroidDeviceAnalysis/LoadRecordFile.cpp)
 cm_example_project("android" AndroidDeviceAnalysis)
 
+####################################################################################################
+
+add_executable(PAttribTest utils/PAttribTest.cpp)
+cm_example_project("utils" PAttribTest)
