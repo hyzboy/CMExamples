@@ -27,6 +27,9 @@ cm_example_project("DataType" CollectionTest)
 add_executable(SplitStringTest datatype/SplitStringTest.cpp)
 cm_example_project("DataType" SplitStringTest)
 
+add_executable(StrChrTest datatype/strchr_test.cpp)
+cm_example_project("DataType" StrChrTest)
+
 add_executable(MultiMapTest datatype/MultiMapTest.cpp)
 cm_example_project("DataType" MultiMapTest)
 
