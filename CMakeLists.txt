@@ -16,7 +16,7 @@ macro(cm_example_project sub_folder project_name)
     set_property(TARGET ${project_name} PROPERTY FOLDER "CM/Examples/${sub_folder}")
 endmacro()
 
-
+####################################################################################################
 
 add_executable(HalfFloatTest datatype/HalfFloatTest.cpp)
 cm_example_project("DataType" HalfFloatTest)
@@ -43,9 +43,13 @@ cm_example_project("DataType" Size2Test)
 add_executable(DataArrayTest datatype/DataArrayTest.cpp)
 cm_example_project("DataType" DataArrayTest)
 
+####################################################################################################
 
 add_executable(FixFilenameTest filesystem/FixFilenameTest.cpp)
 cm_example_project("File System" FixFilenameTest)
+
+add_executable(EnumFileTest filesystem/EnumFileTest.cpp)
+cm_example_project("File System" EnumFileTest)
 
 IF(WIN32)
 
@@ -54,6 +58,7 @@ IF(WIN32)
 
 ENDIF(WIN32)
 
+####################################################################################################
 
 add_executable(GetCpuInfo GetCpuInfo.cpp)
 cm_example_project("Hareware" GetCpuInfo)
