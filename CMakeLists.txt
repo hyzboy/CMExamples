@@ -106,3 +106,6 @@ cm_example_project("android" AndroidDeviceAnalysis)
 
 add_executable(PAttribTest utils/PAttribTest.cpp)
 cm_example_project("utils" PAttribTest)
+
+add_executable(Base64Test utils/base64test.cpp)
+cm_example_project("utils" Base64Test)
