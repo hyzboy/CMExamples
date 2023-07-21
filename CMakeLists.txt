@@ -76,6 +76,9 @@ target_link_libraries(OSFontList PRIVATE CMUtil)
 add_executable(DistributionChart2D DistributionChart2D.cpp BitmapFont.cpp BitmapFont.h)
 cm_example_project("chart" DistributionChart2D)
 
+add_executable(TimeCount time/time_count.cpp)
+cm_example_project("time" TimeCount)
+####################################################################################################
 add_executable(AndroidDeviceAnalysis    android/AndroidDeviceAnalysis/main.cpp
 					                    android/AndroidDeviceAnalysis/GameRecord.h
                                         android/AndroidDeviceAnalysis/GameRecord.cpp
