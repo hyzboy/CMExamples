@@ -30,6 +30,9 @@ cm_example_project("DataType" SplitStringTest)
 add_executable(StrChrTest datatype/strchr_test.cpp)
 cm_example_project("DataType" StrChrTest)
 
+add_executable(Uint2StrTest datatype/utos_test.cpp)
+cm_example_project("DataType" Uint2StrTest)
+
 add_executable(MapTest datatype/MapTest.cpp)
 cm_example_project("DataType" MapTest)
 
