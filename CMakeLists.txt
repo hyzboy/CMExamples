@@ -30,6 +30,9 @@ cm_example_project("DataType" SplitStringTest)
 add_executable(StrChrTest datatype/strchr_test.cpp)
 cm_example_project("DataType" StrChrTest)
 
+add_executable(MapTest datatype/MapTest.cpp)
+cm_example_project("DataType" MapTest)
+
 add_executable(MultiMapTest datatype/MultiMapTest.cpp)
 cm_example_project("DataType" MultiMapTest)
 
@@ -45,6 +48,9 @@ cm_example_project("DataType" Size2Test)
 
 add_executable(DataArrayTest datatype/DataArrayTest.cpp)
 cm_example_project("DataType" DataArrayTest)
+
+add_executable(Uint2HexStrTest datatype/Uint2HexStrTest.cpp)
+cm_example_project("DataType" Uint2HexStrTest)
 
 ####################################################################################################
 
