@@ -1,11 +1,13 @@
 #pragma once
 #include"RuntimeAssetManager.h"
+#include<hgl/type/String.h>
 #include<hgl/type/SortedSets.h>
+#include<iostream>
 
 using namespace hgl;
 
-using InstanceID        =uint64_t;
-using PhysicalDeviceID  =uint64_t;
+using InstanceID        =uint64;
+using PhysicalDeviceID  =uint64;
 
 struct Instance:public RuntimeAsset<InstanceID,Instance>
 {
