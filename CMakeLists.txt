@@ -109,3 +109,6 @@ cm_example_project("utils" PAttribTest)
 
 add_executable(Base64Test utils/base64test.cpp)
 cm_example_project("utils" Base64Test)
+
+add_executable(HashTest utils/HashTest.cpp)
+cm_example_project("utils" HashTest)
