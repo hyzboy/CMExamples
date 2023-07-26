@@ -418,8 +418,8 @@ public:
 
         uint low,high,gap;
         
-        ColorGradient.GetLowest(low);
-        ColorGradient.GetHighest(high);
+        ColorGradient.GetLowestPosition(low);
+        ColorGradient.GetHighestPosition(high);
 
         gap=high-low;
 
