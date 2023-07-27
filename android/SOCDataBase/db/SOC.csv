@@ -1,0 +1,223 @@
+,,,,,,,,CoreA,,,CoreB,,,CoreC,,,CoreD,,
+SOCVendor,SOCModel,ProductName,ReleaseTime,GPUBrand,GPUModel,GPUCore,GPUFreq,Model,Count,Freq,Model,Count,Freq,Model,Count,Freq,Model,Count,Freq
+Qualcomm,MSM8227,,2012.2H,Adreno,305,1,320,,,,,,,Krait,2,1,,,
+Qualcomm,MSM8627,,2012.2H,Adreno,305,1,320,,,,,,,Krait,2,1,,,
+Qualcomm,APQ8030,,2012.3Q,Adreno,305,1,400,,,,,,,Krait,2,1.2,,,
+Qualcomm,MSM8230,,2012.3Q,Adreno,305,1,400,,,,,,,Krait,2,1.2,,,
+Qualcomm,MSM8630,,2012.3Q,Adreno,305,1,400,,,,,,,Krait,2,1.2,,,
+Qualcomm,MSM8930,,2012.3Q,Adreno,305,1,400,,,,,,,Krait,2,1.2,,,
+Qualcomm,MSM8260A Pro,,,Adreno,320,1,400,,,,,,,Krait 300,2,1.7,,,
+Qualcomm,MSM8960T,,2012.2Q,Adreno,320,1,400,,,,,,,Krait 300,2,1.7,,,
+Qualcomm,MSM8960T Pro,,,Adreno,320,1,400,,,,,,,Krait 300,2,1.7,,,
+Qualcomm,MSM8960AB,,,Adreno,320,1,400,,,,,,,Krait 300,2,1.7,,,
+Qualcomm,MSM8960DT,,2013.3Q,Adreno,320,1,400,,,,,,,Krait 300,2,1.7,,,
+Qualcomm,APQ8064,,2012,Adreno,320,1,400,,,,,,,Krait 300,4,1.5,,,
+Qualcomm,MSM8210,Snapdragon 200,2013,Adreno,302,1,400,,,,,,,A7,2,1.2,,,
+Qualcomm,MSM8610,Snapdragon 200,2013,Adreno,302,1,400,,,,,,,A7,2,1.2,,,
+Qualcomm,MSM8212,Snapdragon 200,2013,Adreno,302,1,400,,,,,,,A7,4,1.2,,,
+Qualcomm,MSM8612,Snapdragon 200,2013,Adreno,302,1,400,,,,,,,A7,4,1.2,,,
+Qualcomm,MSM8905,Snapdragon 205,2017,Adreno,304,1,400,,,,,,,A7,2,1.1,,,
+Qualcomm,MSM8208,Snapdragon 208,2014,Adreno,304,1,400,,,,,,,A7,2,1.1,,,
+Qualcomm,MSM8909,Snapdragon 210,2014,Adreno,304,1,400,,,,,,,A7,4,1.1,,,
+Qualcomm,MSM8908AA,Snapdragon 212,2015,Adreno,304,1,400,,,,,,,A7,4,1.3,,,
+Qualcomm,QM215,Snapdragon 215,2019.3Q,Adreno,308,1,400,,,,,,,A53,4,1.3,,,
+Qualcomm,APQ8026,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,A7,4,1.2,,,
+Qualcomm,MSM8226,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,A7,4,1.2,,,
+Qualcomm,MSM8626,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,A7,4,1.2,,,
+Qualcomm,MSM8926,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,A7,4,1.2,,,
+Qualcomm,APQ8028,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,A7,4,1.6,,,
+Qualcomm,MSM8228,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,A7,4,1.6,,,
+Qualcomm,MSM8628,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,A7,4,1.6,,,
+Qualcomm,MSM8928,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,A7,4,1.6,,,
+Qualcomm,MSM8230,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,Krait 200,2,1.2,,,
+Qualcomm,MSM8630,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,Krait 200,2,1.2,,,
+Qualcomm,MSM8930,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,Krait 200,2,1.2,,,
+Qualcomm,MSM8930AA,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,Krait 300,2,1.4,,,
+Qualcomm,APQ8030AB,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,Krait 300,2,1.7,,,
+Qualcomm,MSM8230AB,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,Krait 300,2,1.7,,,
+Qualcomm,MSM8630AB,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,Krait 300,2,1.7,,,
+Qualcomm,MSM8930AB,Snapdragon 400,2013,Adreno,305,1,400,,,,,,,Krait 300,2,1.7,,,
+Qualcomm,APQ8016,Snapdragon 410,2014.1H,Adreno,306,1,450,,,,,,,A53,4,1.2,,,
+Qualcomm,MSM8916,Snapdragon 410,2014.1H,Adreno,306,1,450,,,,,,,A53,4,1.2,,,
+Qualcomm,MSM8916 v2,Snapdragon 412,2015.2H,Adreno,306,1,450,,,,,,,A53,4,1.4,,,
+Qualcomm,MSM8929,Snapdragon 415,2015.1H,Adreno,405,1,500,,,,,,,A53,4,1.4,A53,4,1.1
+Qualcomm,MSM8917,Snapdragon 425,2016.3Q,Adreno,308,1,598,,,,,,,A53,4,1.4,,,
+Qualcomm,MSM8920,Snapdragon 427,2017.1Q,Adreno,308,1,598,,,,,,,A53,4,1.4,,,
+Qualcomm,MSM8937,Snapdragon 430,2016.2Q,Adreno,505,1,450,,,,,,,A53,8,1.4,,,
+Qualcomm,MSM8940,Snapdragon 435,2016.4Q,Adreno,505,1,475,,,,,,,A53,8,1.4,,,
+Qualcomm,SDM429,Snapdragon 429,2018.3Q,Adreno,504,1,320,,,,,,,A53,4,1.95,,,
+Qualcomm,SDM439,Snapdragon 439,2018.3Q,Adreno,505,1,650,,,,,,,A53,4,2,A53,4,1.45
+Qualcomm,SDM450,Snapdragon 450,2017.3Q,Adreno,506,1,600,,,,,,,A53,8,1.8,,,
+Qualcomm,SDM4250-AA,Snapdragon 460,2020.1Q,Adreno,610,1,600,,,,,,,A73,4,1.8,A53,4,1.8
+Qualcomm,SDM4350,Snapdragon 480,2021.1H,Adreno,619,1,650,,,,,,,A76,2,2,A55,6,1.8
+Qualcomm,SDM4350-AC,Snapdragon 480+,2021.4Q,Adreno,619,1,650,,,,,,,A76,2,2.2,A55,6,1.9
+Qualcomm,SM4375,Snapdragon 4 Gen 1,2022.3Q,Adreno,619,1,700,,,,,,,Kryo Gold,2,2,Kryo Silver,6,1.8
+Qualcomm,SM4450,Snapdragon 4 Gen 2,2023.2Q,Adreno,613,1,955,,,,,,,Kryo Gold,2,2.2,Kryo Silver,6,2
+Qualcomm,APQ8064-1AA,Snapdragon 600,2013.1Q,Adreno,320,1,400,,,,,,,Krait 300,4,1.5,,,
+Qualcomm,APQ8064M,Snapdragon 600,2013.1Q,Adreno,320,1,400,,,,,,,Krait 300,4,1.7,,,
+Qualcomm,APQ8064T,Snapdragon 600,2013.1Q,Adreno,320,1,400,,,,,,,Krait 300,4,1.7,,,
+Qualcomm,APQ8064AB,Snapdragon 600,2013.1Q,Adreno,320,1,450,,,,,,,Krait 300,4,1.9,,,
+Qualcomm,MSM8936,Snapdragon 610,2014.3Q,Adreno,405,1,550,,,,,,,A53,4,1.7,,,
+Qualcomm,MSM8939,Snapdragon 615,2014.3Q,Adreno,405,1,550,,,,,,,A53,4,1.5,A53,4,1
+Qualcomm,MSM8939 v2,Snapdragon 616,2015.3Q,Adreno,405,1,550,,,,,,,A53,4,1.7,A53,4,1.2
+Qualcomm,MSM8952,Snapdragon 617,2015.4Q,Adreno,405,1,550,,,,,,,A53,4,1.5,A53,4,1.2
+Qualcomm,MSM8953,Snapdragon 625,2016.2Q,Adreno,506,1,650,,,,,,,A53,8,2,,,
+Qualcomm,MSM8953 Pro,Snapdragon 626,2016.4Q,Adreno,506,1,650,,,,,,,A53,8,2.2,,,
+Qualcomm,SDM630,Snapdragon 630,2017.2Q,Adreno,508,1,700,,,,,,,A53,4,2.2,A53,4,1.8
+Qualcomm,SDM632,Snapdragon 632,2018.3Q,Adreno,506,1,725,,,,,,,A73,4,1.8,A53,4,1.8
+Qualcomm,SDM636,Snapdragon 636,2017.4Q,Adreno,509,1,430,,,,,,,A73,4,1.8,A53,4,1.6
+Qualcomm,MSM8956,Snapdragon 650,2016.1Q,Adreno,510,1,600,,,,,,,A72,2,1.8,A53,4,1.4
+Qualcomm,MSM8976,Snapdragon 652,2016.1Q,Adreno,510,1,600,,,,,,,A72,4,1.8,A53,4,1.4
+Qualcomm,MSM8976 Pro,Snapdragon 653,2016.4Q,Adreno,510,1,600,,,,,,,A72,4,1.95,A53,4,1.44
+Qualcomm,SDM660,Snapdragon 660,2017.2Q,Adreno,512,1,647,,,,,,,A73,4,2.2,A53,4,1.84
+Qualcomm,SDA660,Snapdragon 660,2017.2Q,Adreno,512,1,647,,,,,,,A73,4,2.2,A53,4,1.84
+Qualcomm,SM6115,Snapdragon 662,2020.1Q,Adreno,610,1,950,,,,,,,A73,4,2,A53,4,1.8
+Qualcomm,SM6125,Snapdragon 665,2019.2Q,Adreno,610,1,950,,,,,,,A73,4,2,A53,4,1.8
+Qualcomm,SDM670,Snapdragon 670,2018.3Q,Adreno,615,1,430,,,,,,,A75,2,2,A55,6,1.7
+Qualcomm,SM6150,Snapdragon 675,2019.1Q,Adreno,612,1,845,,,,,,,A76,2,2,A55,6,1.7
+Qualcomm,SM6150-AC,Snapdragon 678,2020.4Q,Adreno,612,1,895,,,,,,,A76,2,2.2,A55,6,1.7
+Qualcomm,SM6225,Snapdragon 680,2021.4Q,Adreno,610,1,1114,,,,,,,A73,4,2.4,A55,4,1.9
+Qualcomm,SM6225-AD,Snapdragon 685,2023.1Q,Adreno,610,1,1260,,,,,,,A73,4,2.8,A55,4,1.9
+Qualcomm,SM6350,Snapdragon 690,2020.2H,Adreno,619L,1,565,,,,,,,A77,2,2,A55,6,1.7
+Qualcomm,SM6375,Snapdragon 695,2021.4Q,Adreno,619,1,840,,,,,,,A78,2,2.2,A55,6,1.8
+Qualcomm,SM6450,Snapdragon 6 Gen 1,2023.1Q,Adreno,710,1,,,,,,,,Kryo Gold,4,2.2,Kryo Silver,4,1.8
+Qualcomm,SDM710,Snapdragon 710,2018.2Q,Adreno,616,1,504,,,,,,,A75,2,2.2,A55,6,1.7
+Qualcomm,SDM712,Snapdragon 712,2019.1Q,Adreno,616,1,610,,,,,,,A75,2,2.3,A55,6,1.7
+Qualcomm,SM7125,Snapdragon 720G,2020.1Q,Adreno,618,1,750,,,,,,,A76,2,2.3,A55,6,1.8
+Qualcomm,SM7150-AA,Snapdragon 730,2019.2Q,Adreno,618,1,610,,,,,,,A76,2,2.2,A55,6,1.8
+Qualcomm,SM7150-AB,Snapdragon 730G,2019.2Q,Adreno,618,1,700,,,,,,,A76,2,2.2,A55,6,1.8
+Qualcomm,SM7150-AC,Snapdragon 732G,2020.3Q,Adreno,618,1,800,,,,,,,A76,2,2.3,A55,6,1.8
+Qualcomm,SM7225,Snapdragon 750G,2020.4Q,Adreno,619,1,800,,,,,,,A77,2,2.2,A55,6,1.8
+Qualcomm,SM7250-AA,Snapdragon 765,2020.1Q,Adreno,620,1,625,,,,A76,1,2.3,A76,1,2.2,A55,6,1.8
+Qualcomm,SM7250-AB,Snapdragon 765G,2020.1Q,Adreno,620,1,625,,,,A76,1,2.4,A76,1,2.2,A55,6,1.8
+Qualcomm,SM7250-AC,Snapdragon 768G,2020.2Q,Adreno,620,1,750,,,,A76,1,2.8,A76,1,2.4,A55,6,1.8
+Qualcomm,SM7325,Snapdragon 778G,2021.2Q,Adreno,642L,1,550,,,,A78,1,2.4,A78,3,2.4,A55,4,1.8
+Qualcomm,SM7325-AE,Snapdragon 778G+,2021.4Q,Adreno,642L,1,550,,,,A78,1,2.5,A78,3,2.4,A55,4,1.8
+Qualcomm,SM7350-AB,Snapdragon 780G,2021.1Q,Adreno,642,1,490,,,,A78,1,2.4,A78,3,2.2,A55,4,1.9
+Qualcomm,SM7350-AF,Snapdragon 782G,2022.4Q,Adreno,642L,1,490,,,,A78,1,2.7,A78,3,2.4,A55,4,1.8
+Qualcomm,SM7450-AB,Snapdragon 7 Gen 1,2022.2Q,Adreno,644,1,443,,,,A710,1,2.4,A710,3,2.36,A510,4,1.8
+Qualcomm,SM7475-AB,Snapdragon 7 Gen 2,2023.1Q,Adreno,725,1,580,X2,1,2.91,,,,A710,3,2.49,A510,4,1.8
+Qualcomm,APQ8074AA,Snapdragon 800,2013.2Q,Adreno,330,1,450,,,,,,,Krait 400,4,2.26,,,
+Qualcomm,MSM8274AA,Snapdragon 800,2013.2Q,Adreno,330,1,450,,,,,,,Krait 400,4,2.26,,,
+Qualcomm,MSM8674AA,Snapdragon 800,2013.2Q,Adreno,330,1,450,,,,,,,Krait 400,4,2.26,,,
+Qualcomm,MSM8974AA,Snapdragon 800,2013.2Q,Adreno,330,1,450,,,,,,,Krait 400,4,2.26,,,
+Qualcomm,MSM8974AA v3,Snapdragon 801,2014.3Q,Adreno,330,1,450,,,,,,,Krait 400,4,2.26,,,
+Qualcomm,APQ8074AB v3,Snapdragon 801,2013.4Q,Adreno,330,1,578,,,,,,,Krait 400,4,2.36,,,
+Qualcomm,MSM8274AB,Snapdragon 800,2013.4Q,Adreno,330,1,578,,,,,,,Krait 400,4,2.36,,,
+Qualcomm,MSM8674AB v3,Snapdragon 801,2013.2Q,Adreno,330,1,578,,,,,,,Krait 400,4,2.36,,,
+Qualcomm,MSM8974AB v3,Snapdragon 801,2013.4Q,Adreno,330,1,578,,,,,,,Krait 400,4,2.36,,,
+Qualcomm,MSM8274AC v3,Snapdragon 801,2014.2Q,Adreno,330,1,578,,,,,,,Krait 400,4,2.45,,,
+Qualcomm,MSM8974AC v3,Snapdragon 801,2014.1Q,Adreno,330,1,578,,,,,,,Krait 400,4,2.45,,,
+Qualcomm,APQ8084,Snapdragon 805,2014.1Q,Adreno,420,1,600,,,,,,,Krait 450,4,2.7,,,
+Qualcomm,MSM8992,Snapdragon 808,2014.3Q,Adreno,418,1,600,,,,,,,A57,2,1.8,A53,4,1.44
+Qualcomm,MSM8994,Snapdragon 810,2014.3Q,Adreno,430,1,600,,,,,,,A57,4,2,A53,4,1.5
+Qualcomm,MSM8994v2,Snapdragon 810,2015,Adreno,430,1,630,,,,,,,A57,4,2,A53,4,1.5
+Qualcomm,MSM8994v2.1,Snapdragon 810,2015.2Q,Adreno,430,1,630,,,,,,,A57,4,2,A53,4,1.5
+Qualcomm,MSM8996 Lite,Snapdragon 820,2016.1Q,Adreno,530,1,510,,,,,,,Kryo,2,1.804,Kryo,2,1.363
+Qualcomm,MSM8996,Snapdragon 820,2015.4Q,Adreno,530,1,624,,,,,,,Kryo,2,2.15,Kryo,2,1.593
+Qualcomm,MSM8996 Pro-AB,Snapdragon 821,2016.3Q,Adreno,530,1,624,,,,,,,Kryo,2,2.15,Kryo,2,1.593
+Qualcomm,MSM8996 Pro-AC,Snapdragon 821,2016.3Q,Adreno,530,1,653,,,,,,,Kryo,2,2.342,Kryo,2,1.6
+Qualcomm,MSM8998,Snapdragon 835,2017.2Q,Adreno,540,1,710,,,,,,,A73,4,2.45,A53,4,1.9
+Qualcomm,SDM845,Snapdragon 845,2018.1Q,Adreno,630,1,710,,,,,,,A75,4,2.8,A55,4,1.8
+Qualcomm,SM8150,Snapdragon 855,2019.1Q,Adreno,640,1,585,,,,A76,1,2.84,A76,3,2.42,A55,4,1.8
+Qualcomm,SM8150-AC,Snapdragon 860,2021.1Q,Adreno,640,1,675,,,,A76,1,2.96,A76,3,2.42,A55,4,1.8
+Qualcomm,SM8150P,Snapdragon 855+,2019.3Q,Adreno,640,1,675,,,,A76,1,2.96,A76,3,2.42,A55,4,1.8
+Qualcomm,SM8250,Snapdragon 865,2020.1Q,Adreno,650,1,587,,,,A77,1,2.84,A77,3,2.42,A55,4,1.8
+Qualcomm,SM8250-AB,Snapdragon 865+,2020.3Q,Adreno,650,1,670,,,,A77,1,3.1,A77,3,2.42,A55,4,1.8
+Qualcomm,SM8250-AC,Snapdragon 870,2021.1Q,Adreno,650,1,670,,,,A77,1,3.2,A77,3,2.42,A55,4,1.8
+Qualcomm,SM8350,Snapdragon 888,2021.1Q,Adreno,660,1,840,X1,1,2.84,,,,A78,3,2.42,A55,4,1.8
+Qualcomm,SM8350-AC,Snapdragon 888+,2021.3Q,Adreno,660,1,840,X1,1,3,,,,A78,3,2.42,A55,4,1.8
+Qualcomm,SM8450,Snapdragon 8 Gen 1,2021.4Q,Adreno,730,1,818,X2,1,3,,,,A710,3,2.5,A510,4,1.8
+Qualcomm,SM8475,Snapdragon 8+ Gen 1,2022.2Q,Adreno,730,1,900,X2,1,3.2,,,,A710,3,2.75,A510,4,2
+Qualcomm,SM8550-AB,Snapdragon 8 Gen 2,2022.4Q,Adreno,740,1,680,X3,1,3.2,A715,2,2.8,A710,2,2.8,A510,3,2
+Qualcomm,SM8550-AC,Snapdragon 8 Gen 2 for Galaxy,2023.1Q,Adreno,740,1,719,X3,1,3.36,A715,2,2.8,A710,2,2.8,A510,3,2
+Qualcomm,ATOLL-AB,,2021.1Q,Adreno,618,1,750,,,,,,,A76,2,2.3,A55,6,1.8
+Qualcomm,BENGAL,,,Adreno,610,1,950,,,,,,,A73,4,2,A53,4,1.8
+Qualcomm,KHAJE,,,,,,,,,,,,,,,,,,
+Qualcomm,KONA,,,Adreno,650,1,587,,,,A77,1,2.84,A77,3,2.42,A55,4,1.8
+Qualcomm,LAGOON,,,,,,,,,,,,,,,,,,
+Qualcomm,LITO,,,Adreno,620,1,625,,,,A76,1,2.4,A76,1,2.2,A55,6,1.8
+Qualcomm,SDMMAGPIE,,,,,,,,,,,,,,,,,,
+Qualcomm,TRINKET,,,Adreno,610,1,950,,,,,,,A73,4,2,A53,4,1.8
+Qualcomm,Yupik IDP + PM7250B,,,,,,,,,,,,,,,,,,
+MediaTek,MT6739WW,,2017.4Q,PowerVR,GE8100,1,570,,,,,,,,,,A53,4,1.5
+MediaTek,MT6750,,2016.2Q,Mali,T860,2,520,,,,,,,A53,4,1.5,A53,4,1
+MediaTek,MT6757,Helio P20,,,,,,,,,,,,,,,,,
+MediaTek,MT6761V/WBB,Helio A22,2018.2Q,PowerVR,GE8300,1,660,,,,,,,,,,A53,4,2
+MediaTek,MT6761V/WE,Helio A20,2020.1Q,PowerVR,GE8300,1,550,,,,,,,,,,A53,4,1.8
+MediaTek,MT6762,Helio P22,2018.2Q,PowerVR,GE8320,1,650,,,,,,,A53,4,2,A53,4,1.5
+MediaTek,MT6762G,Helio G25,2020.2Q,PowerVR,GE8320,1,650,,,,,,,A53,4,2,A53,4,1.5
+MediaTek,MT6762V/CA,,,PowerVR,GE8320,1,650,,,,,,,A53,4,2,A53,4,1.5
+MediaTek,MT6762V/CB,,,PowerVR,GE8320,1,650,,,,,,,A53,4,2,A53,4,1.5
+MediaTek,MT6762V/CN,,,PowerVR,GE8320,1,650,,,,,,,A53,4,2,A53,4,1.5
+MediaTek,MT6762V/WA,,,PowerVR,GE8320,1,650,,,,,,,A53,4,2,A53,4,1.5
+MediaTek,MT6762V/WB,Helio A25,2019.4Q,PowerVR,GE8320,1,600,,,,,,,A53,4,1.8,A53,4,1.5
+MediaTek,MT6762V/WD,Helio A25,2019.4Q,PowerVR,GE8320,1,600,,,,,,,A53,4,1.8,A53,4,1.5
+MediaTek,MT6762V/WR,,,PowerVR,GE8320,1,600,,,,,,,A53,4,1.8,A53,4,1.5
+MediaTek,MT6763V/CT,Helio P23,2021.1Q,Mali,G71,2,770,,,,,,,A53,4,2.3,A53,4,1.65
+MediaTek,MT6765,Helio P35,2019.4Q,PowerVR,GE8320,1,680,,,,,,,A53,4,2.3,A53,4,1.8
+MediaTek,MT6765G,Helio G35,2020.2Q,PowerVR,GE8320,1,680,,,,,,,A53,4,2.3,A53,4,1.8
+MediaTek,MT6765H,Helio G37,2021.4Q,PowerVR,GE8320,1,680,,,,,,,A53,4,2.3,A53,4,1.8
+MediaTek,MT6765V/CA,,,PowerVR,GE8320,1,680,,,,,,,A53,4,2.3,A53,4,1.8
+MediaTek,MT6765V/CB,Helio G35,2020.2Q,PowerVR,GE8320,1,680,,,,,,,A53,4,2.3,A53,4,1.8
+MediaTek,MT6765V/WA,,,PowerVR,GE8320,1,680,,,,,,,A53,4,2.3,A53,4,1.8
+MediaTek,MT6765V/WB,Helio P35,,PowerVR,GE8320,1,680,,,,,,,A53,4,2.3,A53,4,1.8
+MediaTek,MT6765V/XBA,,,PowerVR,GE8320,1,680,,,,,,,A53,4,2.3,A53,4,1.8
+MediaTek,MT6768V/CA,Helio P65,2019.3Q,Mali,G52,2,820,,,,,,,A75,2,2,A55,6,1.7
+MediaTek,MT6769H,Helio G88,2021.3Q,Mali,G52,2,1000,,,,,,,A75,2,2,A55,6,1.8
+MediaTek,MT6769T,Helio G80,2020.2Q,Mali,G52,2,950,,,,,,,A75,2,2,A55,6,1.8
+MediaTek,MT6769V/CB,Helio G70,2020.1Q,Mali,G52,2,820,,,,,,,A75,2,2,A55,6,1.7
+MediaTek,MT6769V/CT,,,Mali,G52,2,950,,,,,,,A75,2,2,A55,6,1.8
+MediaTek,MT6769V/CU,Helio G80,2020,Mali,G52,2,950,,,,,,,A75,2,2,A55,6,1.8
+MediaTek,MT6769V/CZ,,,Mali,G52,2,950,,,,,,,A75,2,2,A55,6,1.8
+MediaTek,MT6769V/WB,,,Mali,G52,2,950,,,,,,,A75,2,2,A55,6,1.8
+MediaTek,MT6769Z,Helio G85,2020.2Q,Mali,G52,2,1000,,,,,,,A75,2,2,A55,6,1.8
+MediaTek,MT6771V/C,Helio P60,,Mali,G72,3,800,,,,,,,A73,4,2.1,A53,4,2
+MediaTek,MT6771V/W,,,Mali,G72,3,800,,,,,,,A73,4,2.1,A53,4,2
+MediaTek,MT6771V/WL,,,Mali,G72,3,800,,,,,,,A73,4,2.1,A53,4,2
+MediaTek,MT6771V/WT,Helio P70,2018.4Q,Mali,G72,3,800,,,,,,,A73,4,2.1,A53,4,2
+MediaTek,MT6779V/CV,Helio P90,2019.1Q,PowerVR,GM9446,1,970,,,,,,,A75,2,2.2,A55,6,2
+MediaTek,MT6781,Helio G96,2021.3Q,Mali,G57,2,950,,,,,,,A76,2,2.05,A55,6,2
+MediaTek,MT6781V/CD,Helio G96,2021.3Q,Mali,G57,2,950,,,,,,,A76,2,2.05,A55,6,2
+MediaTek,MT6781V/CDZAMB-H,Helio G96,2021.3Q,Mali,G57,2,950,,,,,,,A76,2,2.05,A55,6,2
+MediaTek,MT6785,,,Mali,G76,4,720,,,,,,,A76,2,2.05,A55,6,2
+MediaTek,MT6785V/CC,Helio G90T,2019.3Q,Mali,G76,4,720,,,,,,,A76,2,2.05,A55,6,2
+MediaTek,MT6785V/CD,Helio G90,2019.3Q,Mali,G76,4,800,,,,,,,A76,2,2.05,A55,6,2
+MediaTek,MT6797X,Helio X27,2017.1Q,Mali,T880,4,875,,,,A72,2,2.6,A53,4,2,A53,4,1.6
+MediaTek,MT6833,Dimensity 810,2021.3Q,Mali,G57,2,950,,,,,,,A76,2,2.4,A55,6,2
+MediaTek,MT6833V/NZA,Dimensity 700,2021.1Q,Mali,G57,2,950,,,,,,,A76,2,2.2,A55,6,2
+MediaTek,MT6833V/PNZA,Dimensity 810,2021.3Q,Mali,G57,2,950,,,,,,,A76,2,2.4,A55,6,2
+MediaTek,MT6833P,Dimensity 810,2021.3Q,Mali,G57,2,950,,,,,,,A76,2,2.4,A55,6,2
+MediaTek,MT6833V/ZA,Dimensity 700,2021.1Q,Mali,G57,2,950,,,,,,,A76,2,2.2,A55,6,2
+MediaTek,MT6853T,Dimensity 800U,2020.3Q,Mali,G57,3,850,,,,,,,A76,2,2.4,A55,6,2
+MediaTek,MT6853V/TNZA,Dimensity 800U,2020.3Q,Mali,G57,3,850,,,,,,,A76,2,2.4,A55,6,2
+MediaTek,MT6877V/TTZA,Dimensity 1080,2022,Mali,G68,4,800,,,,,,,A78,2,2.6,A55,6,2
+MediaTek,MT6877V/TZA,Dimensity 920,2021.3Q,Mali,G68,4,900,,,,,,,A78,2,2.5,A55,6,2
+MediaTek,MT6877V/ZA,Dimensity 900,2021.2Q,Mali,G68,4,900,,,,,,,A78,2,2.4,A55,6,2
+MediaTek,MT6889Z/CZA,Dimensity 1000+,2020.2Q,Mali,G77,9,836,,,,,,,A77,4,2.6,A55,4,2
+MediaTek,MT6891Z/CZA,Dimensity 1100,2021.1Q,Mali,G77,9,836,,,,,,,A78,4,2.6,A55,4,2
+MediaTek,MT6893Z_B/CZA,Dimensity 1200-MAX,,Mali,G77,9,850,,,,A78,1,3,A78,3,2.6,A55,4,2
+MediaTek,MT6893Z_T/CZA,Dimensity 8050,2023.2Q,Mali,G77,9,850,,,,A78,1,3,A78,3,2.6,A55,4,2
+MediaTek,MT6893Z/CZA,Dimensity 1300,2022.2Q,Mali,G77,9,850,,,,A78,1,3,A78,3,2.6,A55,4,2
+MediaTek,MT8168B,,,Mali,G52,1,800,,,,,,,,,,A53,4,2
+MediaTek,MT8765WB,,,PowerVR,GE8100,1,570,,,,,,,,,,A53,4,1.3
+MediaTek,MT8766B,,,PowerVR,GE8320,1,550,,,,,,,,,,A53,4,2
+Exynos,7420,,,Mali,T760,1,266,,,,,,,A57,4,2.1,A53,4,1.5
+Exynos,850,,,Mali,G52,1,,,,,,,,A55,4,2,A55,4,2
+Hisilicon,Kirin620,,,Mali,450,4,500,,,,,,,,,,A53,8,1.2
+Hisilicon,Kirin650,,,Mali,T830,,900,,,,,,,A53,4,2,A53,4,1.7
+Hisilicon,Kirin710,,,Mali,G51,,,,,,,,,A73,4,2.2,A53,4,1.7
+Hisilicon,Kirin810,,,Mali,G52,,,,,,,,,A76,2,2.27,A55,6,1.88
+Hisilicon,Kirin820,,,Mali,G57,6,,,,,A76,1,2.36,A76,3,2.22,A55,4,1.84
+Hisilicon,Kirin910,,,Mali,450,4,533,,,,,,,,,,A9,4,1.6
+Hisilicon,Kirin920,,,Mali,T624,4,600,,,,,,,A15,4,1.7,A7,4,1.3
+Hisilicon,Kirin930,,,Mali,628,4,680,,,,,,,A53,4,2.2,A53,4,1.5
+Hisilicon,Kirin950,,,Mali,T880,4,,,,,,,,A72,4,2.3,A53,4,1.8
+Hisilicon,Kirin960,,,Mali,G71,8,,,,,,,,A73,4,2.4,A53,4,1.8
+Hisilicon,Kirin970,,,Mali,G72,12,,,,,,,,A73,4,,A53,4,
+Hisilicon,Kirin980,,,Mali,G76,10,,,,,A76,2,2.6,A76,2,1.92,A55,4,1.8
+Hisilicon,Kirin985,,,Mali,G77,8,,,,,A76,1,2.58,A76,3,2.4,A55,4,1.84
+Hisilicon,Kirin990,,,Mali,G76,16,,,,,A76,2,2.86,A76,2,2.09,A55,4,1.86
+Hisilicon,Kirin990 5G,,,Mali,G76,16,,,,,A76,2,2.86,A76,2,2.36,A55,4,1.95
+Hisilicon,Kirin9000,,,Mali,G78,24,,,,,A77,1,3.13,A77,3,2.54,A55,4,2.05
+Hisilicon,Kirin9000E,,,Mali,G78,22,,,,,A77,1,3.13,A77,3,2.54,A55,4,2.05
