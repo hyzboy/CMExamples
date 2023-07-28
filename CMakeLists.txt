@@ -90,26 +90,6 @@ cm_example_project("chart" DistributionChart2D)
 
 add_executable(TimeCount time/time_count.cpp)
 cm_example_project("time" TimeCount)
-####################################################################################################
-SET(ADA_LOAD_SOURCE                     android/AndroidDeviceAnalysis/ParseDeviceID.cpp
-                                        android/AndroidDeviceAnalysis/ParseScreenSize.cpp
-                                        android/AndroidDeviceAnalysis/ParseDateTime.cpp
-                                        android/AndroidDeviceAnalysis/ParseAndroidVersion.cpp
-                                        android/AndroidDeviceAnalysis/ParseNumber.cpp
-                                        android/AndroidDeviceAnalysis/LoadRecordFile.cpp
-                                        android/AndroidDeviceAnalysis/EnumCSVFile.cpp
-)
-
-source_group("Load" FILES ${ADA_LOAD_SOURCE})
-
-add_executable(AndroidDeviceAnalysis    android/AndroidDeviceAnalysis/main.cpp
-					                    android/AndroidDeviceAnalysis/GameRecord.h
-                                        android/AndroidDeviceAnalysis/GameRecord.cpp
-                                        android/AndroidDeviceAnalysis/AndroidDeviceRecord.cpp
-#                                        android/AndroidDeviceAnalysis/ExportReport.cpp
-                                        ${ADA_LOAD_SOURCE})
-
-cm_example_project("android" AndroidDeviceAnalysis)
 
 ####################################################################################################
 
@@ -121,3 +101,11 @@ cm_example_project("utils" Base64Test)
 
 add_executable(HashTest utils/HashTest.cpp)
 cm_example_project("utils" HashTest)
+
+####################################################################################################
+OPTION(CM_EXAMPLES_ABOUT_ANDROID    OFF)
+
+IF(CM_EXAMPLES_ABOUT_ANDROID)
+add_subdirectory(android)
+ENDIF()
+
