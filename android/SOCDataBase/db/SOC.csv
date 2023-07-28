@@ -156,6 +156,7 @@ Qualcomm,LITO,,,Adreno,620,1,625,,,,A76,1,2.4,A76,1,2.2,A55,6,1.8
 Qualcomm,SDMMAGPIE,Snapdragon 730,,Adreno,618,1,610,,,,,,,A76,2,2.2,A55,6,1.8
 Qualcomm,TRINKET,,,Adreno,610,1,950,,,,,,,A73,4,2,A53,4,1.8
 Qualcomm,Yupik IDP + PM7250B,Snapdragon 778G 5G (6nm),,Adreno,642L,1,550,,,,A78,1,2.4,A78,3,2.2,A55,4,1.9
+MediaTek,MT6739CH,,,PowerVR,GE8100,1,570,,,,,,,,,,A53,4,1.5
 MediaTek,MT6739WA,,,PowerVR,GE8100,1,570,,,,,,,,,,A53,4,1.5
 MediaTek,MT6739WW,,2017.4Q,PowerVR,GE8100,1,570,,,,,,,,,,A53,4,1.5
 MediaTek,MT6750,,2016.2Q,Mali,T860,2,520,,,,,,,A53,4,1.5,A53,4,1
