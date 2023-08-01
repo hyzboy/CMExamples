@@ -21,6 +21,10 @@ endmacro()
 add_executable(HalfFloatTest datatype/HalfFloatTest.cpp)
 cm_example_project("DataType" HalfFloatTest)
 
+add_executable(LifetimeTest datatype/LifetimeTest.cpp)
+#cm_example_project("DataType" LifetimeTest)
+set_property(TARGET LifetimeTest PROPERTY FOLDER "CM/Examples/DataType")
+
 add_executable(CollectionTest datatype/CollectionTest.cpp)
 cm_example_project("DataType" CollectionTest)
 
@@ -57,6 +61,9 @@ cm_example_project("DataType" Uint2HexStrTest)
 
 add_executable(StackTest datatype/StackTest.cpp)
 cm_example_project("DataType" StackTest)
+
+add_executable(QueueTest datatype/QueueTest.cpp)
+cm_example_project("DataType" QueueTest)
 
 ####################################################################################################
 
