@@ -55,6 +55,9 @@ cm_example_project("DataType" DataArrayTest)
 add_executable(Uint2HexStrTest datatype/Uint2HexStrTest.cpp)
 cm_example_project("DataType" Uint2HexStrTest)
 
+add_executable(StackTest datatype/StackTest.cpp)
+cm_example_project("DataType" StackTest)
+
 ####################################################################################################
 
 add_executable(FixFilenameTest filesystem/FixFilenameTest.cpp)
