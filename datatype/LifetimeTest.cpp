@@ -35,7 +35,7 @@ public:
 
 public:
 
-    TestArray(RawLifetimeCallback<T> *cb)
+    TestArray(TCB *cb)
     {
         life_cb=cb;
 
@@ -96,21 +96,58 @@ template<typename T> class TestObject
 
 public:
 
-    TestObject(){value=0;}
+    TestObject()
+    {
+        value=0;
+        std::cout<<"TestObject()"<<std::endl;
+    }
+
+    TestObject(int v)
+    {
+        value=v;
+
+        std::cout<<"TestObject("<<value<<")"<<std::endl;
+    }
+
     ~TestObject()
     {
         std::cout<<"~TestObject("<<value<<")"<<std::endl;
     }
+
+    void Set(int v)
+    {
+        value=v;
+
+        std::cout<<"TestObject::Set("<<value<<")"<<std::endl;
+    }
+
+    int Get()const{return value;}
 };
 
-template<typename T> class TestObjectArray:public Test<T,ObjectLifetimeCallback<T>>
+template<typename T> class TestObjectArray:public TestArray<T *,ObjectLifetimeCallback<T>>
 {
-    DefaultObjectLifetimeCallback life_cb;;
+    DefaultObjectLifetimeCallback<T> life_cb;
 
 public:
 
-    TestObjectArray():TestArray<T,ObjectLifetimeCallback<T>>(&life_cb){}
-    ~TestObjectArray()=default;
+    TestObjectArray():TestArray<T *,ObjectLifetimeCallback<T>>(&life_cb){}
+    virtual ~TestObjectArray()
+    {
+        for(T *p:*this)
+            life_cb.Clear(&p);
+    }
+
+    T *Create()
+    {
+        T *p;
+
+        if(!life_cb.Create(&p))
+            return nullptr;
+
+        TestArray<T *,ObjectLifetimeCallback<T>>::Add(p);
+
+        return p;
+    }
 };
 
 void main()
@@ -170,14 +207,22 @@ void main()
     {
         TestObjectArray<TestObject<int>> ta_obj;
 
-        ta_obj.Add();
-        ta_obj.Add();
-        ta_obj.Add();
+        ta_obj.Add(new TestObject<int>(1));
+        ta_obj.Add(new TestObject<int>(2));
+        ta_obj.Add(new TestObject<int>(3));
+
+        TestObject<int> *p=ta_obj.Create();
+
+        p->Set(4);
+
+        TestObject<int> *two[2]={new TestObject<int>(9),new TestObject<int>(0)};
+
+        ta_obj.Add(two,2);
 
         std::cout<<"TestArray<TestObject<int>>: ";
 
-        for(const TestObject<int> &obj:ta_obj)
-            std::cout<<"{"<<obj.value<<"} ";
+        for(TestObject<int> *obj:ta_obj)
+            std::cout<<"{"<<obj->Get()<<"} ";
 
         std::cout<<std::endl;
     }

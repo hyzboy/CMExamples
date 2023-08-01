@@ -1,4 +1,4 @@
-﻿#include<hgl/type/Queue.H>
+﻿#include<hgl/type/Queue.h>
 #include<iostream>
 
 using namespace hgl;
