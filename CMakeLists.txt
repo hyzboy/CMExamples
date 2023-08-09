@@ -21,13 +21,6 @@ endmacro()
 add_executable(HalfFloatTest datatype/HalfFloatTest.cpp)
 cm_example_project("DataType" HalfFloatTest)
 
-add_executable(LifetimeTest datatype/LifetimeTest.cpp)
-#cm_example_project("DataType" LifetimeTest)
-set_property(TARGET LifetimeTest PROPERTY FOLDER "CM/Examples/DataType")
-
-add_executable(CollectionTest datatype/CollectionTest.cpp)
-cm_example_project("DataType" CollectionTest)
-
 add_executable(SplitStringTest datatype/SplitStringTest.cpp)
 cm_example_project("DataType" SplitStringTest)
 
@@ -53,17 +46,26 @@ cm_example_project("DataType/RAM" RuntimeAssetManagerTest)
 add_executable(Size2Test datatype/Size2Test.cpp)
 cm_example_project("DataType" Size2Test)
 
-add_executable(DataArrayTest datatype/DataArrayTest.cpp)
-cm_example_project("DataType" DataArrayTest)
-
 add_executable(Uint2HexStrTest datatype/Uint2HexStrTest.cpp)
 cm_example_project("DataType" Uint2HexStrTest)
 
+####################################################################################################
+
+add_executable(LifetimeTest datatype/LifetimeTest.cpp)
+#cm_example_project("DataType" LifetimeTest)
+set_property(TARGET LifetimeTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+
+add_executable(CollectionTest datatype/CollectionTest.cpp)
+cm_example_project("DataType/DataArray" CollectionTest)
+
+add_executable(DataArrayTest datatype/DataArrayTest.cpp)
+cm_example_project("DataType/DataArray" DataArrayTest)
+
 add_executable(StackTest datatype/StackTest.cpp)
-cm_example_project("DataType" StackTest)
+set_property(TARGET StackTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
 
 add_executable(QueueTest datatype/QueueTest.cpp)
-set_property(TARGET QueueTest PROPERTY FOLDER "CM/Examples/DataType")
+set_property(TARGET QueueTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
 
 ####################################################################################################
 
