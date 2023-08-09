@@ -80,13 +80,13 @@ public:
     }
 };
 
-template<typename T> class TestRawArray:public TestArray<T,RawLifetimeCallback<T>>
+template<typename T> class TestRawArray:public TestArray<T,DataLifetimeCallback<T>>
 {
-    RawLifetimeCallback<T> life_cb;
+    DataLifetimeCallback<T> life_cb;
 
 public:
 
-    TestRawArray():TestArray<T,RawLifetimeCallback<T>>(&life_cb){}
+    TestRawArray():TestArray<T,DataLifetimeCallback<T>>(&life_cb){}
     ~TestRawArray()=default;
 };
 

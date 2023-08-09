@@ -38,7 +38,7 @@ add_executable(AndroidDeviceAnalysis    AndroidDeviceAnalysis/main.cpp
 					                    AndroidDeviceAnalysis/GameRecord.h
                                         AndroidDeviceAnalysis/GameRecord.cpp
                                         AndroidDeviceAnalysis/AndroidDeviceRecord.cpp
-                                        AndroidDeviceAnalysis/GetDeviceLevel.cpp
+                                        AndroidDeviceAnalysis/GPUDeviceRecord.cpp
 #                                        AndroidDeviceAnalysis/ExportReport.cpp
                                         ${ADA_LOAD_GAME_RECORD_SOURCE})
 

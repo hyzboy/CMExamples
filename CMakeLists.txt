@@ -63,7 +63,7 @@ add_executable(StackTest datatype/StackTest.cpp)
 cm_example_project("DataType" StackTest)
 
 add_executable(QueueTest datatype/QueueTest.cpp)
-cm_example_project("DataType" QueueTest)
+set_property(TARGET QueueTest PROPERTY FOLDER "CM/Examples/DataType")
 
 ####################################################################################################
 
