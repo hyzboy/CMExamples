@@ -56,16 +56,19 @@ add_executable(LifetimeTest datatype/LifetimeTest.cpp)
 set_property(TARGET LifetimeTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
 
 add_executable(CollectionTest datatype/CollectionTest.cpp)
-cm_example_project("DataType/DataArray" CollectionTest)
+set_property(TARGET CollectionTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
 
 add_executable(DataArrayTest datatype/DataArrayTest.cpp)
-cm_example_project("DataType/DataArray" DataArrayTest)
+set_property(TARGET DataArrayTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
 
 add_executable(StackTest datatype/StackTest.cpp)
 set_property(TARGET StackTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
 
 add_executable(QueueTest datatype/QueueTest.cpp)
 set_property(TARGET QueueTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+
+add_executable(PoolTest datatype/PoolTest.cpp)
+set_property(TARGET PoolTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
 
 ####################################################################################################
 
