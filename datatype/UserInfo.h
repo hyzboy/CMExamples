@@ -1,5 +1,10 @@
 #pragma once
 
+#include<string.h>
+#include<iostream>
+
+using namespace std;
+
 struct UserInfo
 {
     char name[32];
@@ -38,4 +43,29 @@ static UserInfo user_info_array[]=
     {"Xavier",true,41},
     {"Yoyo",false,42},
     {"Zack",true,43}
+};
+
+class UserInfoClass
+{
+    UserInfo info;
+
+public:
+
+    UserInfoClass()=default;
+
+    void Set(const UserInfo &ui)
+    {
+        memcpy(&info,&ui,sizeof(UserInfo));
+
+        cout<<"UserInfoClass::Set("<<info.name<<")"<<endl;
+    }
+
+    ~UserInfoClass()
+    {
+        cout<<"~UserInfoClass("<<info.name<<")"<<endl;
+    }
+
+    const char *GetName()const{return info.name;}
+    const bool GetSex()const{return info.sex;}
+    const int GetAge()const{return info.age;}
 };

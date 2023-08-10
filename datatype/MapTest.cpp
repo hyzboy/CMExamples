@@ -88,14 +88,39 @@ void StringMapTest()
     });
 
     cout<<endl;
+}
 
+void StringObjectMapTest()
+{
+    ObjectMap<UTF8String,UserInfoClass> ui_map;
+
+    for(auto &ui:user_info_array)
+    {
+        UserInfoClass *uic=new UserInfoClass;
+
+        uic->Set(ui);
+
+        ui_map.Add(ui.name,uic);
+    }
+
+    ui_map.Enum([](const UTF8String &key,UserInfoClass *&ui)
+    {
+        cout<<"["<<key<<","<<(ui->GetSex()?"male":"female")<<","<<ui->GetAge()<<"]"<<endl;
+    });
+
+    cout<<endl;
 }
 
 int main(int,char **)
 {
+    cout<<"Map<int,int> Test"<<endl;
     IntMapTest();
 
+    cout<<"Map<String,UserInfo> Test"<<endl;
     StringMapTest();
+
+    cout<<"ObjectMap<String,UserInfoClass> Test"<<endl;
+    StringObjectMapTest();
 
     return(0);
 }

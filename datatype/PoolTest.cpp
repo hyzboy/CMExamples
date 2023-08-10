@@ -54,29 +54,6 @@ void StructPoolTest()
     }
 }
 
-class UserInfoClass
-{
-    UserInfo info;
-
-public:
-
-    UserInfoClass()=default;
-
-    void Set(const UserInfo &ui)
-    {
-        memcpy(&info,&ui,sizeof(UserInfo));
-
-        cout<<"UserInfoClass::Set("<<info.name<<")"<<endl;
-    }
-
-    ~UserInfoClass()
-    {
-        cout<<"~UserInfoClass("<<info.name<<")"<<endl;
-    }
-
-    const char *GetName()const{return info.name;}
-};
-
 void ShowUserInfoArray(const DataArray<UserInfoClass *> &ua)
 {
     cout<<"user info array "<<ua.GetCount()<<" [";
