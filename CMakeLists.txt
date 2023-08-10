@@ -30,12 +30,6 @@ cm_example_project("DataType" StrChrTest)
 add_executable(Uint2StrTest datatype/utos_test.cpp)
 cm_example_project("DataType" Uint2StrTest)
 
-add_executable(MapTest datatype/MapTest.cpp)
-cm_example_project("DataType" MapTest)
-
-add_executable(MultiMapTest datatype/MultiMapTest.cpp)
-cm_example_project("DataType" MultiMapTest)
-
 add_executable(RuntimeAssetManagerTest datatype/ram/RuntimeAssetManagerTest.cpp
                                        datatype/ram/RuntimeAssetManager.h
                                        datatype/ram/RAM_TestClass.h
@@ -69,6 +63,9 @@ set_property(TARGET QueueTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
 
 add_executable(PoolTest datatype/PoolTest.cpp)
 set_property(TARGET PoolTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+
+add_executable(MapTest datatype/MapTest.cpp)
+set_property(TARGET MapTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
 
 ####################################################################################################
 

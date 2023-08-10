@@ -3,6 +3,8 @@
 #include<time.h>
 #include<hgl/type/SortedSets.h>
 #include<hgl/type/Map.h>
+#include<hgl/type/String.h>
+#include"UserInfo.h"
 
 using namespace hgl;
 using namespace std;
@@ -23,7 +25,7 @@ void out_id(Map<int,int> &int_map)
 //     }
 
     //lambda用法
-    int_map.Enum([](const int &key,int value)
+    int_map.Enum([](const int &key,int &value)
     {
         cout<<"["<<key<<","<<value<<"]";
     });
@@ -31,8 +33,10 @@ void out_id(Map<int,int> &int_map)
     cout<<endl;
 }
 
-int main(int,char **)
+void IntMapTest()
 {
+    constexpr const int MAX_COUNT=10;
+
     int index;
     int value;
     SortedSets<int> int_sets;
@@ -40,11 +44,11 @@ int main(int,char **)
 
     srand(time(nullptr));
 
-    for(int i=0;i<20;i++)
+    for(int i=0;i<MAX_COUNT;i++)
     {
         while(true)
         {
-            index=rand()%20;
+            index=rand()%MAX_COUNT;
             if(!int_sets.IsMember(index))break;
         }
 
@@ -60,7 +64,7 @@ int main(int,char **)
 
     cout<<endl;
 
-    for(int i=0;i<20;i++)
+    for(int i=0;i<MAX_COUNT;i++)
     {
         value=rand()%255;
 
@@ -69,6 +73,29 @@ int main(int,char **)
 
         out_id(int_map);
     }
+}
+
+void StringMapTest()
+{
+    Map<UTF8String,UserInfo> ui_map;
+
+    for(auto &ui:user_info_array)
+        ui_map.Add(ui.name,ui);
+
+    ui_map.Enum([](const UTF8String &key,UserInfo &ui)
+    {
+        cout<<"["<<key<<","<<(ui.sex?"male":"female")<<","<<ui.age<<"]"<<endl;
+    });
+
+    cout<<endl;
+
+}
+
+int main(int,char **)
+{
+    IntMapTest();
+
+    StringMapTest();
 
     return(0);
 }

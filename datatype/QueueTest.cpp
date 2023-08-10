@@ -71,12 +71,12 @@ void TestQueueStruct()
 
     Queue<UserInfo> ui_queue;
 
-    for(uint i=0;i<sizeof(ui_array)/sizeof(UserInfo);i++)
-        ui_queue.Push(ui_array[i]);
+    for(uint i=0;i<sizeof(user_info_array)/sizeof(UserInfo);i++)
+        ui_queue.Push(user_info_array[i]);
 
     cout<<"Queue Count: "<<ui_queue.GetCount()<<endl;
 
-    for(uint i=0;i<sizeof(ui_array)/sizeof(UserInfo);i++)
+    for(uint i=0;i<sizeof(user_info_array)/sizeof(UserInfo);i++)
     {
         UserInfo ui;
 

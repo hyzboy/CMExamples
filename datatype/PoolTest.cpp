@@ -26,7 +26,7 @@ void StructPoolTest()
 
     //添加所有的人物数据到池中
     {
-        for(auto ui:ui_array)
+        for(auto ui:user_info_array)
             pool.Append(ui);
     }
 
@@ -37,7 +37,7 @@ void StructPoolTest()
         int count=10+rand()%10;
 
         for(int i=0;i<count;i++)
-            pool.Release(ui_array[rand()%26]);
+            pool.Release(user_info_array[rand()%26]);
     }
 
     ShowUserInfoArray(pool.GetActiveArray());
@@ -100,7 +100,7 @@ void ObjectPoolTest()
 
     //添加所有的人物数据到池中
     {
-        for(auto ui:ui_array)
+        for(auto ui:user_info_array)
         {
             UserInfoClass *uic=new UserInfoClass;
 

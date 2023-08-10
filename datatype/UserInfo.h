@@ -7,7 +7,7 @@ struct UserInfo
     int age;
 };
 
-static UserInfo ui_array[]=
+static UserInfo user_info_array[]=
 {
     //注： 以下人物信息由Github Copilot自动创建
     //ps: The following list of character information is automatically created by Github Copilot
