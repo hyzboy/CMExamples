@@ -42,7 +42,7 @@ void StructPoolTest()
 
     ShowUserInfoArray(pool.GetActiveArray());
     
-    cout<<"idle count: "<<pool.GetInactiveCount()<<endl;
+    cout<<"idle count: "<<pool.GetIdleCount()<<endl;
 
     //取出所有闲置数据
     {
@@ -97,7 +97,7 @@ void ObjectPoolTest()
 
     ShowUserInfoArray(pool.GetActiveArray());
     
-    cout<<"idle count: "<<pool.GetInactiveCount()<<endl;
+    cout<<"idle count: "<<pool.GetIdleCount()<<endl;
 
     //取出闲置列表中的一半数据
     {
@@ -118,8 +118,8 @@ void ObjectPoolTest()
         cout<<"clear active "<<pool.GetActiveCount()<<endl;
         pool.ClearActive();
 
-        cout<<"clear inactive "<<pool.GetInactiveCount()<<endl;
-        pool.ClearInactive();
+        cout<<"clear idle "<<pool.GetIdleCount()<<endl;
+        pool.ClearIdle();
     }
 }
 

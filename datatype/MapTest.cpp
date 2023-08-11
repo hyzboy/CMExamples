@@ -107,8 +107,6 @@ void StringObjectMapTest()
     {
         cout<<"["<<key<<","<<(ui->GetSex()?"male":"female")<<","<<ui->GetAge()<<"]"<<endl;
     });
-
-    cout<<endl;
 }
 
 int main(int,char **)
