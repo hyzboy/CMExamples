@@ -16,6 +16,10 @@ macro(cm_example_project sub_folder project_name)
     set_property(TARGET ${project_name} PROPERTY FOLDER "CM/Examples/${sub_folder}")
 endmacro()
 
+macro(set_example_project_folder sub_folder project_name)
+    set_property(TARGET ${project_name} PROPERTY FOLDER "CM/Examples/${sub_folder}")
+endmacro()
+
 ####################################################################################################
 
 add_executable(HalfFloatTest datatype/HalfFloatTest.cpp)
@@ -46,26 +50,25 @@ cm_example_project("DataType" Uint2HexStrTest)
 ####################################################################################################
 
 add_executable(LifetimeTest datatype/LifetimeTest.cpp)
-#cm_example_project("DataType" LifetimeTest)
-set_property(TARGET LifetimeTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+set_example_project_folder("DataType/DataArray" LifetimeTest)
 
 add_executable(CollectionTest datatype/CollectionTest.cpp)
-set_property(TARGET CollectionTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+set_example_project_folder("DataType/DataArray" CollectionTest)
 
 add_executable(DataArrayTest datatype/DataArrayTest.cpp)
-set_property(TARGET DataArrayTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+set_example_project_folder("DataType/DataArray" DataArrayTest)
 
 add_executable(StackTest datatype/StackTest.cpp)
-set_property(TARGET StackTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+set_example_project_folder("DataType/DataArray" StackTest)
 
 add_executable(QueueTest datatype/QueueTest.cpp)
-set_property(TARGET QueueTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+set_example_project_folder("DataType/DataArray" QueueTest)
 
 add_executable(PoolTest datatype/PoolTest.cpp)
-set_property(TARGET PoolTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+set_example_project_folder("DataType/DataArray" PoolTest)
 
 add_executable(MapTest datatype/MapTest.cpp)
-set_property(TARGET MapTest PROPERTY FOLDER "CM/Examples/DataType/DataArray")
+set_example_project_folder("DataType/DataArray" MapTest)
 
 ####################################################################################################
 
