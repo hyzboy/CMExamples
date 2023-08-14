@@ -38,7 +38,7 @@ int main(int argc,char **argv)
         LoadFromTextFile<char>(ToOSString(argv[2]),pl_set);
 
         //lambda方式
-        pl_set.Enum([](const String<char> &key,PAttribBase<char> *attr)
+        pl_set.Enum([](const String<char> &key,PAttribBase<char> * &attr)
         {
             std::cout<<std::setw(8)<<key.c_str()<<":"<<attr->MakeToString().c_str()<<std::endl;
         });

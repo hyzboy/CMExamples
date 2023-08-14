@@ -53,7 +53,7 @@ add_executable(LifetimeTest datatype/LifetimeTest.cpp)
 set_example_project_folder("DataType/DataArray" LifetimeTest)
 
 add_executable(CollectionTest datatype/CollectionTest.cpp)
-set_example_project_folder("DataType/DataArray" CollectionTest)
+cm_example_project("DataType/DataArray" CollectionTest)
 
 add_executable(DataArrayTest datatype/DataArrayTest.cpp)
 set_example_project_folder("DataType/DataArray" DataArrayTest)

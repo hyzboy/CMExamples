@@ -29,7 +29,7 @@ int main(int,char **)
 
     cout<<"Encode: "<<tmp<<endl;
 
-    mos.ClearData();
+    mos.Clear();
 
     if(!base64_decode(&mos,tmp,len))
     {

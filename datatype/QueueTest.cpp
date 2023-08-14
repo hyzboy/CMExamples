@@ -130,9 +130,9 @@ void TestObjectQueue()
 
     for(i=0;i<5;i++)        //只取出5个,剩几个给自动清理处理
     {
-        QueueTestObject *obj=tab.Pop();
+        QueueTestObject *obj;
 
-        if(obj)
+        if(tab.Pop(obj))
             delete obj;
     }
 
