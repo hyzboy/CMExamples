@@ -233,6 +233,7 @@ MediaTek,MT6893Z_B/CZA,Dimensity 1200-MAX,,Mali,G77,9,850,,,,A78,1,3,A78,3,2.6,A
 MediaTek,MT6893Z_T/CZA,Dimensity 8050,2023.2Q,Mali,G77,9,850,,,,A78,1,3,A78,3,2.6,A55,4,2
 MediaTek,MT6893Z_Z/CZA,,,Mali,G77,9,850,,,,A78,1,3,A78,3,2.6,A55,4,2
 MediaTek,MT6893Z/CZA,Dimensity 1300,2022.2Q,Mali,G77,9,850,,,,A78,1,3,A78,3,2.6,A55,4,2
+MediaTek,MT6983,Dimensity 9000+,,Mali,G710,10,,,,,X2,1,3.2,A710,3,2.85,A510,4,1.8
 MediaTek,MT8168B,,,Mali,G52,1,800,,,,,,,,,,A53,4,2
 MediaTek,MT8183,Helio P60T,,Mali,G72,3,,,,,,,,A73,4,2,A53,4,2
 MediaTek,MT8765WA,,,PowerVR,GE8100,1,570,,,,,,,,,,A53,4,1.3
