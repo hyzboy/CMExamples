@@ -62,7 +62,8 @@ void IntMapTest()
         out_id(int_map);
     }
 
-    cout<<endl;
+    cout<<"-----------------------------------------"<<endl;
+    cout<<"Map<int,int> Change Test"<<endl;
 
     for(int i=0;i<MAX_COUNT;i++)
     {
@@ -111,12 +112,15 @@ void StringObjectMapTest()
 
 int main(int,char **)
 {
+    cout<<"-----------------------------------------"<<endl;
     cout<<"Map<int,int> Test"<<endl;
     IntMapTest();
 
+    cout<<"-----------------------------------------"<<endl;
     cout<<"Map<String,UserInfo> Test"<<endl;
     StringMapTest();
 
+    cout<<"-----------------------------------------"<<endl;
     cout<<"ObjectMap<String,UserInfoClass> Test"<<endl;
     StringObjectMapTest();
 
