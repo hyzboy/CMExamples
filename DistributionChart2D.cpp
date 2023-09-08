@@ -15,6 +15,10 @@ using namespace hgl;
 
 OSString csv_filename;
 
+uint MAP_RATE_SCALE=100;                    //地图缩小比例，UNREAL中单位为厘米，换算到米需要/100。
+                                            //原地图4K，现底层为1K，所以需要再/4。
+                                            //2K地图用的底层为2K，所以只/100
+
 using BitmapRGB8=bitmap::Bitmap<Vector3u8>;
 using BitmapRGBA8=bitmap::Bitmap<Vector4u8>;
 
@@ -235,8 +239,8 @@ bool ParsePosition(Vector2i *result,const UTF8String &str)
     if(!hgl::stoi(sp,result->y))
         return(false);
 
-    result->x/=400;     //Unreal单位为cm,把单位缩到米
-    result->y/=400;     //同时把4096的地图缩小到1024
+    result->x/=MAP_RATE_SCALE;     //Unreal单位为cm,把单位缩到米
+    result->y/=MAP_RATE_SCALE;     //同时把4096的地图缩小到1024
 
     if(result->x>=BackgroundBitmap->GetWidth()
      ||result->y>=BackgroundBitmap->GetHeight()
