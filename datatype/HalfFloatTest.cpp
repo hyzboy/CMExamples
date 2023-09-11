@@ -26,31 +26,25 @@ void InitFloat4()
     }
 }
 
-void OutputFloat4(const char *hint,const float *f)
+void OutputFloat4(const float *f)
 {
-    cout<<hint<<" float4: "<<f[0]<<","<<f[1]<<","<<f[2]<<","<<f[3]<<endl;
+    cout<<" f32: "<<f[0]<<","<<f[1]<<","<<f[2]<<","<<f[3]<<endl;
 }
 
-void OutputHalfFloat(const char *hint,const half_float *hf)
+void OutputHalfFloat(const half_float *hf)
 {
-    cout<<hint<<" half_float: "<<hf[0]<<","<<hf[1]<<","<<hf[2]<<","<<hf[3]<<endl;
+    cout<<" f16: "<<hf[0]<<","<<hf[1]<<","<<hf[2]<<","<<hf[3]<<endl;
 }
 
 void half_float_test()
 {
-    OutputFloat4("origin",origin_float);
+    OutputFloat4(origin_float);
 
-    half_float hf_fast[4];
     half_float hf_std[4];
 
-    float_to_half(hf_fast,origin_float,4);
     Float32toFloat16(hf_std,origin_float,4);
 
-    for(uint i=0;i<4;i++)
-        hf_std[i]&=0x7FFF;      //去掉符号位
-
-    OutputHalfFloat("fast",hf_fast);
-    OutputHalfFloat("std ",hf_std);
+    OutputHalfFloat(hf_std);
 }
 
 void split_float_test()
