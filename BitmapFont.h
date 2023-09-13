@@ -6,7 +6,4 @@ using namespace hgl;
 bool LoadBitmapFont();
 void ClearBitmapFont();
 
-const uint GetCharWidth();
-const uint GetCharHeight();
-
-const uint8 *GetBitmapChar(const char ch);
+const uint8 *Get8x16Char(const char ch);

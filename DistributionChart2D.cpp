@@ -149,8 +149,8 @@ bool InitBitmapFont()
     if(!LoadBitmapFont())
         return(false);
 
-    CHAR_BITMAP_WIDTH=GetCharWidth();
-    CHAR_BITMAP_HEIGHT=GetCharHeight();
+    CHAR_BITMAP_WIDTH=8;
+    CHAR_BITMAP_HEIGHT=16;
 
     return(true);
 }
@@ -385,7 +385,7 @@ private:
 
     void DrawChar(const char ch,const uint x,const uint y)
     {
-        const uint8 *sp=GetBitmapChar(ch);
+        const uint8 *sp=Get8x16Char(ch);
 
         if(!sp)return;
 

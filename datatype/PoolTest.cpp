@@ -27,7 +27,7 @@ void StructPoolTest()
     //添加所有的人物数据到池中
     {
         for(auto ui:user_info_array)
-            pool.Append(ui);
+            pool.AppendToActive(ui);
     }
 
     ShowUserInfoArray(pool.GetActiveArray());
@@ -83,7 +83,7 @@ void ObjectPoolTest()
 
             uic->Set(ui);
    
-            pool.Append(uic);
+            pool.AppendToActive(uic);
 
             if(rand()%3==1)                 //有1/3的概率，将这个数据放入释放列表
                 release_list.Add(uic);
