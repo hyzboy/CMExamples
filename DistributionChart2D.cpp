@@ -2,16 +2,17 @@
 #include<hgl/io/LoadStringList.h>
 #include<hgl/type/Gradient.h>
 #include<hgl/math/Vector.h>
-#include<hgl/util/imgfmt/tga.h>
 #include<hgl/io/FileInputStream.h>
 #include<hgl/io/FileOutputStream.h>
 #include<hgl/filesystem/Filename.h>
 #include<iostream>
-#include<hgl/2d/Bitmap.h>
+#include<hgl/2d/BitmapLoad.h>
+#include<hgl/2d/BitmapSave.h>
 #include<hgl/2d/DrawGeometry.h>
 #include"BitmapFont.h"
 
 using namespace hgl;
+using namespace hgl::bitmap;
 
 OSString csv_filename;
 
@@ -19,126 +20,13 @@ uint MAP_RATE_SCALE=100;                    //地图缩小比例，UNREAL中单�
                                             //原地图4K，现底层为1K，所以需要再/4。
                                             //2K地图用的底层为2K，所以只/100
 
-using BitmapRGB8=bitmap::Bitmap<Vector3u8>;
-using BitmapRGBA8=bitmap::Bitmap<Vector4u8>;
-
-using BitmapU32=bitmap::Bitmap<uint32>;
-using DrawBitmapU32=bitmap::DrawGeometry<uint32>;
-
-using DrawBitmapRGBA8=bitmap::DrawGeometry<Vector4u8>;
-
-struct BlendColorU32Additive:public bitmap::BlendColor<uint32>
-{
-    const uint32 operator()(const uint32 &src,const uint32 &dst)const
-    {
-        uint64 result=src+dst;
-
-        return (result>HGL_U32_MAX)?HGL_U32_MAX:(result&HGL_U32_MAX);
-    }
-
-    const uint32 operator()(const uint32 &src,const uint32 &dst,const float &alpha)const
-    {
-        uint64 result=src*alpha+dst;
-
-        return (result>HGL_U32_MAX)?HGL_U32_MAX:(result&HGL_U32_MAX);
-    }
-};
-
-struct BlendColorRGBA8:public bitmap::BlendColor<Vector4u8>
-{
-    const Vector4u8 operator()(const Vector4u8 &src,const Vector4u8 &dst)const
-    {
-        uint8 na=255-src.a;
-
-        return Vector4u8((src.r*src.a+dst.r*na)/255,
-                         (src.g*src.a+dst.g*na)/255,
-                         (src.b*src.a+dst.b*na)/255,
-                         dst.a);
-    }
-
-    const Vector4u8 operator()(const Vector4u8 &src,const Vector4u8 &dst,const float &alpha)const
-    {
-        uint8 a=src.a*alpha;
-        uint8 na=255-src.a;
-
-        return Vector4u8((src.r*src.a+dst.r*na)/255,
-                         (src.g*src.a+dst.g*na)/255,
-                         (src.b*src.a+dst.b*na)/255,
-                         dst.a);
-    }
-};
-
-template<> void bitmap::BlendBitmap<Vector4u8,Vector3u8>::operator()(const bitmap::Bitmap<Vector4u8> *src_bitmap,bitmap::Bitmap<Vector3u8> *dst_bitmap,const float alpha)const
-{
-    if(!src_bitmap||!dst_bitmap||alpha<=0)return;
-
-    const uint width=src_bitmap->GetWidth();
-    const uint height=src_bitmap->GetHeight();
-
-    if(width!=dst_bitmap->GetWidth()||height!=dst_bitmap->GetHeight())
-        return;
-
-          Vector3u8 *dst=dst_bitmap->GetData();
-    const Vector4u8 *src=src_bitmap->GetData();
-
-    float a;
-    float na;
-
-    for(uint i=0;i<width*height;i++)
-    {
-        a=src->a*alpha;
-        na=255-src->a;
-
-        dst->r=(src->r*a+dst->r*na)/255;
-        dst->g=(src->g*a+dst->g*na)/255;
-        dst->b=(src->b*a+dst->b*na)/255;
-
-        ++dst;
-        ++src;
-    }
-}
-
 BitmapRGB8 *BackgroundBitmap=nullptr;
-
-using BlendRGBA2RGB=bitmap::BlendBitmap<Vector4u8,Vector3u8>;
 
 bool LoadBackgroundBitmap()
 {
-    io::OpenFileInputStream fis(OS_TEXT("mini_map.tga"));
+    BackgroundBitmap=bitmap::LoadBitmapRGB8FromTGA(OS_TEXT("mini_map.tga"));
 
-    if(!fis)
-        return(false);
-
-    util::TGAHeader tga_header;
-    util::TGAImageDesc tga_desc;
-
-    fis->Read(&tga_header,sizeof(util::TGAHeader));
-
-    if(tga_header.image_type!=util::TGA_IMAGE_TYPE_TRUE_COLOR)
-        return(false);
-
-    if(tga_header.bit!=24)
-        return(false);
-
-    tga_desc.image_desc=tga_header.image_desc;
-
-    BackgroundBitmap=new BitmapRGB8;
-
-    BackgroundBitmap->Create(tga_header.width,tga_header.height);
-
-    const uint total_bytes=BackgroundBitmap->GetTotalBytes();
-
-    if(fis->Read(BackgroundBitmap->GetData(),total_bytes)!=total_bytes)
-    {
-        delete BackgroundBitmap;
-        BackgroundBitmap=nullptr;
-        return(false);
-    }
-
-    if(tga_desc.direction==util::TGA_DIRECTION_LOWER_LEFT)
-       BackgroundBitmap->Flip();
-
-    return(true);
+    return(BackgroundBitmap);
 }
 
 uint CHAR_BITMAP_WIDTH=0;
@@ -339,10 +227,10 @@ struct Chart
     BitmapU32 circle_bitmap;
     BitmapRGBA8 chart_bitmap;
 
-    DrawBitmapU32 *draw_circle=nullptr;
+    DrawGeometryU32 *draw_circle=nullptr;
     BlendColorU32Additive blend_u32_additive;
 
-    DrawBitmapRGBA8 *draw_chart=nullptr;
+    DrawGeometryRGBA8 *draw_chart=nullptr;
     BlendColorRGBA8 blend_rgba8;
 
 public:
@@ -360,10 +248,10 @@ public:
         circle_bitmap.ClearColor(0);
         chart_bitmap.ClearColor(black_color);
 
-        draw_circle=new DrawBitmapU32(&circle_bitmap);
+        draw_circle=new DrawGeometryU32(&circle_bitmap);
         draw_circle->SetBlend(&blend_u32_additive);
 
-        draw_chart=new DrawBitmapRGBA8(&chart_bitmap);
+        draw_chart=new DrawGeometryRGBA8(&chart_bitmap);
         draw_chart->SetBlend(&blend_rgba8);
 
         max_count=0;
@@ -478,7 +366,7 @@ void StatData(BitmapU32 &count_bitmap,const LineSegmentData &lsd)
 {
     {
         BlendColorU32Additive blend_u32_additive;
-        DrawBitmapU32 draw_bitmap(&count_bitmap);
+        DrawGeometryU32 draw_bitmap(&count_bitmap);
         draw_bitmap.SetBlend(&blend_u32_additive);
 
         draw_bitmap.SetDrawColor(1);
@@ -680,7 +568,7 @@ void ChartStat(Chart *chart,const uint data_count)
     //混合底图
     if(BackgroundBitmap)
     {
-        BlendRGBA2RGB blend;
+        BlendBitmapRGBA8toRGB8 blend;
 
         blend(&(chart->chart_bitmap),BackgroundBitmap,1.0);
     }
@@ -768,27 +656,12 @@ int os_main(int argc,os_char **argv)
 
     ChartStat(chart,data_count);
 
-    OSString tga_filename;
     {
-        tga_filename=filesystem::ReplaceExtName(csv_filename,OSString(OS_TEXT(".tga")));
+        const OSString tga_filename=filesystem::ReplaceExtName(csv_filename,OSString(OS_TEXT(".tga")));
 
         os_out<<OS_TEXT("output: ")<<tga_filename.c_str()<<std::endl;
-    }
-
-    {
-        util::TGAHeader tga_header;
-
-        util::FillTGAHeader(&tga_header,chart->width,chart->height,3);
-
-        io::OpenFileOutputStream fos(tga_filename.c_str(),io::FileOpenMode::CreateTrunc);
-
-        if(fos)
-        {
-            fos->Write(&tga_header,util::TGAHeaderSize);
-            fos->Write(BackgroundBitmap->GetData(),BackgroundBitmap->GetTotalBytes());
-            fos->Close();
-        }
-        else
+   
+        if(!SaveBitmapToTGA(tga_filename,BackgroundBitmap))
             std::cerr<<"Create chart.tga failed!"<<std::endl;
     }
 
