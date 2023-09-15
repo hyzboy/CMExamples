@@ -70,6 +70,9 @@ set_example_project_folder("DataType/DataArray" PoolTest)
 add_executable(ActiveIDManagerTest datatype/ActiveIDManagerTest.cpp)
 set_example_project_folder("DataType/DataArray" ActiveIDManagerTest)
 
+add_executable(ActiveDataManagerTest datatype/ActiveDataManagerTest.cpp)
+set_example_project_folder("DataType/DataArray" ActiveDataManagerTest)
+
 add_executable(MapTest datatype/MapTest.cpp)
 set_example_project_folder("DataType/DataArray" MapTest)
 
@@ -103,11 +106,18 @@ add_executable(OSFontList OSFontList.cpp)
 cm_example_project("os" OSFontList)
 target_link_libraries(OSFontList PRIVATE CMUtil)
 
-add_executable(DistributionChart2D DistributionChart2D.cpp BitmapFont.cpp BitmapFont.h)
-cm_example_project("chart" DistributionChart2D)
-
 add_executable(TimeCount time/time_count.cpp)
 cm_example_project("time" TimeCount)
+
+####################################################################################################
+
+add_executable(DistributionChart2D DistributionChart2D.cpp BitmapFont.cpp BitmapFont.h)
+cm_example_project("chart" DistributionChart2D)
+target_link_libraries(DistributionChart2D PRIVATE CM2D)
+
+add_executable(PlayerTraceChart2D PlayerTraceChart2D.cpp BitmapFont.cpp BitmapFont.h)
+cm_example_project("chart" PlayerTraceChart2D)
+target_link_libraries(PlayerTraceChart2D PRIVATE CM2D)
 
 ####################################################################################################
 
