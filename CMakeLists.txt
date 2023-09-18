@@ -68,10 +68,10 @@ add_executable(PoolTest datatype/PoolTest.cpp)
 set_example_project_folder("DataType/DataArray" PoolTest)
 
 add_executable(ActiveIDManagerTest datatype/ActiveIDManagerTest.cpp)
-set_example_project_folder("DataType/DataArray" ActiveIDManagerTest)
+cm_example_project("DataType/DataArray" ActiveIDManagerTest)
 
 add_executable(ActiveDataManagerTest datatype/ActiveDataManagerTest.cpp)
-set_example_project_folder("DataType/DataArray" ActiveDataManagerTest)
+cm_example_project("DataType/DataArray" ActiveDataManagerTest)
 
 add_executable(MapTest datatype/MapTest.cpp)
 set_example_project_folder("DataType/DataArray" MapTest)

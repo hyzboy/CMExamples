@@ -7,7 +7,7 @@ using namespace std;
 
 struct UserInfo
 {
-    char name[32];
+    char name[8];
     bool sex;
     int age;
 };
