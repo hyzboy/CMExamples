@@ -67,14 +67,19 @@ set_example_project_folder("DataType/DataArray" QueueTest)
 add_executable(PoolTest datatype/PoolTest.cpp)
 set_example_project_folder("DataType/DataArray" PoolTest)
 
-add_executable(ActiveIDManagerTest datatype/ActiveIDManagerTest.cpp)
-cm_example_project("DataType/DataArray" ActiveIDManagerTest)
-
-add_executable(ActiveDataManagerTest datatype/ActiveDataManagerTest.cpp)
-cm_example_project("DataType/DataArray" ActiveDataManagerTest)
-
 add_executable(MapTest datatype/MapTest.cpp)
 set_example_project_folder("DataType/DataArray" MapTest)
+
+####################################################################################################
+
+add_executable(1_ActiveIDManagerTest datatype/ActiveIDManagerTest.cpp)
+cm_example_project("DataType/ActiveManager" 1_ActiveIDManagerTest)
+
+add_executable(2_ActiveMemoryBlockManagerTest datatype/ActiveMemoryBlockManagerTest.cpp)
+cm_example_project("DataType/ActiveManager" 2_ActiveMemoryBlockManagerTest)
+
+add_executable(3_ActiveDataManagerTest datatype/ActiveDataManagerTest.cpp)
+cm_example_project("DataType/ActiveManager" 3_ActiveDataManagerTest)
 
 ####################################################################################################
 

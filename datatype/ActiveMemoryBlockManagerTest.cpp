@@ -42,11 +42,11 @@ void DebugOutputArray(const char *hint,const char **str,const int count)
 
 void DebugOutputArray(const char *hint,const ActiveMemoryBlockManager &ambm,const int *idp,const int count)
 {
-    if(count<=0)return;
+    if(!idp||count<=0)return;
 
     char **data=new char *[count];
 
-    ambm.GetDataArrayPointer((void **)data,idp,count);
+    ambm.GetData((void **)data,idp,count);
 
     DebugOutputArray(hint,(const char **)data,count);
 
