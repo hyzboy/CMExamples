@@ -58,7 +58,9 @@ void main(int,char **)
             out(cu);
         }
 
-        cu.Insert(0,0);out(cu);
+        std::cout<<"insert 'A' data at first."<<std::endl;
+        cu.Insert(0,"A");
+        out(cu);
 
         std::cout<<"indexOf(E) is "<<cu.indexOfValue('E')<<std::endl;
         
