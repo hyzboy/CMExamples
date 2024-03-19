@@ -70,6 +70,9 @@ set_example_project_folder("DataType/DataArray" PoolTest)
 add_executable(MapTest datatype/MapTest.cpp)
 set_example_project_folder("DataType/DataArray" MapTest)
 
+add_executable(DataBlockTest datatype/DataBlockTest.cpp)
+set_example_project_folder("DataType/DataArray" DataBlockTest)
+
 ####################################################################################################
 
 add_executable(1_ActiveIDManagerTest datatype/ActiveIDManagerTest.cpp)
