@@ -7,6 +7,53 @@
 using namespace std;
 using namespace hgl;
 
+template<typename T> class SerialsPool
+{
+    T MaxCount;                         ///<最大数量
+    T *Serials;                         ///<序列数据
+    T *EndPointer,*AccessPointer;       ///<结束指针,访问指针
+
+public:
+
+    Serials(const T &count)
+    {
+        MaxCount=count;
+        Serials=new T[MaxCount];
+        EndPointer=Serials+MaxCount;
+        AccessPointer=EndPointer;
+
+        for(T i=0;i<MaxCount;i++)
+            Serials[i]=i;
+    }
+
+    ~Serials()
+    {
+        delete[] Serials;
+    }
+
+    bool Acquire(T *sp)
+    {
+        if(!sp)return(false);
+
+        if(AccessPointer<=Serials)
+            return(false);
+
+        *sp=*(--AccessPointer);
+        return(true);
+    }
+
+    bool Release(const T &s)
+    {
+        if(AccessPointer>=EndPointer)
+            return(false);
+
+        *AccessPointer=s;
+        ++AccessPointer;
+
+        return(true);    
+    }
+};//template<typename T> class Serials
+
 /**
  * 数据块管理器
  */
