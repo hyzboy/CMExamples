@@ -138,6 +138,9 @@ cm_example_project("utils" Base64Test)
 add_executable(HashTest utils/HashTest.cpp)
 cm_example_project("utils" HashTest)
 
+add_executable(SeriesPoolTest utils/SeriesPoolTest.cpp)
+cm_example_project("utils" SeriesPoolTest)
+
 ####################################################################################################
 OPTION(CM_EXAMPLES_ABOUT_ANDROID    OFF)
 

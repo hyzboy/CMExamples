@@ -251,6 +251,3 @@ namespace hgl
         }
     };//class DataChain
 }//namespace hgl
-
-
-理论上写完了，下一步写编写测试程序
