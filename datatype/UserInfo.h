@@ -3,8 +3,6 @@
 #include<string.h>
 #include<iostream>
 
-using namespace std;
-
 struct UserInfo
 {
     char name[8];
@@ -45,6 +43,8 @@ static UserInfo user_info_array[]=
     {"Zack",true,43}
 };
 
+constexpr const size_t user_info_array_count=sizeof(user_info_array)/sizeof(UserInfo);
+
 class UserInfoClass
 {
     UserInfo info;
@@ -57,15 +57,33 @@ public:
     {
         memcpy(&info,&ui,sizeof(UserInfo));
 
-        cout<<"UserInfoClass::Set("<<info.name<<")"<<endl;
+        std::cout<<"UserInfoClass::Set("<<info.name<<")"<<std::endl;
     }
 
     ~UserInfoClass()
     {
-        cout<<"~UserInfoClass("<<info.name<<")"<<endl;
+        std::cout<<"~UserInfoClass("<<info.name<<")"<<std::endl;
     }
 
-    const char *GetName()const{return info.name;}
-    const bool GetSex()const{return info.sex;}
-    const int GetAge()const{return info.age;}
+    const char *GetName ()const{return info.name;}
+    const bool  GetSex  ()const{return info.sex;}
+    const int   GetAge  ()const{return info.age;}
 };
+
+inline void out_userinfo(const UserInfo *ui)
+{
+    if(!ui)return;
+
+    std::cout<<"User("<<ui->name<<","<<(ui->sex?"Male":"Female")<<","<<ui->age<<")"<<std::endl;
+}
+
+inline void out_userinfo(const UserInfo *ui,const int count)
+{
+    if(!ui||count<=0)return;
+
+    for(int i=0;i<count;i++)
+    {
+        std::cout<<"User "<<i<<" ("<<ui->name<<","<<(ui->sex?"Male":"Female")<<","<<ui->age<<")"<<std::endl;
+        ++ui;
+    }
+}
