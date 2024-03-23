@@ -73,8 +73,8 @@ set_example_project_folder("DataType/DataArray" MapTest)
 add_executable(StackPoolTest datatype/StackPoolTest.cpp)
 set_example_project_folder("DataType/DataArray" StackPoolTest)
 
-add_executable(DataBlockTest datatype/DataBlockTest.cpp)
-set_example_project_folder("DataType/DataArray" DataBlockTest)
+add_executable(DataChainTest datatype/DataChainTest.cpp)
+cm_example_project("DataType/DataArray" DataChainTest)
 
 ####################################################################################################
 
