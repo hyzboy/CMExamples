@@ -44,8 +44,8 @@ template<typename T> void out_list(const List<T> &l)
 
 int os_main(int,os_char **)
 {
-    SeriesU8 series_pool(POOL_MAX_COUNT);        //序列号池
-    List<uint8> tmp_list;                       //临时序列号列表
+    SeriesU8 series_pool(POOL_MAX_COUNT);       //序号池
+    List<uint8> tmp_list;                       //临时序号列表
 
     tmp_list.PreAlloc(POOL_MAX_COUNT);          //预分配空间(注：没有数据，只是预分配空间，减少未来内存分配次数而己)
 
@@ -77,9 +77,9 @@ int os_main(int,os_char **)
             {
                 uint8 index;
 
-                if (series_pool.Acquire(&index))                     //取得一个序列号
+                if (series_pool.Acquire(&index))                     //取得一个序号
                 {
-                     cout<< (int)index <<" ";
+                    cout<< (int)index <<" ";
 
                     tmp_list.Add(index);
                 }
@@ -106,7 +106,7 @@ int os_main(int,os_char **)
                 tmp_list.Get(pos,index);            //取得这个位置的数据
                 tmp_list.Delete(pos);               //删除这个位置的数据
 
-                if (series_pool.Release(index))              //释放一个序列号
+                if (series_pool.Release(index))              //释放一个序号
                 {
                     cout << (int)index << " ";
                 }
