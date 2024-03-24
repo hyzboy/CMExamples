@@ -58,16 +58,16 @@ int os_main(int,os_char **)
     dc.Release(un[0]);
     out_data_chain(&dc);
 
-    cout<<"Release  5 ";
-    dc.Release(un[5]);
+    cout<<"Release  7 ";
+    dc.Release(un[7]);
     out_data_chain(&dc);
 
     cout<<"Release  9 ";
     dc.Release(un[9]);
     out_data_chain(&dc);
 
-    cout<<"Release  6 ";
-    dc.Release(un[6]);
+    cout<<"Release  4 ";
+    dc.Release(un[4]);
     out_data_chain(&dc);
 
     cout<<"---------------------------------------------------------------------------------"<<endl;
@@ -75,11 +75,12 @@ int os_main(int,os_char **)
     DataChain::UserNode *ud20=dc.Acquire(20);
     out_data_chain(&dc);
 
-    cout<<"Release  2 ";
-    dc.Release(un[2]);
-    out_data_chain(&dc);
     cout<<"Release  3 ";
     dc.Release(un[3]);
+    out_data_chain(&dc);
+
+    cout<<"Release  2 ";
+    dc.Release(un[2]);
     out_data_chain(&dc);
 
     cout<<"Acquire 15 ";

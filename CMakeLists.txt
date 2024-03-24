@@ -76,6 +76,9 @@ set_example_project_folder("DataType/DataArray" StackPoolTest)
 add_executable(DataChainTest datatype/DataChainTest.cpp)
 cm_example_project("DataType/DataArray" DataChainTest)
 
+add_executable(DataChainTest2 datatype/DataChainTest2.cpp)
+cm_example_project("DataType/DataArray" DataChainTest2)
+
 ####################################################################################################
 
 add_executable(1_ActiveIDManagerTest datatype/ActiveIDManagerTest.cpp)
