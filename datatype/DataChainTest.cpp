@@ -1,5 +1,6 @@
 ﻿#include<hgl/type/DataChain.h>
 #include<iostream>
+#include<iomanip>
 #include<random>
 
 using namespace std;
@@ -16,7 +17,7 @@ void out_data_chain(DataChain *dc)
 
     while(node)
     {
-        cout<<"["<<node->start<<","<<node->count<<"]";
+        cout<<"["<<setw(3)<<node->start<<","<<setw(3)<<node->count<<"]";
 
         if(node==end)
             break;
@@ -46,42 +47,42 @@ int os_main(int,os_char **)
         }
         else
         {
-            cout<<"Acquire UserNode: "<<un[i]->GetStart()<<","<<un[i]->GetCount()<<endl;
+            cout<<"Acquire UserNode: ["<<setw(3)<<un[i]->GetStart()<<","<<setw(3)<<un[i]->GetCount()<<"] ";
         }
 
         out_data_chain(&dc);
     }
 
     cout<<"---------------------------------------------------------------------------------"<<endl;
-    cout<<"Release 0"<<endl;
+    cout<<"Release  0 ";
     dc.Release(un[0]);
     out_data_chain(&dc);
 
-    cout<<"Release 5"<<endl;
+    cout<<"Release  5 ";
     dc.Release(un[5]);
     out_data_chain(&dc);
 
-    cout<<"Release 9"<<endl;
+    cout<<"Release  9 ";
     dc.Release(un[9]);
     out_data_chain(&dc);
 
-    cout<<"Release 6"<<endl;
+    cout<<"Release  6 ";
     dc.Release(un[6]);
     out_data_chain(&dc);
 
     cout<<"---------------------------------------------------------------------------------"<<endl;
-    cout<<"Acquire 20"<<endl;
+    cout<<"Acquire 20 ";
     DataChain::UserNode *ud20=dc.Acquire(20);
     out_data_chain(&dc);
 
-    cout<<"Release 2"<<endl;
+    cout<<"Release  2 ";
     dc.Release(un[2]);
     out_data_chain(&dc);
-    cout<<"Release 3"<<endl;
+    cout<<"Release  3 ";
     dc.Release(un[3]);
     out_data_chain(&dc);
 
-    cout<<"Acquire 15"<<endl;
+    cout<<"Acquire 15 ";
     DataChain::UserNode *ud15=dc.Acquire(15);
     out_data_chain(&dc);
 }
