@@ -241,6 +241,7 @@ MediaTek,MT8765WB,,,PowerVR,GE8100,1,570,,,,,,,,,,A53,4,1.3
 MediaTek,MT8766B,,,PowerVR,GE8320,1,550,,,,,,,,,,A53,4,2
 MediaTek,MT8768WT,Helio P22T,,PowerVR,GE8320,1,,,,,,,,A53,4,2.3,A53,4,
 MediaTek,MT8786V/CT,Helio G80,,Mali,G52,2,950,,,,,,,A75,2,2,A55,6,1.8
+MediaTek,MT8788,,,Mali,G72,3,800,,,,,,,A73,4,2,A53,4,2
 Exynos,5433,,,Mali,T760,6,,,,,,,,A57,4,1.9,A53,4,1.3
 Exynos,7420,,,Mali,T760,1,266,,,,,,,A57,4,2.1,A53,4,1.5
 Exynos,850,,,Mali,G52,1,,,,,,,,A55,4,2,A55,4,2
