@@ -1,4 +1,4 @@
-macro(cm_example_project sub_folder project_name)
+﻿macro(cm_example_project sub_folder project_name)
     target_link_libraries(${project_name} PRIVATE CMCore CMPlatform CMUtil)
 
     if(UNIX)
@@ -46,6 +46,12 @@ cm_example_project("DataType" Size2Test)
 
 add_executable(Uint2HexStrTest datatype/Uint2HexStrTest.cpp)
 cm_example_project("DataType" Uint2HexStrTest)
+
+add_executable(ConstStringSetTest datatype/ConstStringSetTest.cpp)
+cm_example_project("DataType" ConstStringSetTest)
+
+add_executable(IDNameTest datatype/IDNameTest.cpp)
+cm_example_project("DataType" IDNameTest)
 
 ####################################################################################################
 
