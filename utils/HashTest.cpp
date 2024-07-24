@@ -53,7 +53,7 @@ int os_main(int argc,os_char **argv)
 
         h->GetName(hash_name);
 
-        cout<<setw(8)<<hash_name.c_str()<<":"<<hash_str<<",use time: "<<(end_time-start_time)<<endl;
+        cout<<setw(16)<<std::right<<hash_name.c_str()<<"["<<setw(16)<<std::left<<(end_time-start_time)<<"] "<<hash_str<<endl;
 
         delete[] hash_code;
         delete h;
