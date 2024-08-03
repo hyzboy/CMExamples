@@ -22,6 +22,9 @@ endmacro()
 
 ####################################################################################################
 
+add_executable(TypeSizeof datatype/TypeSizeof.cpp)
+CM_EXAMPLE_PROJECT("DataType" TypeSizeof)
+
 add_executable(HalfFloatTest datatype/HalfFloatTest.cpp)
 cm_example_project("DataType" HalfFloatTest)
 
