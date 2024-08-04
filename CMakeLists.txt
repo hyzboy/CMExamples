@@ -56,6 +56,10 @@ cm_example_project("DataType" ConstStringSetTest)
 add_executable(IDNameTest datatype/IDNameTest.cpp)
 cm_example_project("DataType" IDNameTest)
 
+
+add_executable(TransformBenchmark math/TransformBenchmark.cpp)
+CM_EXAMPLE_PROJECT("Math" TransformBenchmark)
+
 ####################################################################################################
 
 add_executable(LifetimeTest datatype/LifetimeTest.cpp)
