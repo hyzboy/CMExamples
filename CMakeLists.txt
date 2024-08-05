@@ -91,6 +91,11 @@ cm_example_project("DataType/DataArray" DataChainTest)
 
 add_executable(DataChainTest2 datatype/DataChainTest2.cpp)
 cm_example_project("DataType/DataArray" DataChainTest2)
+####################################################################################################
+
+add_executable(Pick2DTest pick/Pick2DTest.cpp)
+cm_example_project("Pick" Pick2DTest)
+target_link_libraries(Pick2DTest PRIVATE CM2D)
 
 ####################################################################################################
 

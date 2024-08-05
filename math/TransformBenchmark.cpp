@@ -5,7 +5,7 @@
 
 using namespace hgl;
 
-constexpr const size_t TEST_COUNT=10000;
+constexpr const size_t TEST_COUNT=1000000;
 
 int main(int,char **)
 {
