@@ -7,7 +7,7 @@ void out(const char *source,const char *result)
     std::cout<<source<<" return \""<<result<<"\""<<std::endl;
 }
 
-void out(const char *source,const hgl::UTF8String &param,const hgl::UTF8String &result)
+void out(const char *source,const hgl::AnsiString &param,const hgl::AnsiString &result)
 {
     std::cout<<source<<"(\""<<param.c_str()<<"\") return \""<<result.c_str()<<"\""<<std::endl;
 }
@@ -27,13 +27,13 @@ int main(int,char **)
     out("strrchr(str,strlen(str),3,'l')",hgl::strrchr(str,hgl::strlen(str),3,'l'));
     out("strrchr(str,strlen(str),3,\"el\",2)",hgl::strrchr(str,hgl::strlen(str),3,"el",2));
 
-    hgl::UTF8String fn("C:\\1.txt");
+    hgl::AnsiString fn("C:\\1.txt");
 
     out("ClipFilename",fn,hgl::filesystem::ClipFilename(fn));
 
-    hgl::UTF8String tp1("C:\\1\\2");
-    hgl::UTF8String tp2("C:\\1\\2\\");
-    hgl::UTF8String tp3("C:\\1\\2\\\\");
+    hgl::AnsiString tp1("C:\\1\\2");
+    hgl::AnsiString tp2("C:\\1\\2\\");
+    hgl::AnsiString tp3("C:\\1\\2\\\\");
 
     out("ClipLastPathname",tp1,hgl::filesystem::ClipLastPathname(tp1));
     out("ClipLastPathname",tp2,hgl::filesystem::ClipLastPathname(tp2));
