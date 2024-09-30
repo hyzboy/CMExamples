@@ -1,7 +1,7 @@
 ﻿#include<hgl/type/IDName.h>
 #include<iostream>
 
-void main()
+int main(int,char **)
 {
     using namespace hgl;
 
@@ -9,7 +9,7 @@ void main()
     AnsiIDName id4("id2");
 
     AnsiIDName id5("id1");
-    AnsiIDName id6("id1");
+    AnsiIDName id6("id2");
 
     std::cout<<id5.GetID()<<":"<<id5.GetName()<<", ClassID: "<<std::hex<<id5.GetClassID()<<std::endl;
     std::cout<<id6.GetID()<<":"<<id6.GetName()<<", ClassID: "<<std::hex<<id6.GetClassID()<<std::endl;

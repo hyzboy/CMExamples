@@ -49,7 +49,7 @@ void IntMapTest()
         while(true)
         {
             index=rand()%MAX_COUNT;
-            if(!int_sets.IsMember(index))break;
+            if(!int_sets.Contains(index))break;
         }
 
         int_sets.Add(index);
