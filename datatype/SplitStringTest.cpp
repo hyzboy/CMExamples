@@ -1,5 +1,4 @@
 #include<hgl/type/SplitString.h>
-#include<hgl/type/MergeString.h>
 #include<iostream>
 
 using namespace hgl;
@@ -10,7 +9,7 @@ void Output(UTF8StringList &sl,const char *str)
     cout<<str<<": ";
 
     for(int i=0;i<sl.GetCount();i++)
-        cout<<"\""<<sl[i].c_str()<<"\" ";
+        cout<<(char *)"\""<<(char *)sl[i].c_str()<<"\" ";
 
     cout<<endl;
     sl.Clear();
@@ -20,16 +19,16 @@ int main(int,char **)
 {
     UTF8StringList sl;
 
-    UTF8String str="hello game world!";
+    UTF8String str=u8"hello game world!";
     
     {
         UTF8String left,right;
 
-        SpliteByString(str, UTF8String("game"), &left, &right);
+        SpliteByString(str, UTF8String(u8"game"), &left, &right);
 
         cout<<"SpliteByString"<<endl;
-        cout << "left: \"" << left.c_str() <<"\"" << endl;
-        cout << "right: \""<<right.c_str() <<"\"" << endl;
+        cout << "left: \"" <<(char *) left.c_str() <<"\"" << endl;
+        cout << "right: \""<<(char *)right.c_str() <<"\"" << endl;
     }
 
     {
@@ -39,13 +38,13 @@ int main(int,char **)
     }
 
     {
-        SplitToStringListByChar(sl,str,' ');
+        SplitToStringListByChar(sl,str,u8' ');
 
         Output(sl,"SplitToStringListByChar");
     }
 
     {
-        str="Hello\rgame,\nhello\r\nworld!";
+        str=u8"Hello\rgame,\nhello\r\nworld!";
 
         SplitToStringListByEnter(sl,str);
         
@@ -53,7 +52,7 @@ int main(int,char **)
     }
 
     {
-        str="Hello, Game. World!";
+        str=u8"Hello, Game. World!";
 
         SplitToStringListByCodes(sl,str);
         
@@ -61,7 +60,7 @@ int main(int,char **)
     }
 
     {
-        str="123,456 789-000";
+        str=u8"123,456 789-000";
 
         SplitToStringListByDigit(sl,str);
         
@@ -69,7 +68,7 @@ int main(int,char **)
     }
 
     {
-        str="0x123,0x456 0x789-0x000";
+        str=u8"0x123,0x456 0x789-0x000";
 
         SplitToStringListByXDigit(sl,str);
         
@@ -77,7 +76,7 @@ int main(int,char **)
     }
 
     {
-        str="123.456 789 0.123 3.1415 .5";
+        str=u8"123.456 789 0.123 3.1415 .5";
 
         SplitToStringListByFloat(sl,str);
         
@@ -85,10 +84,10 @@ int main(int,char **)
     }
 
     {
-        str="#include<hello.h>\n"
+        str=u8"#include<hello.h>\n"
             "#include\"world.h\"\n";
 
-        SplitToStringListByChars(sl,str,UTF8String("<>\"\n"));
+        SplitToStringListByChars(sl,str,UTF8String(u8"<>\"\n"));
         
         Output(sl,"SplitToStringListByChars");
     }
