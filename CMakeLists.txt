@@ -1,5 +1,5 @@
 ﻿macro(cm_example_project sub_folder project_name)
-    target_link_libraries(${project_name} PRIVATE CMCore CMPlatform CMUtil)
+    target_link_libraries(${project_name} PRIVATE CMCore CMPlatform CMUtil tsl::robin_map)
 
     if(UNIX)
         target_link_libraries(${project_name} PRIVATE dl)
@@ -11,6 +11,12 @@
         set_debugger_directory(${project_name} ${CMAKE_CURRENT_SOURCE_DIR})
 
         target_sources(${project_name} PRIVATE ${CM_MANIFEST})
+        
+        if(MSVC)
+            target_sources(${project_name} INTERFACE
+                           ${CM_NATVIS})
+        endif()
+
     ENDIF()
 
     set_property(TARGET ${project_name} PROPERTY FOLDER "CM/Examples/${sub_folder}")
@@ -21,7 +27,10 @@ macro(set_example_project_folder sub_folder project_name)
 endmacro()
 
 ####################################################################################################
+add_executable(DebugObject debug/DebugObject.cpp)
+CM_EXAMPLE_PROJECT("Debug" DebugObject)
 
+####################################################################################################
 add_executable(TypeSizeof datatype/TypeSizeof.cpp)
 CM_EXAMPLE_PROJECT("DataType" TypeSizeof)
 
@@ -32,7 +41,7 @@ add_executable(HalfFloatTest datatype/HalfFloatTest.cpp)
 cm_example_project("DataType" HalfFloatTest)
 
 add_executable(SplitStringTest datatype/SplitStringTest.cpp)
-cm_example_project("DataType" SplitStringTest)
+cm_example_project("DataType" SplitStringTest ${CM_NATVIS})
 
 add_executable(StrChrTest datatype/strchr_test.cpp)
 cm_example_project("DataType" StrChrTest)
@@ -59,6 +68,10 @@ cm_example_project("DataType" ConstStringSetTest)
 add_executable(IDNameTest datatype/IDNameTest.cpp)
 cm_example_project("DataType" IDNameTest)
 
+####################################################################################################
+
+add_executable(OutputEpsilon math/OutputEpsilon.cpp)
+CM_EXAMPLE_PROJECT("Math" OutputEpsilon)
 
 add_executable(TransformBenchmark math/TransformBenchmark.cpp)
 CM_EXAMPLE_PROJECT("Math" TransformBenchmark)
