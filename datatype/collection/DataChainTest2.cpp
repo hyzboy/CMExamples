@@ -33,7 +33,9 @@ int os_main(int,os_char **)
 {
     constexpr const int BLOCK_SIZE=100;
 
-    DataChain dc(BLOCK_SIZE);                  ///数据链管理器
+    DataChain dc;
+    
+    dc.Init(BLOCK_SIZE);                  ///数据链管理器
 
     cout<<"DataChain Test"<<endl;
 

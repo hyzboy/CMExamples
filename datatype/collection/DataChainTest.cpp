@@ -30,7 +30,9 @@ void out_data_chain(DataChain *dc)
 
 int os_main(int,os_char **)
 {
-    DataChain dc(100);         ///数据链管理器(预定100个块)
+    DataChain dc;
+    
+    dc.Init(100);         ///数据链管理器(预定100个块)
 
     cout<<"DataChain Test"<<endl;
 

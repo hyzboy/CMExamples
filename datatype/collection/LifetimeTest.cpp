@@ -80,13 +80,13 @@ public:
     }
 };
 
-template<typename T> class TestRawArray:public TestArray<T,DataLifetimeCallback<T>>
+template<typename T> class TestRawArray:public TestArray<T,DataLifecycleManager<T>>
 {
-    DataLifetimeCallback<T> life_cb;
+    DataLifecycleManager<T> life_cb;
 
 public:
 
-    TestRawArray():TestArray<T,DataLifetimeCallback<T>>(&life_cb){}
+    TestRawArray():TestArray<T,DataLifecycleManager<T>>(&life_cb){}
     ~TestRawArray()=default;
 };
 
@@ -124,13 +124,13 @@ public:
     int Get()const{return value;}
 };
 
-template<typename T> class TestObjectArray:public TestArray<T *,ObjectLifetimeCallback<T>>
+template<typename T> class TestObjectArray:public TestArray<T *,ObjectLifecycleManager<T>>
 {
     DefaultObjectLifetimeCallback<T> life_cb;
 
 public:
 
-    TestObjectArray():TestArray<T *,ObjectLifetimeCallback<T>>(&life_cb){}
+    TestObjectArray():TestArray<T *,ObjectLifecycleManager<T>>(&life_cb){}
     virtual ~TestObjectArray()
     {
         for(T *p:*this)
@@ -144,7 +144,7 @@ public:
         if(!life_cb.Create(&p))
             return nullptr;
 
-        TestArray<T *,ObjectLifetimeCallback<T>>::Add(p);
+        TestArray<T *,ObjectLifecycleManager<T>>::Add(p);
 
         return p;
     }
