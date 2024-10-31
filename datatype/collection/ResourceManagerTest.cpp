@@ -8,69 +8,76 @@
 * 同时，对引用和释放可以产生详细的日志供开发者调试分析。
 */
 
-#include<hgl/type/LifetimeCallback.h>
+#include<iostream>
 #include<hgl/type/object/ObjectBaseInfo.h>
-#include<hgl/type/object/ObjectManager.h>
-#include<hgl/type/List.h>
 
 using namespace hgl;
+using namespace std;
 
-struct RefRecord;
-struct RefUser;
-struct ResObject;
-
-/**
-* 引用记录
-*/
-struct RefRecord
+class IGraphResObject
 {
-    constexpr const static unsigned int ACTION_INC=1;     ///<增加引用
-    constexpr const static unsigned int ACTION_DEC=2;     ///<减少引用
+    ObjectSimpleInfo    osi;
+
+    int ref_count;
 
 public:
 
-    ObjectSimpleInfo user_osi;          ///<引用者对象简单信息
-
-    uint action;                        ///<动作
-
-    int new_ref_count;                  ///<新的引用计数
-};
-
-/**
-* 引用者信息
-*/
-struct RefUser
-{
-    ObjectSimpleInfo user_osi;           ///<对象简单信息
-};
-
-/**
-* 资源对象基类
-*/
-class ResObject:public ObjectSimpleInfo
-{
-    int ref_count;                      ///<引用计数
-
-    List<RefRecord> ref_record_list;    ///<引用记录列表
-
-public:
+    const size_t GetTypeHash()const noexcept{return osi.hash_code;}         ///<获取数据类型的HASH值
+    const size_t GetSerial()const noexcept{return osi.serial_number;}       ///<获取数据序列号
 
     const int GetRefCount()const noexcept{return ref_count;}
 
-    /**
-    * 增加引用计数
-    */
-    virtual void IncRef() noexcept
+public:
+
+    IGraphResObject(const ObjectSimpleInfo &info)
     {
-        ++ref_count;
+        osi=info;
+        ref_count=0;
+
+        cout<<"type("<<info.hash_code<<") serial("<<info.serial_number<<") create."<<endl;
     }
 
-public:
-};//class ResObject
+    virtual ~IGraphResObject()
+    {
+        cout<<"type("<<osi.hash_code<<") serial("<<osi.serial_number<<") destroy."<<endl;
+    }
+};//class IGraphResObject
 
-class ResManager:public ObjectManager
+template<typename T> class GraphResObject:public IGraphResObject
 {
+    static size_t SerialCount=0;
+
+public:
+
+    GraphResObject():IGraphResObject({typeid(T).hash_code,SerialCount++}){}
+    virtual ~GraphResObject()=default;
+};//class GraphResObject
+
+class IGraphResManager
+{
+    size_t SerialCount;
+
 public:
 
 
 };
+
+class TestObjectA{};
+class TestObjectB{};
+
+using TOA=GraphResObject<TestObjectA>;
+using TOB=GraphResObject<TestObjectB>;
+
+int main()
+{
+    TOA *toa=new TOA;
+    TOB *tob=new TOB;
+
+    cout<<"toa->GetRefCount():"<<toa->GetRefCount()<<endl;
+    cout<<"tob->GetRefCount():"<<tob->GetRefCount()<<endl;
+
+    delete toa;
+    delete tob;
+
+    return(0);
+}

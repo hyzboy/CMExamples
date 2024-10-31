@@ -1,4 +1,4 @@
-﻿#include<hgl/type/LifetimeCallback.h>
+﻿#include<hgl/type/LifecycleManager.h>
 
 #include<iostream>
 #include<stdlib.h>
