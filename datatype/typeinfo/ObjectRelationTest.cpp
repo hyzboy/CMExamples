@@ -21,15 +21,12 @@
 using namespace hgl;
 using namespace std;
 
-#define CLASS_TYPE_HASH(type)   public: static const size_t StaticTypeHash(){return typeid(type).hash_code();}
-
+#define CLASS_TYPE_HASH(type)   static const size_t StaticTypeHash(){return typeid(type).hash_code();}
 
 class BaseObject
 {
     size_t object_hash_code;
     size_t object_serial;
-
-    CLASS_TYPE_HASH(BaseObject)
 
 public:
 
@@ -40,20 +37,29 @@ public:
     }
 
     virtual ~BaseObject()=default;
-    
+
+    CLASS_TYPE_HASH(BaseObject)
+
     const size_t GetTypeHash()const{return object_hash_code;}
     const size_t GetObjectSerial()const{return object_serial;}
 };//class BaseObject
 
-#define CLASS_BODY(class_type)  CLASS_TYPE_HASH(class_type)    \
-                                private:    \
+#define CLASS_BODY(class_type)  private:    \
                                     static const size_t CreateObjectSerial(){static size_t serial=0;return ++serial;} \
                                 public: \
                                     class_type():BaseObject(class_type::StaticTypeHash(),class_type::CreateObjectSerial()){}    \
-                                    virtual ~class_type()=default;
+                                    virtual ~class_type()=default;  \
+                                    CLASS_TYPE_HASH(class_type)
 
 
 template<typename T> inline const bool IsType(BaseObject *bo){return bo?(bo->GetTypeHash()==T::StaticTypeHash()):false;}
+
+inline const bool TypeEqual(BaseObject *bo1,BaseObject *bo2)
+{
+    if(!bo1||!bo2)return(false);
+
+    return bo1->GetTypeHash()==bo2->GetTypeHash();
+}
 
 class TestObject:public BaseObject
 {
@@ -145,9 +151,13 @@ int main(int,char **)
     std::cout<<"bo->TypeHash:   "<<bo->GetTypeHash()<<std::endl;
     std::cout<<"bo->Serial:     "<<bo->GetObjectSerial()<<std::endl;
 
-    const bool result=IsType<TestObject>(bo);
+    bool result=IsType<TestObject>(bo);
     
     std::cout<<"IsType<TestObject>(bo) result is "<<(result?"true":"false")<<std::endl;
+
+    result=TypeEqual(&to1,bo);
+
+    std::cout<<"TypeEqual(&to1,bo) result is "<<(result?"true":"false")<<std::endl;
 
     return 0;
 }
