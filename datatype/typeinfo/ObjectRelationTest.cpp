@@ -16,6 +16,7 @@
 
 #include<hgl/type/object/Object.h>
 #include<hgl/type/List.h>
+#include<tsl/robin_set.h>
 #include<iostream>
 
 using namespace hgl;
@@ -25,29 +26,27 @@ using namespace std;
 
 class BaseObject
 {
-    size_t object_hash_code;
-    size_t object_serial;
+    ObjectSimpleInfo object_simple_info;
 
 public:
 
-    BaseObject(const size_t hash,const size_t os)
+    BaseObject(const ObjectSimpleInfo &osi)
     {
-        object_hash_code=hash;
-        object_serial   =os;
+        object_simple_info=osi;
     }
 
     virtual ~BaseObject()=default;
 
     CLASS_TYPE_HASH(BaseObject)
 
-    const size_t GetTypeHash()const{return object_hash_code;}
-    const size_t GetObjectSerial()const{return object_serial;}
+    const size_t GetTypeHash()const{return object_simple_info.hash_code;}
+    const size_t GetObjectSerial()const{return object_simple_info.serial_number;}
 };//class BaseObject
 
 #define CLASS_BODY(class_type)  private:    \
                                     static const size_t CreateObjectSerial(){static size_t serial=0;return ++serial;} \
                                 public: \
-                                    class_type():BaseObject(class_type::StaticTypeHash(),class_type::CreateObjectSerial()){}    \
+                                    class_type():BaseObject(ObjectSimpleInfo(class_type::StaticTypeHash(),class_type::CreateObjectSerial())){}    \
                                     virtual ~class_type()=default;  \
                                     CLASS_TYPE_HASH(class_type)
 
@@ -69,23 +68,34 @@ public:
 
 };
 
-template<typename T> class SharedObject
-{
-    T *obj;
+using ObjectSimpleInfoSet=tsl::robin_set<ObjectSimpleInfo>;
 
-    int ref_count;
-    int weak_count;
+/**
+* 数据指针引用<br>
+* 类似于std::shared_ptr,SharedPtr。但这个类强大在于它会记录谁引用了它，以及它引用了谁。
+*/
+template<typename T> class RefPtr
+{
+    struct RefData
+    {
+        void *obj;
+
+        ObjectSimpleInfoSet ref_set;
+        ObjectSimpleInfoSet weak_set;
+    };
+
+    RefData *data;
 
 public:
 
-    SharedObject()
+    RefPtr()
     {
         obj=nullptr;
         ref_count=0;
         weak_count=0;
     }
 
-    ~SharedObject()
+    ~RefPtr()
     {
         if(obj)
             delete obj;
