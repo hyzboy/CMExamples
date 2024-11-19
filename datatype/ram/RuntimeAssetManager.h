@@ -104,7 +104,7 @@ public:
  *      {
  *      public:
  * 
- *          using RuntimeAsset::RuntimeAsset;
+ *          using RuntimeAsset<MyAssetID,MyRuntimeAsset>::RuntimeAsset;
  *      };
  * 
  * MyRuntimeAsset.cpp

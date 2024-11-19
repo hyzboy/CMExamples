@@ -39,8 +39,14 @@ public:
 
     CLASS_TYPE_HASH(BaseObject)
 
+    const ObjectSimpleInfo &GetObjectSimpleInfo()const{return object_simple_info;}
     const size_t GetTypeHash()const{return object_simple_info.hash_code;}
     const size_t GetObjectSerial()const{return object_simple_info.serial_number;}
+
+    virtual void Destory()
+    {
+        delete this;
+    }
 };//class BaseObject
 
 #define CLASS_BODY(class_type)  private:    \
@@ -68,85 +74,7 @@ public:
 
 };
 
-using ObjectSimpleInfoSet=tsl::robin_set<ObjectSimpleInfo>;
-
-/**
-* 数据指针引用<br>
-* 类似于std::shared_ptr,SharedPtr。但这个类强大在于它会记录谁引用了它，以及它引用了谁。
-*/
-template<typename T> class RefPtr
-{
-    struct RefData
-    {
-        void *obj;
-
-        ObjectSimpleInfoSet ref_set;
-        ObjectSimpleInfoSet weak_set;
-    };
-
-    RefData *data;
-
-public:
-
-    RefPtr()
-    {
-        obj=nullptr;
-        ref_count=0;
-        weak_count=0;
-    }
-
-    ~RefPtr()
-    {
-        if(obj)
-            delete obj;
-    }
-
-    void SetObject(T *o)
-    {
-        if(obj)
-            delete obj;
-
-        obj=o;
-    }
-
-    T *GetObject()
-    {
-        return obj;
-    }
-
-    void AddRef()
-    {
-        ++ref_count;
-    }
-
-    void DelRef()
-    {
-        if(ref_count>0)
-            --ref_count;
-    }
-
-    void AddWeak()
-    {
-        ++weak_count;
-    }
-
-    void DelWeak()
-    {
-        if(weak_count>0)
-            --weak_count;
-    }
-
-    int GetRefCount()const
-    {
-        return ref_count;
-    }
-    int GetWeakCount()const
-    {
-        return weak_count;
-    }
-};
-
-int main(int,char **)
+void test1()
 {
     TestObject to1,to2,to3;
 
@@ -168,6 +96,129 @@ int main(int,char **)
     result=TypeEqual(&to1,bo);
 
     std::cout<<"TypeEqual(&to1,bo) result is "<<(result?"true":"false")<<std::endl;
+}
+
+using ObjectSimpleInfoSet=tsl::robin_set<ObjectSimpleInfo>;
+
+template<typename T> class RefPtr;
+
+/**
+* 引用对象
+*/
+template<typename T> class RefObject
+{
+    T *obj;
+
+    ObjectSimpleInfoSet ref_me_set;     ///<引用我的对象
+    ObjectSimpleInfoSet me_ref_set;     ///<我引用的对象
+
+    template<typename T> friend class RefPtr;
+
+public:
+
+    RefObject(T *o)
+    {
+        obj=o;
+    }
+
+    ~RefObject()
+    {
+        if(obj)
+            obj->Destory();
+    }
+
+    /**
+    * 申请一个引用
+    */
+    RefPtr<T> Acquire(const ObjectSimpleInfo *osi,const SourceCodeLocation &scl);
+
+    void Release(RefPtr<T> *rp,const SourceCodeLocation &)
+    {
+        if(!rp)return;
+
+
+    }
+};//template<typename T> class RefObject
+
+template<typename T> class RefPtr
+{
+    RefObject<T> *ref_obj;
+
+public:
+
+    RefPtr()
+    {
+        ref_obj=nullptr;
+    }
+
+    RefPtr(RefObject<T> *ro)
+    {
+        ref_obj=ro;
+    }
+
+    ~RefPtr()
+    {
+        if(ref_obj)
+            ref_obj->Release(this,HGL_SCL_HERE);
+    }
+
+    bool IsValid()const
+    {
+        if(!this)return(false);
+        if(!ref_obj)return(false);
+        if(!ref_obj->obj)return(false);
+
+        return(true);
+    }
+
+    operator T *()
+    {
+        return ref_obj->obj;
+    }
+
+    void Release(const SourceCodeLocation &scl)
+    {
+        if(!ref_obj)return;
+
+        ref_obj->Release(this,scl);
+    }
+};
+
+#define ACQUIRE_REF(ref_object,self) ref_object->Acquire(&self->GetObjectSimpleInfo(),HGL_SCL_HERE);
+
+#define REF_PTR_RELEASE(obj)    obj->Release(HGL_SCL_HERE);
+
+class TestTexture:public BaseObject
+{
+    CLASS_BODY(TestTexture)
+};
+
+class TestMaterial:public BaseObject
+{
+    CLASS_BODY(TestMaterial)
+
+    RefPtr<TestTexture> texture;
+
+public:
+
+    void Init(RefObject<TestTexture> *ref_tex)
+    {
+        texture=ACQUIRE_REF(ref_tex,this);
+    }
+};
+
+void test2()
+{
+    RefObject<TestTexture> ref_tex1=new TestTexture;
+
+    TestMaterial *mtl=new TestMaterial;
+
+    mtl->Init(&ref_tex1);
+}
+
+int main(int,char **)
+{
+
 
     return 0;
 }

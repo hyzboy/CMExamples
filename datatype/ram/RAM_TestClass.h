@@ -1,7 +1,7 @@
 #pragma once
 #include"RuntimeAssetManager.h"
 #include<hgl/type/String.h>
-#include<hgl/type/SortedSets.h>
+#include<hgl/type/SortedSet.h>
 #include<iostream>
 
 using namespace hgl;
@@ -11,7 +11,7 @@ using PhysicalDeviceID  =uint64;
 
 struct Instance:public RuntimeAsset<InstanceID,Instance>
 {
-    SortedSets<PhysicalDeviceID> physical_devices;
+    SortedSet<PhysicalDeviceID> physical_devices;
 
 public:
 
@@ -27,7 +27,7 @@ public:
         physical_devices.Add(pd_id);
     }
 
-    const SortedSets<PhysicalDeviceID> &GetPhysicalDevices()const{return physical_devices;}
+    const SortedSet<PhysicalDeviceID> &GetPhysicalDevices()const{return physical_devices;}
 };
 
 struct PhysicalDevice:public RuntimeAsset<PhysicalDeviceID,PhysicalDevice>

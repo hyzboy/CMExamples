@@ -35,8 +35,12 @@ cm_example_project("DataType/RAM" RuntimeAssetManagerTest  datatype/ram/RuntimeA
                                                            datatype/ram/RAM_TestClass.cpp)
 
 ####################################################################################################
-cm_example_project("DataType" TypeSizeof            datatype/TypeSizeof.cpp)
-cm_example_project("DataType" TypeCastTest          datatype/TypeCastTest.cpp)
+cm_example_project("DataType/TypeInfo" TypeSizeof           datatype/TypeInfo/TypeSizeof.cpp)
+cm_example_project("DataType/TypeInfo" TypeCastTest         datatype/TypeInfo/TypeCastTest.cpp)
+cm_example_project("DataType/TypeInfo" TypeCheck            datatype/TypeInfo/TypeCheck.cpp)
+cm_example_project("DataType/TypeInfo" ObjectRelationTest   datatype/TypeInfo/ObjectRelationTest.cpp)
+
+####################################################################################################
 cm_example_project("DataType" HalfFloatTest         datatype/HalfFloatTest.cpp)
 cm_example_project("DataType" SplitStringTest       datatype/SplitStringTest.cpp)
 cm_example_project("DataType" StrChrTest            datatype/strchr_test.cpp)
@@ -64,6 +68,7 @@ cm_example_project("DataType/Collection" StackPoolTest   datatype/collection/Sta
 cm_example_project("DataType/Collection" DataChainTest   datatype/collection/DataChainTest.cpp)
 cm_example_project("DataType/Collection" DataChainTest2  datatype/collection/DataChainTest2.cpp)
 cm_example_project("DataType/Collection" ResManagerTest  datatype/collection/ResourceManagerTest.cpp)
+cm_example_project("DataType/Collection" HashSetTest     datatype/collection/HashSetTest.cpp)
 ####################################################################################################
 
 cm_example_project("Pick" Pick2DTest    pick/Pick2DTest.cpp)

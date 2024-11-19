@@ -1,7 +1,7 @@
 #include<iostream>
 #include<stdlib.h>
 #include<time.h>
-#include<hgl/type/SortedSets.h>
+#include<hgl/type/SortedSet.h>
 #include<hgl/type/Map.h>
 #include<hgl/type/String.h>
 #include"UserInfo.h"
@@ -39,7 +39,7 @@ void IntMapTest()
 
     int index;
     int value;
-    SortedSets<int> int_sets;
+    SortedSet<int> int_sets;
     Map<int,int> int_map;
 
     srand(time(nullptr));
@@ -78,22 +78,27 @@ void IntMapTest()
 
 void StringMapTest()
 {
-    Map<UTF8String,UserInfo> ui_map;
+    Map<AnsiString,UserInfo> ui_map;
 
     for(auto &ui:user_info_array)
         ui_map.Add(ui.name,ui);
 
-    ui_map.Enum([](const UTF8String &key,UserInfo &ui)
+    ui_map.Enum([](const AnsiString &key,UserInfo &ui)
     {
         cout<<"["<<key<<","<<(ui.sex?"male":"female")<<","<<ui.age<<"]"<<endl;
     });
+
+    for(auto it:ui_map)     //测试一下迭代器
+    {
+        cout<<"Iterator["<<it->key.c_str()<<","<<(it->value.sex?"male":"female")<<","<<it->value.age<<"]"<<endl;
+    }
 
     cout<<endl;
 }
 
 void StringObjectMapTest()
 {
-    ObjectMap<UTF8String,UserInfoClass> ui_map;
+    ObjectMap<AnsiString,UserInfoClass> ui_map;
 
     for(auto &ui:user_info_array)
     {
@@ -104,7 +109,7 @@ void StringObjectMapTest()
         ui_map.Add(ui.name,uic);
     }
 
-    ui_map.Enum([](const UTF8String &key,UserInfoClass *&ui)
+    ui_map.Enum([](const AnsiString &key,UserInfoClass *&ui)
     {
         cout<<"["<<key<<","<<(ui->GetSex()?"male":"female")<<","<<ui->GetAge()<<"]"<<endl;
     });
