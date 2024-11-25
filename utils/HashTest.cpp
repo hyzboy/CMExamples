@@ -25,14 +25,14 @@ int os_main(int argc,os_char **argv)
 
     cout<<"file length: "<<file_length<<endl;
 
-    UTF8String hash_name;
+    AnsiString hash_name;
     int hash_length;
     char *hash_code;
     char hash_str[256];
 
     double start_time,end_time;
 
-    ENUM_CLASS_FOR(HASH,int,i)
+    ENUM_CLASS_FOR(HASH,size_t,i)
     {
         Hash *h=CreateHash(HASH(i));
         hash_length=h->GetHashBytes();
