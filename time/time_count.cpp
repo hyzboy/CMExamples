@@ -17,7 +17,7 @@ int main(int,char **)
 
     ToDateTime(d,t,cur_time);
 
-    UTF8String str=UTF8String::floatOf(cur_time,TIME_OUT_FRAC);
+    U8String str=U8String::floatOf(cur_time,TIME_OUT_FRAC);
 
     cout<<"cur_time="<<str.c_str()<<endl;
     cout<<"\tyear="<<d.GetYear()<<" month="<<d.GetMonth()<<" day="<<d.GetDay()<<endl;
@@ -26,7 +26,7 @@ int main(int,char **)
 
     const double new_time=FromDateTime(d,t);
 
-    str=UTF8String::floatOf(new_time,TIME_OUT_FRAC);
+    str=U8String::floatOf(new_time,TIME_OUT_FRAC);
     cout<<"new_time="<<str.c_str()<<endl;
 
     cout<<"TimeZone:"<<GetTimeZone()<<endl;

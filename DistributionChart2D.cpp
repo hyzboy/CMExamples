@@ -84,7 +84,7 @@ enum class DataSourceType
     TwoPosition,
 };
 
-DataSourceType CheckDataSourceType(const UTF8String &str)
+DataSourceType CheckDataSourceType(const U8String &str)
 {
     if(str.Length()<=11)return(DataSourceType::Error);
 
@@ -99,7 +99,7 @@ DataSourceType CheckDataSourceType(const UTF8String &str)
     return(DataSourceType::Error);
 }
 
-bool ParsePosition(Vector2i *result,const UTF8String &str)
+bool ParsePosition(Vector2i *result,const U8String &str)
 {
     if(!result)return(false);
 
@@ -149,7 +149,7 @@ struct LineSegment
 
 using LineSegmentData=List<LineSegment>;
 
-bool ParseLineSegment(LineSegment *result,const UTF8String &str)
+bool ParseLineSegment(LineSegment *result,const U8String &str)
 {
     if(!result)return(false);
 
@@ -189,7 +189,7 @@ bool ParseLineSegment(LineSegment *result,const UTF8String &str)
 }
 
 template<typename T>
-void ParseStringList(List<T> &data_list,const UTF8StringList &sl,bool (*ParseLineFunc)(T *,const UTF8String &))
+void ParseStringList(List<T> &data_list,const U8StringList &sl,bool (*ParseLineFunc)(T *,const U8String &))
 {
     const uint count=sl.GetCount();
 
@@ -197,7 +197,7 @@ void ParseStringList(List<T> &data_list,const UTF8StringList &sl,bool (*ParseLin
 
     T *p=data_list.GetData();
 
-    UTF8String str;
+    U8String str;
     uint result=0;
 
     for(uint i=0;i<count;i++)
@@ -596,7 +596,7 @@ int os_main(int argc,os_char **argv)
         return 2;
     }
 
-    UTF8StringList sl;
+    U8StringList sl;
 
     csv_filename=argv[1];
 

@@ -4,7 +4,7 @@
 using namespace hgl;
 using namespace std;
 
-void Output(UTF8StringList &sl,const char *str)
+void Output(U8StringList &sl,const char *str)
 {
     cout<<str<<": ";
 
@@ -17,14 +17,14 @@ void Output(UTF8StringList &sl,const char *str)
 
 int main(int,char **)
 {
-    UTF8StringList sl;
+    U8StringList sl;
 
-    UTF8String str=u8"hello game world!";
+    U8String str=u8"hello game world!";
     
     {
-        UTF8String left,right;
+        U8String left,right;
 
-        SpliteByString(str, UTF8String(u8"game"), &left, &right);
+        SpliteByString(str, U8String(u8"game"), &left, &right);
 
         cout<<"SpliteByString"<<endl;
         cout << "left: \"" <<(char *) left.c_str() <<"\"" << endl;
@@ -87,7 +87,7 @@ int main(int,char **)
         str=u8"#include<hello.h>\n"
             "#include\"world.h\"\n";
 
-        SplitToStringListByChars(sl,str,UTF8String(u8"<>\"\n"));
+        SplitToStringListByChars(sl,str,U8String(u8"<>\"\n"));
         
         Output(sl,"SplitToStringListByChars");
     }
