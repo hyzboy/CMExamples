@@ -39,6 +39,7 @@ cm_example_project("DataType/TypeInfo" TypeSizeof           datatype/TypeInfo/Ty
 cm_example_project("DataType/TypeInfo" TypeCastTest         datatype/TypeInfo/TypeCastTest.cpp)
 cm_example_project("DataType/TypeInfo" TypeCheck            datatype/TypeInfo/TypeCheck.cpp)
 cm_example_project("DataType/TypeInfo" ObjectRelationTest   datatype/TypeInfo/ObjectRelationTest.cpp)
+cm_example_project("DataType/TypeInfo" InheritTest          datatype/TypeInfo/InheritTest.cpp)
 
 ####################################################################################################
 cm_example_project("DataType" HalfFloatTest         datatype/HalfFloatTest.cpp)
