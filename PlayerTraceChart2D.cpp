@@ -12,8 +12,8 @@
 using namespace hgl;
 using namespace hgl::bitmap;
 
-uint POSITION_SCALE_RATE=100;           //位置缩放比例,unreal中单位为cm
-uint64 BATTLE_FIELD_ID=0;               //战场ID
+uint POSITION_SCALE_RATE=100;           //浣嶇疆缂╂斁姣斾緥,unreal涓崟浣嶄负cm
+uint64 BATTLE_FIELD_ID=0;               //鎴樺満ID
 
 constexpr const uint CHAR_WIDTH=8;
 constexpr const uint CHAR_HEIGHT=16;
@@ -27,7 +27,7 @@ DrawGeometryRGB8 *draw_bmp=nullptr;
 
 using TraceList=List<Vector2i>;
 
-ObjectMap<uint,TraceList> PlayerTrace;   //玩家轨迹
+ObjectMap<uint,TraceList> PlayerTrace;   //鐜╁杞ㄨ抗
 
 Vector3u8 *PlayerColor=nullptr;
 
