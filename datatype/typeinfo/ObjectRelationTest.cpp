@@ -26,11 +26,11 @@ using namespace std;
 
 class BaseObject
 {
-    ObjectSimpleInfo object_simple_info;
+    ObjectBaseInfo object_simple_info;
 
 public:
 
-    BaseObject(const ObjectSimpleInfo &osi)
+    BaseObject(const ObjectBaseInfo &osi)
     {
         object_simple_info=osi;
     }
@@ -39,9 +39,9 @@ public:
 
     CLASS_TYPE_HASH(BaseObject)
 
-    const ObjectSimpleInfo &GetObjectSimpleInfo()const{return object_simple_info;}
+    const ObjectBaseInfo &GetObjectBaseInfo()const{return object_simple_info;}
     const size_t GetTypeHash()const{return object_simple_info.hash_code;}
-    const size_t GetObjectSerial()const{return object_simple_info.serial_number;}
+    const size_t GetObjectSerial()const{return object_simple_info.unique_id;}
 
     virtual void Destory()
     {
@@ -52,7 +52,7 @@ public:
 #define CLASS_BODY(class_type)  private:    \
                                     static const size_t CreateObjectSerial(){static size_t serial=0;return ++serial;} \
                                 public: \
-                                    class_type():BaseObject(ObjectSimpleInfo(class_type::StaticTypeHash(),class_type::CreateObjectSerial())){}    \
+                                    class_type():BaseObject(ObjectBaseInfo(class_type::StaticTypeHash(),class_type::CreateObjectSerial())){}    \
                                     virtual ~class_type()=default;  \
                                     CLASS_TYPE_HASH(class_type)
 
@@ -98,7 +98,7 @@ void test1()
     std::cout<<"TypeEqual(&to1,bo) result is "<<(result?"true":"false")<<std::endl;
 }
 
-using ObjectSimpleInfoSet=tsl::robin_set<ObjectSimpleInfo>;
+using ObjectSimpleInfoSet=tsl::robin_set<ObjectBaseInfo>;
 
 template<typename T> class RefPtr;
 
@@ -130,7 +130,7 @@ public:
     /**
     * 申请一个引用
     */
-    RefPtr<T> Acquire(const ObjectSimpleInfo *osi,const SourceCodeLocation &scl);
+    RefPtr<T> Acquire(const ObjectBaseInfo *osi,const SourceCodeLocation &scl);
 
     void Release(RefPtr<T> *rp,const SourceCodeLocation &)
     {
@@ -184,7 +184,7 @@ public:
     }
 };
 
-#define ACQUIRE_REF(ref_object,self) ref_object->Acquire(&self->GetObjectSimpleInfo(),HGL_SCL_HERE);
+#define ACQUIRE_REF(ref_object,self) ref_object->Acquire(&self->GetObjectBaseInfo(),HGL_SCL_HERE);
 
 #define REF_PTR_RELEASE(obj)    obj->Release(HGL_SCL_HERE);
 

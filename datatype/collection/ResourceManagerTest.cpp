@@ -16,30 +16,30 @@ using namespace std;
 
 class IGraphResObject
 {
-    ObjectSimpleInfo    osi;
+    ObjectBaseInfo    osi;
 
     int ref_count;
 
 public:
 
     const size_t GetTypeHash()const noexcept{return osi.hash_code;}         ///<获取数据类型的HASH值
-    const size_t GetSerial()const noexcept{return osi.serial_number;}       ///<获取数据序列号
+    const size_t GetSerial()const noexcept{return osi.unique_id;}       ///<获取数据序列号
 
     const int GetRefCount()const noexcept{return ref_count;}
 
 public:
 
-    IGraphResObject(const ObjectSimpleInfo &info)
+    IGraphResObject(const ObjectBaseInfo &info)
     {
         osi=info;
         ref_count=0;
 
-        cout<<"type("<<info.hash_code<<") serial("<<info.serial_number<<") create."<<endl;
+        cout<<"type("<<info.hash_code<<") serial("<<info.unique_id<<") create."<<endl;
     }
 
     virtual ~IGraphResObject()
     {
-        cout<<"type("<<osi.hash_code<<") serial("<<osi.serial_number<<") destroy."<<endl;
+        cout<<"type("<<osi.hash_code<<") serial("<<osi.unique_id<<") destroy."<<endl;
     }
 };//class IGraphResObject
 

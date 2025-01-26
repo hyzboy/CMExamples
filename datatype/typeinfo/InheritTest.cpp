@@ -1,5 +1,6 @@
 #include<typeinfo>
 #include<iostream>
+#include<hgl/type/object/Object.h>
 
 class Object
 {

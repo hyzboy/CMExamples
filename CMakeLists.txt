@@ -47,6 +47,7 @@ cm_example_project("DataType" SplitStringTest       datatype/SplitStringTest.cpp
 cm_example_project("DataType" StrChrTest            datatype/strchr_test.cpp)
 cm_example_project("DataType" Uint2StrTest          datatype/utos_test.cpp)
 cm_example_project("DataType" Size2Test             datatype/Size2Test.cpp)
+cm_example_project("DataType" MemcmpTest            datatype/MemcmpTest.cpp)
 cm_example_project("DataType" Uint2HexStrTest       datatype/Uint2HexStrTest.cpp)
 
 cm_example_project("DataType" ConstStringSetTest    datatype/ConstStringSetTest.cpp)
