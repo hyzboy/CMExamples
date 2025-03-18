@@ -27,6 +27,7 @@ endmacro()
 
 ####################################################################################################
 cm_example_project("Debug" DebugObject  debug/DebugObject.cpp)
+cm_example_project("Debug" AutoSCL      debug/AutoSCL.cpp)
 
 ####################################################################################################
 cm_example_project("DataType/RAM" RuntimeAssetManagerTest  datatype/ram/RuntimeAssetManagerTest.cpp
