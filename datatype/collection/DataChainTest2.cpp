@@ -1,5 +1,5 @@
 ﻿#include<hgl/type/DataChain.h>
-#include<hgl/type/List.h>
+#include<hgl/type/ArrayList.h>
 #include<iostream>
 #include<iomanip>
 #include<random>

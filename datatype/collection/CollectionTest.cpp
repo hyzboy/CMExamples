@@ -1,5 +1,5 @@
 #include<hgl/type/Collection.h>
-//#include<hgl/type/List.h>
+//#include<hgl/type/ArrayList.h>
 #include<iostream>
 
 using namespace hgl;

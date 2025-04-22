@@ -1,5 +1,5 @@
 #include<hgl/util/csv/CSVParse.h>
-#include<hgl/type/List.h>
+#include<hgl/type/ArrayList.h>
 #include<hgl/type/Map.h>
 #include<iostream>
 #include<hgl/2d/BitmapLoad.h>

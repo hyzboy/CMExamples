@@ -2,7 +2,7 @@
 #include<time.h>
 #include<hgl/type/DataType.h>
 #include<hgl/type/SeriesPool.h>
-#include<hgl/type/List.h>
+#include<hgl/type/ArrayList.h>
 #include<random>
 
 using namespace std;

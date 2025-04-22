@@ -15,7 +15,7 @@
 */
 
 #include<hgl/type/object/Object.h>
-#include<hgl/type/List.h>
+#include<hgl/type/ArrayList.h>
 #include<tsl/robin_set.h>
 #include<iostream>
 
