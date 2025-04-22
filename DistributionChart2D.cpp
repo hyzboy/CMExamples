@@ -139,7 +139,7 @@ bool ParsePosition(Vector2i *result,const U8String &str)
     return(true);
 }
 
-using OnePositionData=List<Vector2i>;
+using OnePositionData=ArrayList<Vector2i>;
 
 struct LineSegment
 {
@@ -147,7 +147,7 @@ struct LineSegment
     Vector2i end;
 };
 
-using LineSegmentData=List<LineSegment>;
+using LineSegmentData=ArrayList<LineSegment>;
 
 bool ParseLineSegment(LineSegment *result,const U8String &str)
 {
@@ -189,7 +189,7 @@ bool ParseLineSegment(LineSegment *result,const U8String &str)
 }
 
 template<typename T>
-void ParseStringList(List<T> &data_list,const U8StringList &sl,bool (*ParseLineFunc)(T *,const U8String &))
+void ParseStringList(ArrayList<T> &data_list,const U8StringList &sl,bool (*ParseLineFunc)(T *,const U8String &))
 {
     const uint count=sl.GetCount();
 

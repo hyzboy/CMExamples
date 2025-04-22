@@ -25,7 +25,7 @@ constexpr const uint ICON_SIZE=8;
 BitmapRGB8 *BackgroundBitmap=nullptr;
 DrawGeometryRGB8 *draw_bmp=nullptr;
 
-using TraceList=List<Vector2i>;
+using TraceList=ArrayList<Vector2i>;
 
 ObjectMap<uint,TraceList> PlayerTrace;   //玩家轨迹
 

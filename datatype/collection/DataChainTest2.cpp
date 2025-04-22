@@ -45,7 +45,7 @@ int os_main(int,os_char **)
     uniform_int_distribution<int> dis_un_count(BLOCK_SIZE/10,BLOCK_SIZE/4);
     uniform_int_distribution<int> dis_block_count(1,BLOCK_SIZE/10);
 
-    List<DataChain::UserNode *> user_node_list;
+    ArrayList<DataChain::UserNode *> user_node_list;
     int free_count=dc.GetFreeCount();
 
     do

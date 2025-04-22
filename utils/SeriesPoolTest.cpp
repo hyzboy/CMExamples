@@ -27,7 +27,7 @@ template<typename T> void out_series_pool(const SeriesPool<T> &sp)
     cout<<endl;
 }
 
-template<typename T> void out_list(const List<T> &l)
+template<typename T> void out_list(const ArrayList<T> &l)
 {
     cout<<"List("<<uint(l.GetCount())<<"): ";
 
@@ -45,7 +45,7 @@ template<typename T> void out_list(const List<T> &l)
 int os_main(int,os_char **)
 {
     SeriesU8 series_pool(POOL_MAX_COUNT);       //序号池
-    List<uint8> tmp_list;                       //临时序号列表
+    ArrayList<uint8> tmp_list;                       //临时序号列表
 
     tmp_list.PreAlloc(POOL_MAX_COUNT);          //预分配空间(注：没有数据，只是预分配空间，减少未来内存分配次数而己)
 

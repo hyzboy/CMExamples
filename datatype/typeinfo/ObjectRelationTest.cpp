@@ -59,7 +59,7 @@ public:
 
 template<typename T> inline const bool IsType(BaseObject *bo){return bo?(bo->GetTypeHash()==T::StaticTypeHash()):false;}
 
-inline const bool TypeEqual(BaseObject *bo1,BaseObject *bo2)
+inline const bool IsSameType(BaseObject *bo1,BaseObject *bo2)
 {
     if(!bo1||!bo2)return(false);
 
@@ -93,12 +93,12 @@ void test1()
     
     std::cout<<"IsType<TestObject>(bo) result is "<<(result?"true":"false")<<std::endl;
 
-    result=TypeEqual(&to1,bo);
+    result=IsSameType(&to1,bo);
 
-    std::cout<<"TypeEqual(&to1,bo) result is "<<(result?"true":"false")<<std::endl;
+    std::cout<<"IsSameType(&to1,bo) result is "<<(result?"true":"false")<<std::endl;
 }
 
-using ObjectSimpleInfoSet=tsl::robin_set<ObjectBaseInfo>;
+using ObjectBaseInfoSet=tsl::robin_set<ObjectBaseInfo>;
 
 template<typename T> class RefPtr;
 
@@ -109,8 +109,8 @@ template<typename T> class RefObject
 {
     T *obj;
 
-    ObjectSimpleInfoSet ref_me_set;     ///<引用我的对象
-    ObjectSimpleInfoSet me_ref_set;     ///<我引用的对象
+    ObjectBaseInfoSet ref_me_set;     ///<引用我的对象
+    ObjectBaseInfoSet me_ref_set;     ///<我引用的对象
 
     template<typename T> friend class RefPtr;
 

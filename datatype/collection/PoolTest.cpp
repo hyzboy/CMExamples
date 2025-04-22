@@ -73,7 +73,7 @@ void ObjectPoolTest()
 {
     ObjectPool<UserInfoClass> pool;
 
-    List<UserInfoClass *> release_list;
+    ArrayList<UserInfoClass *> release_list;
 
     //添加所有的人物数据到池中
     {

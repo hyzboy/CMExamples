@@ -63,7 +63,7 @@ int main(int,char **)
     da_list.Delete(5,5);       //删除从5号位置开始的5个值
     output("delete(5,5)");
 
-    da_list.DeleteMove(0,3);   //删除从0号位置开始的3个值
+    da_list.DeleteShift(0,3);   //删除从0号位置开始的3个值
     output("delete move(0,3)");
 
     da_list.Move(10,0,2);       //从0号位置开始的2个值移动到10号位置

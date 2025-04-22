@@ -1,48 +1,40 @@
 #include<iostream>
-#include<hgl/type/object/ObjectRelation.h>
+#include<hgl/type/object/Object.h>
 
 using namespace hgl;
+using namespace std;
 
-class Base
+void out(const char *name,Object *obj)
 {
-    ObjectBaseInfo obj_base_info;                           ///<对象基本信息
+    cout<<name<<" static  "<<obj->GetTypeName()<<": "<<std::hex<<obj->GetTypeHash()<<endl;
+}
 
-    ObjectRelation obj_relation;                            ///<对象引用关系
+class TestObject:public Object
+{
+    HGL_OBJECT_BODY(TestObject)
 
 public:
 
-    const size_t GetTypeHash()const noexcept{return obj_base_info.hash_code;}
-
-public:
+    HGL_OBJECT_CONSTRUCT(TestObject)
 };
 
-template<typename T> class Inherit:public T
+class TestObjectA:public TestObject
 {
-    size_t hash_code;
+    HGL_OBJECT_BODY(TestObjectA)
 
 public:
 
-    Inherit()
-    {
-        hash_code=GetTypeHash<Inherit>();
-    }
-
-    const size_t GetClassTypeHash()const noexcept{return hash_code;}
-};
-
-class TestA:public Inherit<Base>
-{
-
-public:
+    HGL_OBJECT_CONSTRUCT_SC(TestObjectA,TestObject)
 
 };
 
-int main()
+int main(int,char **)
 {
-    TestA test;
+    TestObject *to=NewObject(TestObject);
+    TestObjectA *toa=NewObject(TestObjectA);
 
-    std::cout<<"Base1: "<<base1.StaticTypeHash()<<std::endl;
-    std::cout<<"Base2: "<<base2.StaticTypeHash()<<std::endl;
+    out("to",to);
+    out("toa",toa);
 
     return 0;
 }
