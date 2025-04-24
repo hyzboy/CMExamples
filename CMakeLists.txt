@@ -66,6 +66,7 @@ cm_example_project("DataType/Collection" StackTest       datatype/collection/Sta
 cm_example_project("DataType/Collection" QueueTest       datatype/collection/QueueTest.cpp)
 cm_example_project("DataType/Collection" PoolTest        datatype/collection/PoolTest.cpp)
 cm_example_project("DataType/Collection" ListTest        datatype/collection/ListTest.cpp)
+cm_example_project("DataType/Collection" IndexedListTest datatype/collection/IndexedListTest.cpp)
 cm_example_project("DataType/Collection" MapTest         datatype/collection/MapTest.cpp)
 cm_example_project("DataType/Collection" MultiMapTest    datatype/collection/MultiMapTest.cpp)
 cm_example_project("DataType/Collection" StackPoolTest   datatype/collection/StackPoolTest.cpp)
