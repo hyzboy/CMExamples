@@ -39,13 +39,13 @@ int os_main(int argc,os_char **argv)
 
         hash_code=new char[hash_length];
 
-        start_time=GetDoubleTime();
+        start_time=GetPreciseTime();
 
         h->Init();
         h->Update(file_data,file_length);
         h->Final(hash_code);
 
-        end_time=GetDoubleTime();
+        end_time=GetPreciseTime();
 
         ToLowerHexStr(hash_str,hash_code,hash_length);
 

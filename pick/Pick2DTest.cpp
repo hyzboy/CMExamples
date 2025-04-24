@@ -66,7 +66,7 @@ void Pick2DTriangle()
     draw.DrawLine(v[1],v[2]);
     draw.DrawLine(v[2],v[0]);
 
-    double st=GetDoubleTime();
+    double st=GetPreciseTime();
 
     for(int i=0;i<10000;i++)
     {
@@ -81,7 +81,7 @@ void Pick2DTriangle()
         draw.PutPixel(t);
     }
 
-    double et=GetDoubleTime();
+    double et=GetPreciseTime();
 
     std::cout<<"test 10000 points in a triangle cost "<<(et-st)<<" seconds."<<std::endl;
 

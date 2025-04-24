@@ -10,7 +10,7 @@ constexpr const size_t TIME_OUT_FRAC=6;     //小数输出位数
 
 int main(int,char **)
 {
-    const double cur_time=GetDoubleTime();
+    const double cur_time=GetPreciseTime();
 
     Date d;
     Time t;

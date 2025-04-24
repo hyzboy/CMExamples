@@ -49,7 +49,7 @@ int main(int,char **)
 
     tp=t;
 
-    st=GetDoubleTime();
+    st=GetPreciseTime();
     for(int i=0;i<TEST_COUNT;i++)
     {
         *m=tp->GetMatrix();
@@ -57,7 +57,7 @@ int main(int,char **)
         ++tp;
         ++m;
     }
-    et=GetDoubleTime();
+    et=GetPreciseTime();
 
     std::cout<<"Transform::GetMatrix() "<<TEST_COUNT<<" time: "<<et-st<<"sec."<<std::endl;
     return 0;
