@@ -5,6 +5,9 @@
 
 using namespace hgl;
 
+//#define TEST_REORDER
+//#define TEST_SHRINK
+
 template<typename T>
 void out_list(const char *type,const DataArray<T> &da)
 {
@@ -67,5 +70,18 @@ int main(int,char **)
         std::cout<<"Delete "<<pos<<std::endl;
         il.Delete(pos);
         out_list("delete",il);
+
+    #ifdef TEST_REORDER
+        if(!il.IsOrdered())
+        {
+            il.Reorder();
+            out_list("reorder",il);
+        }
+    #endif//TEST_REORDER
     }
+
+#ifdef TEST_SHRINK
+    il.Shrink();
+    out_list("shrink",il);
+#endif//TEST_SHRINK
 }
