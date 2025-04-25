@@ -34,6 +34,9 @@ cm_example_project("DataType/RAM" RuntimeAssetManagerTest  datatype/ram/RuntimeA
                                                            datatype/ram/RuntimeAssetManager.h
                                                            datatype/ram/RAM_TestClass.h
                                                            datatype/ram/RAM_TestClass.cpp)
+####################################################################################################
+
+cm_example_project("DataType" TreeTest           datatype/TreeTest.cpp)
 
 ####################################################################################################
 cm_example_project("DataType/TypeInfo" TypeSizeof           datatype/TypeInfo/TypeSizeof.cpp)
