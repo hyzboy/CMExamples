@@ -203,12 +203,16 @@ namespace hgl
             if(!node_map.empty())
             {
                 for(auto &it:node_map)
-                    OnDestoryNode(it.second);   //销毁节点
+                {
+                    it.second->MarkWaitDestory();
 
-                //这里的逻辑会有问题，需要更简单的逻辑
+                    wait_destory_node_set.insert(it.second);
+                }
 
                 node_map.clear();
             }
+
+            //正式的销毁可能是需要考虑node顺序的，需要根据依赖进行排序.这里暂时没做。
 
             if(!wait_destory_node_set.empty())
             {
