@@ -79,6 +79,8 @@ int main(int,char **)
         auto *linux=manager.Create();
         (*linux)->SetPath("linux");
         root->AttachChild(linux);
+
+        delete linux;   //手动释放
     }
 
     //自动释放到可以了，但是释放顺序需要处理下
