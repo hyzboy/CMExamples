@@ -39,33 +39,28 @@ class FolderNode:public TreeNode<Folder>
 public:
 
     using TreeNode<Folder>::TreeNode;
+    ~FolderNode()=default;
 
-    void OnAttachParent(TreeBaseNode *node) override
+    void OnAttachParent(TreeNode *node) override
     {
-        TreeNode<Folder>::OnAttachParent(node);
-
-        TreeNode<Folder> *pn=(TreeNode<Folder> *)node;
-
-        std::cout<<(*pn)->GetPath()<<"\\"<<(*this)->GetPath()<<std::endl;
+        std::cout<<(*node)->GetPath()<<"\\"<<(*this)->GetPath()<<std::endl;
     }
 
-    void OnDetachParent(TreeBaseNode *node) override
+    void OnDetachParent() override
     {
-        TreeNode<Folder>::OnDetachParent(node);
+        TreeNode *node=GetParent();
 
-        TreeNode<Folder> *pn=(TreeNode<Folder> *)node;
-
-        std::cout<<"remove "<<(*this)->GetPath()<<" from "<<(*pn)->GetPath()<<std::endl;
+        std::cout<<"remove "<<(*this)->GetPath()<<" from "<<(*node)->GetPath()<<std::endl;
     }
 };
 
 int main(int,char **)
 {
-    using FolderManager=TreeNodeManager<Folder>;
+    using FolderManager=DataNodeManager<FolderNode>;
 
     FolderManager manager;
 
-    auto *root=manager.Create();
+    FolderNode *root=manager.Create();
 
     (*root)->SetPath("root");
 
@@ -80,7 +75,11 @@ int main(int,char **)
         (*linux)->SetPath("linux");
         root->AttachChild(linux);
 
-        delete linux;   //手动释放
+        delete linux;   //手动释放,这里不会产生FolderNode::OnDetachParent是正常现像。
+                        //因为在完成FolderNode::~FolderNode后，虚拟函数的关系已回退到上一级，所以这一级的已经无效，所以无法产生调用。
+                        //如果要实现调用，必须在FolderNode::~FolderNode调用DetachAll()
+
+                        //这个问题我们可能需要调研，如要完全解决可能需要屏蔽delete操作符的使用，只允许使用Destory
     }
 
     //自动释放到可以了，但是释放顺序需要处理下
