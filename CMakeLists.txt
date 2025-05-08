@@ -16,8 +16,8 @@
         target_sources(${project_name} PRIVATE ${CM_MANIFEST})
         
         if(MSVC)
-            target_sources(${project_name} INTERFACE
-                           ${CM_NATVIS})
+            target_sources(${project_name} PRIVATE ${CM_NATVIS})
+            SOURCE_GROUP("natvis" FILES ${CM_NATVIS})
         endif()
 
     ENDIF()
