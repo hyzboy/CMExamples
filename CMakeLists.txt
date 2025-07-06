@@ -60,6 +60,7 @@ cm_example_project("DataType" IDNameTest            datatype/IDNameTest.cpp)
 ####################################################################################################
 cm_example_project("Math" OutputEpsilon         math/OutputEpsilon.cpp)
 cm_example_project("Math" TransformBenchmark    math/TransformBenchmark.cpp)
+cm_example_project("Math" RotateMatrix          math/RotateMatrix.cpp)
 
 ####################################################################################################
 cm_example_project("DataType/Collection" LifetimeTest    datatype/collection/LifetimeTest.cpp)
