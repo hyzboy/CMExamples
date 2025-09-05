@@ -56,6 +56,8 @@ cm_example_project("DataType" Uint2HexStrTest       datatype/Uint2HexStrTest.cpp
 
 cm_example_project("DataType" ConstStringSetTest    datatype/ConstStringSetTest.cpp)
 cm_example_project("DataType" IDNameTest            datatype/IDNameTest.cpp)
+cm_example_project("DataType" IDObjectManagerTest   datatype/IDObjectManagerTest.cpp)
+
 
 ####################################################################################################
 cm_example_project("Math" OutputEpsilon         math/OutputEpsilon.cpp)
@@ -108,6 +110,9 @@ cm_example_project("chart" DistributionChart2D  DistributionChart2D.cpp BitmapFo
 target_link_libraries(DistributionChart2D PRIVATE CM2D)
 cm_example_project("chart" PlayerTraceChart2D   PlayerTraceChart2D.cpp BitmapFont.cpp BitmapFont.h)
 target_link_libraries(PlayerTraceChart2D PRIVATE CM2D)
+
+#cm_example_project("chart" DAGTest   DAGTest.cpp BitmapFont.cpp BitmapFont.h)
+#target_link_libraries(DAGTest PRIVATE CM2D)
 
 ####################################################################################################
 cm_example_project("utils" PAttribTest      utils/PAttribTest.cpp)

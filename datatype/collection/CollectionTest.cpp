@@ -46,7 +46,7 @@ void out3(const Collection &c)
     std::cout<<std::endl;
 }
 
-void main(int,char **)
+int main(int,char **)
 {
     std::cout<<"test one byte Collection."<<std::endl<<std::endl;
     {
