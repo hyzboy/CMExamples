@@ -26,6 +26,9 @@
 endmacro()
 
 ####################################################################################################
+cm_example_project("Logger" LoggerTest LoggerTest.cpp)
+
+####################################################################################################
 cm_example_project("Debug" DebugObject  debug/DebugObject.cpp)
 cm_example_project("Debug" AutoSCL      debug/AutoSCL.cpp)
 
@@ -46,6 +49,7 @@ cm_example_project("DataType/TypeInfo" ObjectRelationTest   datatype/TypeInfo/Ob
 cm_example_project("DataType/TypeInfo" InheritTest          datatype/TypeInfo/InheritTest.cpp)
 
 ####################################################################################################
+cm_example_project("DataType" UbyteColor            datatype/color_test_example.cpp)
 cm_example_project("DataType" HalfFloatTest         datatype/HalfFloatTest.cpp)
 cm_example_project("DataType" SplitStringTest       datatype/SplitStringTest.cpp)
 cm_example_project("DataType" StrChrTest            datatype/strchr_test.cpp)
