@@ -1,7 +1,6 @@
 #include<iostream>
 #include<iomanip>
 #include<hgl/text/FontInfo.h>
-#include<hgl/util/json/JsonTool.h>
 #include<hgl/io/FileOutputStream.h>
 #include<hgl/io/TextOutputStream.h>
 
@@ -13,59 +12,6 @@ constexpr const os_char font_type_string[3][10]=
     OS_TEXT("Vector"),
     OS_TEXT("TrueType")
 };
-
-#define JSON_OUT_FI_UINT(name)   cur_fi[#name]=(uint)(fi->name);
-#define JSON_OUT_FI_BOOL(name)   cur_fi[#name]=(fi->name?"true":"false");
-
-void OutputJson(const FontInfoList &fi_list)
-{
-    const uint count=fi_list.GetCount();
-    FontInfo *fi=fi_list.GetData();
-
-    Json::Value root;
-    Json::Value font_list;
-
-    root["count"]=count;
-
-    for(uint i=0;i<count;i++)
-    {
-        Json::Value cur_fi;
-
-        cur_fi["index"]=i;
-        cur_fi["name"]=to_u8(fi->name).c_str();
-        cur_fi["type"]=to_u8(font_type_string[(size_t)fi->type]).c_str();
-
-        JSON_OUT_FI_UINT(charset)
-        JSON_OUT_FI_UINT(height)
-        JSON_OUT_FI_UINT(ascent)
-        JSON_OUT_FI_UINT(descent)
-        JSON_OUT_FI_UINT(internal_leading)
-        JSON_OUT_FI_UINT(external_leading)
-        JSON_OUT_FI_UINT(ave_char_width)
-        JSON_OUT_FI_UINT(max_char_width)
-        JSON_OUT_FI_UINT(weight)
-        JSON_OUT_FI_UINT(overhang)
-        JSON_OUT_FI_UINT(digitized_aspect_x)
-        JSON_OUT_FI_UINT(digitized_aspect_y)
-        JSON_OUT_FI_UINT(first_char)
-        JSON_OUT_FI_UINT(last_char)
-        JSON_OUT_FI_UINT(default_char)
-        JSON_OUT_FI_UINT(break_char)
-        JSON_OUT_FI_BOOL(italic)
-        JSON_OUT_FI_BOOL(underlined)
-        JSON_OUT_FI_BOOL(struck_out)
-        JSON_OUT_FI_UINT(pitch_and_family)
-
-        font_list.append(cur_fi);
-
-        ++fi;
-    }
-
-    root["font_list"]=font_list;
-
-    OSString error_info;
-    SaveJson(root,OS_TEXT("FontList.json"),error_info);
-}
 
 void OutputCSV(const FontInfoList &fi_list)
 {
@@ -119,7 +65,7 @@ void OutputCSV(const FontInfoList &fi_list)
     fos.Close();
 }
 
-void main()
+int os_main(int,os_char **)
 {
     FontInfoList fi_list;
 
@@ -129,6 +75,7 @@ void main()
 
     std::cout<<"os had "<<count<<" fonts"<<std::endl<<std::endl;
 
-    OutputJson(fi_list);
     OutputCSV(fi_list);
+    
+    return 0;
 }

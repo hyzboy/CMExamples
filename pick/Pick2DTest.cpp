@@ -5,7 +5,7 @@
 #include<hgl/2d/Bitmap.h>
 #include<hgl/2d/BitmapSave.h>
 #include<hgl/2d/DrawGeometry.h>
-#include<hgl/Time.h>
+#include<hgl/time/Time.h>
 #include<iostream>
 #include<random>
 

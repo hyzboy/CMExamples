@@ -1,6 +1,6 @@
 ﻿#include<hgl/util/hash/Hash.h>
 #include<hgl/filesystem/FileSystem.h>
-#include<hgl/Time.h>
+#include<hgl/time/Time.h>
 #include<iostream>
 #include<iomanip>
 
