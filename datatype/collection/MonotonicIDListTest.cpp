@@ -13,6 +13,7 @@ namespace hgl
     {
         MonotonicID old_id;
         MonotonicID new_id;
+        int old_location; // old location of the item
     };
 
     using IDUpdateList = DataArray<IDUpdateItem>;
@@ -78,7 +79,6 @@ namespace hgl
         int BuildCompactMapping(IDUpdateList &mapping) const
         {
             int src_count = GetMapCount();
-            auto src_list = GetDataList();
 
             mapping.Resize(src_count);
 
@@ -95,10 +95,10 @@ namespace hgl
             {
                 ip->old_id = (*id_loc)->key;
                 ip->new_id = new_id;
+                ip->old_location = (*id_loc)->value;
 
                 ++ip;
                 ++new_id;
-
                 ++id_loc;
             }
 
@@ -107,11 +107,11 @@ namespace hgl
 
         void Reset(int new_id_count)
         {
-            id_count = new_id_count;
+            id_count = (new_id_count>0)?(new_id_count-1):-1;
             free_location_set.Clear();
 
             id_location_map.Clear();
-            active_id_set.Resize(id_count);
+            active_id_set.Resize(new_id_count);
 
             for(int i=0;i<new_id_count;i++)
             {
@@ -128,8 +128,6 @@ namespace hgl
     template<typename T>
     class DynamicMonoIDList
     {
-        using MonotonicID=int32;
-
         DataArray<T> item_list; // 存放数据
         DynamicMonoIDLocator locator; // 管理 MonotonicID 与位置
 
@@ -208,64 +206,20 @@ namespace hgl
 
         // 将数据重新紧密排列，并从0 开始重新编号。
         // 若 mapping 不为 nullptr，则在其中写入旧 MonotonicID -> 新 MonotonicID 的映射（以 IDUpdateItem 存放）。
-        void Compact(IDUpdateList *mapping=nullptr)
+        bool Compact(IDUpdateList *mapping)
         {
-            DataArray<T> new_items;
-            Map<MonotonicID,int> new_id_location_map;
-            SortedSet<MonotonicID> new_active_set;
-            Stack<int> new_free_set; // 将保持为空
+            if(GetCount() <= 0)
+                return(true);
 
-            int new_index =0;
+            if(!mapping)
+                return(false)
 
-            //让 locator生成 mapping（若 mapping 为 nullptr 则使用临时 mapping）
-            IDUpdateList tmp_map;
-            IDUpdateList *map_ptr = mapping ? mapping : &tmp_map;
-
-            int valid_count = locator.BuildCompactMapping(map_ptr);
-
-            // 若没有有效项，清空并应用
-            if(valid_count<=0)
+            locator.BuildCompactMapping(mapping);
             {
-                // 清空数据
-                item_list.Clear();
-                Map<MonotonicID,int> empty_map;
-                SortedSet<MonotonicID> empty_active;
-                Stack<int> empty_free;
-                locator.ApplyCompactResult(std::move(empty_map), std::move(empty_active), std::move(empty_free), static_cast<MonotonicID>(-1));
-                return;
+
             }
-
-            IDUpdateItem *map_data = map_ptr->GetData();
-
-            for(int i=0;i<valid_count;i++)
-            {
-                int old_id = map_data[i].old_id;
-                int location;
-                if(!locator.GetLocation(old_id, location))
-                    continue;
-
-                if(location<0) continue;
-
-                int dest = new_items.GetCount();
-                new_items.Expand(1);
-                memcpy(new_items.At(dest), item_list.At(location), sizeof(T));
-
-                MonotonicID new_id = static_cast<MonotonicID>(map_data[i].new_id);
-
-                new_id_location_map.Add(new_id, dest);
-                new_active_set.Add(new_id);
-
-                ++new_index;
-            }
-
-            // 将新的映射应用到 locator
-            MonotonicID new_id_count = (new_index>0)? static_cast<MonotonicID>(new_index-1) : static_cast<MonotonicID>(-1);
-            locator.ApplyCompactResult(std::move(new_id_location_map), std::move(new_active_set), std::move(new_free_set), new_id_count);
-
-            // 替换数据区
-            item_list = std::move(new_items);
+            locator.Reset(item_list.GetCount());
         }
-
     };//class DynamicMonoIDList
 }//namespace hgl
 
