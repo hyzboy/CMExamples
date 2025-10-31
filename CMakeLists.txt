@@ -84,6 +84,8 @@ cm_example_project("DataType/Collection" DataChainTest   datatype/collection/Dat
 cm_example_project("DataType/Collection" DataChainTest2  datatype/collection/DataChainTest2.cpp)
 cm_example_project("DataType/Collection" ResManagerTest  datatype/collection/ResourceManagerTest.cpp)
 cm_example_project("DataType/Collection" HashSetTest     datatype/collection/HashSetTest.cpp)
+
+cm_example_project("DataType/Collection" MonotonicIDListTest datatype/collection/MonotonicIDListTest.cpp)
 ####################################################################################################
 
 cm_example_project("Pick" Pick2DTest    pick/Pick2DTest.cpp)
