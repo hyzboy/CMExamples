@@ -28,17 +28,17 @@ namespace hgl
     protected:
         
         
-        int GetCount() const override
+        int GetCount() const 
         {
             return item_list.GetCount();
         }
 
-        void Expand(int size) override
+        void Expand(int size) 
         {
             item_list.Expand(size);
         }
 
-        void *GetItemAt(int location) override
+        void *GetItemAt(int location) 
         {
             return item_list.At(location);
         }
@@ -52,6 +52,8 @@ namespace hgl
         int AddLocation()
         {
             ID new_id=AcquireID();
+
+            active_id_set.Add(new_id);
 
             if(free_location_set.IsEmpty())
             {
@@ -76,9 +78,7 @@ namespace hgl
             if(!id_location_map.Get(id,location))
                 return(false);
 
-            if(location==-1)
-                return(false);
-
+            active_id_set.Delete(id);
             id_location_map.DeleteByKey(id);
             free_location_set.Push(location);
 
