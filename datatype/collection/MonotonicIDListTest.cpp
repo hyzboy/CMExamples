@@ -8,7 +8,8 @@
 namespace hgl
 {
     /**
-    * 动态单调ID列表
+    * 动态单调ID列表<br>
+    * 只针对原生数据类型，不支持对象数据类型
     */
     template<typename T> 
     class DynamicMonoIDList
@@ -95,6 +96,20 @@ namespace hgl
             memcpy(item_list.At(loc),&data,sizeof(T));
             return(id_count);
         }
+
+        // 根据 ID 获取元素指针，找不到返回 nullptr
+        T *GetByID(ID id)
+        {
+            int location;
+            if(!id_location_map.Get(id, location))
+                return nullptr;
+
+            if(location <0)
+                return nullptr;
+
+            return reinterpret_cast<T *>(item_list.At(location));
+        }
+
     };//class DynamicMonoIDList
 }//namespace hgl
 
