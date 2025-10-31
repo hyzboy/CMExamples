@@ -1,125 +1,18 @@
+#include "DynamicMonoIDLocator.h"
+
 #include<hgl/type/DataArray.h>
 #include<hgl/type/SortedSet.h>
 #include<hgl/type/Stack.h>
 #include<hgl/type/Map.h>
 
 #include<iostream>
+#include<vector>
 
 namespace hgl
 {
-    using MonotonicID=int32;
+    using MonotonicID = int32;
 
-    struct IDUpdateItem
-    {
-        MonotonicID old_id;
-        MonotonicID new_id;
-        int old_location; // old location of the item
-    };
-
-    using IDUpdateList = DataArray<IDUpdateItem>;
-
-    /**
-    * 非模板：只管理 MonotonicID 与位置映射，隐藏实现细节
-    */
-    class DynamicMonoIDLocator
-    {
-        MonotonicID id_count;
-
-        Map<MonotonicID,int> id_location_map;               ///<MonotonicID位置映射表
-        SortedSet<MonotonicID> active_id_set;               ///<活跃MonotonicID集合
-        Stack<int> free_location_set;                       ///<空闲位置集合
-
-    public:
-
-        DynamicMonoIDLocator():id_count(0){}
-
-        MonotonicID AcquireID() { return ++id_count; }
-
-        // 尝试弹出一个空闲位置，成功返回 true 并设置 location
-        bool PopFreeLocation(int &location)
-        {
-            if(free_location_set.IsEmpty())
-                return false;
-            free_location_set.Pop(location);
-            return true;
-        }
-
-        // 在指定位置注册新的 MonotonicID
-        void RegisterIDAtLocation(MonotonicID id,int location)
-        {
-            id_location_map.Add(id,location);
-            active_id_set.Add(id);
-        }
-
-        // 移除指定 MonotonicID
-        bool Remove(MonotonicID id)
-        {
-            int location;
-
-            if(!id_location_map.Get(id,location))
-                return(false);
-
-            active_id_set.Delete(id);
-            id_location_map.DeleteByKey(id);
-            free_location_set.Push(location);
-
-            return(true);
-        }
-
-        // 根据 MonotonicID 获得位置
-        bool GetLocation(MonotonicID id,int &location) const
-        {
-            return id_location_map.Get(id,location);
-        }
-
-        //访问底层映射数据（用于遍历）
-        int GetMapCount() const { return id_location_map.GetCount(); }
-        auto GetDataList() const { return id_location_map.GetDataList(); } // KeyValue<MonotonicID,int>**
-
-        int BuildCompactMapping(IDUpdateList &mapping) const
-        {
-            int src_count = GetMapCount();
-
-            mapping.Resize(src_count);
-
-            if(src_count<=0)
-                return 0;
-
-            IDUpdateItem *ip=mapping.GetData();
-
-            auto id_loc=id_location_map.GetDataList();
-
-            MonotonicID new_id=0;
-
-            for(int i=0;i<src_count;i++)
-            {
-                ip->old_id = (*id_loc)->key;
-                ip->new_id = new_id;
-                ip->old_location = (*id_loc)->value;
-
-                ++ip;
-                ++new_id;
-                ++id_loc;
-            }
-
-            return new_id;
-        }
-
-        void Reset(int new_id_count)
-        {
-            id_count = (new_id_count>0)?(new_id_count-1):-1;
-            free_location_set.Clear();
-
-            id_location_map.Clear();
-            active_id_set.Resize(new_id_count);
-
-            for(int i=0;i<new_id_count;i++)
-            {
-                id_location_map.Add(i,i);
-                active_id_set.Add(i);
-            }
-        }
-    };
+    // DynamicMonoIDLocator and mapping types are defined in the separate header
 
     /**
     * 动态单调MonotonicID列表<br>
@@ -170,9 +63,9 @@ namespace hgl
         {
             int loc;
             MonotonicID new_id = AddLocation(loc);
-            if(loc<0) return static_cast<MonotonicID>(-1);
+            if(loc < 0) return static_cast<MonotonicID>(-1);
 
-            memcpy(item_list.At(loc), &data, sizeof(T));
+            memcpy(item_list.At(loc),&data,sizeof(T));
             return new_id;
         }
 
@@ -186,7 +79,7 @@ namespace hgl
                 location = GetCount();
                 Expand(1);
             }
-            locator.RegisterIDAtLocation(new_id, location);
+            locator.RegisterIDAtLocation(new_id,location);
             out_location = location;
             return new_id;
         }
@@ -195,31 +88,68 @@ namespace hgl
         T *GetByID(MonotonicID id)
         {
             int location;
-            if(!locator.GetLocation(id, location))
+            if(!locator.GetLocation(id,location))
                 return nullptr;
 
-            if(location <0)
+            if(location < 0)
                 return nullptr;
 
             return reinterpret_cast<T *>(item_list.At(location));
         }
 
         // 将数据重新紧密排列，并从0 开始重新编号。
-        // 若 mapping 不为 nullptr，则在其中写入旧 MonotonicID -> 新 MonotonicID 的映射（以 IDUpdateItem 存放）。
-        bool Compact(IDUpdateList *mapping)
+        // 若 id_mapping 不为 nullptr，则在其中写入旧 MonotonicID -> NewMonotonicID 的映射（以 IDUpdateItem 存放）。
+        bool Compact(IDUpdateList *id_mapping)
         {
             if(GetCount() <= 0)
                 return(true);
 
-            if(!mapping)
-                return(false)
-
-            locator.BuildCompactMapping(mapping);
+            // 第一步：紧缩 locator 内的位置并获得 location mapping
+            LocationUpdateList loc_map;
+            int new_count = locator.CompactLocations(&loc_map);
+            if(new_count <= 0)
             {
-
+                // nothing left
+                item_list.Clear();
+                locator.Reset(0);
+                if(id_mapping) id_mapping->Resize(0);
+                return true;
             }
-            locator.Reset(item_list.GetCount());
+
+            // 第二步：根据 loc_map.old_location 把数据搬移到新的紧凑数组
+            LocationUpdateItem *loc_data = loc_map.GetData();
+
+            DataArray<T> new_items;
+            new_items.Resize(new_count);
+
+            for(int i = 0;i < new_count;i++)
+            {
+                int old_loc = loc_data[i].old_location;
+                // copy POD data
+                hgl_cpy<T>(new_items.At(i),item_list.At(old_loc),1);
+            }
+
+            // 替换数据区
+            item_list = std::move(new_items);
+
+            // 第三步：重新生成 ID 与位置为0..new_count-1
+            locator.Reset(new_count);
+
+            // 如果需要 final id mapping（old_id -> new_id），写入 id_mapping
+            if(id_mapping)
+            {
+                id_mapping->Resize(new_count);
+                IDUpdateItem *mid = id_mapping->GetData();
+                for(int i = 0;i < new_count;i++)
+                {
+                    mid[i].old_id = loc_data[i].old_id;
+                    mid[i].new_id = static_cast<MonotonicID>(i);
+                }
+            }
+
+            return true;
         }
+
     };//class DynamicMonoIDList
 }//namespace hgl
 
