@@ -16,72 +16,45 @@ namespace hgl
     using IDUpdateList = DataArray<IDUpdateItem>;
 
     /**
-    * 动态单调ID列表<br>
-    * 只针对原生数据类型，不支持对象数据类型
+    * 非模板：只管理 ID 与位置映射，隐藏实现细节
     */
-    template<typename T> 
-    class DynamicMonoIDList
+    class DynamicMonoIDLocator
     {
-        using ID=int32;
+    public:
+        using ID = int32;
 
+    private:
         ID id_count;
 
-        DataArray<T>    item_list;
-        
-        Map<ID,int>     id_location_map;                    ///<ID位置映射表
-        SortedSet<ID>   active_id_set;                      ///<活跃ID集合
-        Stack<int>      free_location_set;                  ///<空闲位置集合
-
-        ID AcquireID(){return ++id_count;}
-
-    protected:        
-        
-        int GetCount() const 
-        {
-            return item_list.GetCount();
-        }
-
-        void Expand(int size) 
-        {
-            item_list.Expand(size);
-        }
-
-        void *GetItemAt(int location) 
-        {
-            return item_list.At(location);
-        }
+        Map<ID,int> id_location_map;                    ///<ID位置映射表
+        SortedSet<ID> active_id_set;                      ///<活跃ID集合
+        Stack<int> free_location_set;                  ///<空闲位置集合
 
     public:
+        DynamicMonoIDLocator():id_count(0){}
 
-        DynamicMonoIDList():id_count(0){}
-        virtual ~DynamicMonoIDList() = default;
+        ID AcquireID() { return ++id_count; }
 
-        int AddLocation()
+        // 尝试弹出一个空闲位置，成功返回 true 并设置 location
+        bool PopFreeLocation(int &location)
         {
-            ID new_id=AcquireID();
-
-            active_id_set.Add(new_id);
-
             if(free_location_set.IsEmpty())
-            {
-                int location=GetCount();
-                Expand(1);
-                id_location_map.Add(new_id,location);
-                return location;
-            }
-            else
-            {
-                int location;
-                free_location_set.Pop(location);
-                id_location_map.Add(new_id,location);
-                return location;
-            }
+                return false;
+            free_location_set.Pop(location);
+            return true;
         }
 
+        // 在指定位置注册新的 ID
+        void RegisterIDAtLocation(ID id,int location)
+        {
+            id_location_map.Add(id,location);
+            active_id_set.Add(id);
+        }
+
+        // 移除指定 ID
         bool Remove(ID id)
         {
             int location;
-            
             if(!id_location_map.Get(id,location))
                 return(false);
 
@@ -92,22 +65,103 @@ namespace hgl
             return(true);
         }
 
+        // 根据 ID 获得位置
+        bool GetLocation(ID id,int &location) const
+        {
+            return id_location_map.Get(id,location);
+        }
+
+        //访问底层映射数据（用于遍历）
+        int GetMapCount() const { return id_location_map.GetCount(); }
+        auto GetDataList() const { return id_location_map.GetDataList(); } // KeyValue<ID,int>**
+
+        // 应用 Compact 的结果（接管新的映射/集合）
+        void ApplyCompactResult(Map<ID,int> &&new_map, SortedSet<ID> &&new_active_set, Stack<int> &&new_free_set, ID new_id_count)
+        {
+            id_location_map = std::move(new_map);
+            active_id_set = std::move(new_active_set);
+            free_location_set = std::move(new_free_set);
+            id_count = new_id_count;
+        }
+    };
+
+    /**
+    * 动态单调ID列表<br>
+    *只针对原生数据类型，不支持对象数据类型
+    */
+    template<typename T>
+    class DynamicMonoIDList
+    {
+        using ID=int32;
+
+        DataArray<T> item_list; // 存放数据
+        DynamicMonoIDLocator locator; // 管理 ID 与位置
+
+    protected:
+
+        int GetCount() const
+        {
+            return item_list.GetCount();
+        }
+
+        void Expand(int size)
+        {
+            item_list.Expand(size);
+        }
+
+        void *GetItemAt(int location)
+        {
+            return item_list.At(location);
+        }
+
+    public:
+
+        DynamicMonoIDList(){}
+        virtual ~DynamicMonoIDList() = default;
+
+        // 原始返回位置的接口，保持兼容
+        int AddLocation()
+        {
+            int loc;
+            AddLocation(loc); // ignore returned ID
+            return loc;
+        }
+
+        bool Remove(ID id)
+        {
+            return locator.Remove(id);
+        }
+
         ID Add(const T &data)
         {
-            int loc=AddLocation();
+            int loc;
+            ID new_id = AddLocation(loc);
+            if(loc<0) return static_cast<ID>(-1);
 
-            if(loc<0)
-                return(-1);
+            memcpy(item_list.At(loc), &data, sizeof(T));
+            return new_id;
+        }
 
-            memcpy(item_list.At(loc),&data,sizeof(T));
-            return(id_count);
+        // 重载：AddLocation 返回新的 ID 与位置（避免 AcquireID 重复递增）
+        ID AddLocation(int &out_location)
+        {
+            ID new_id = locator.AcquireID();
+            int location;
+            if(!locator.PopFreeLocation(location))
+            {
+                location = GetCount();
+                Expand(1);
+            }
+            locator.RegisterIDAtLocation(new_id, location);
+            out_location = location;
+            return new_id;
         }
 
         // 根据 ID 获取元素指针，找不到返回 nullptr
         T *GetByID(ID id)
         {
             int location;
-            if(!id_location_map.Get(id, location))
+            if(!locator.GetLocation(id, location))
                 return nullptr;
 
             if(location <0)
@@ -127,11 +181,11 @@ namespace hgl
 
             int new_index =0;
 
-            // 遍历现有 id_location_map 的条目，避免从1..id_count的无谓循环
-            int src_count = id_location_map.GetCount();
-            auto src_list = id_location_map.GetDataList(); // KeyValue<ID,int>**
+            // 遍历 locator 的 id_location_map 条目
+            int src_count = locator.GetMapCount();
+            auto src_list = locator.GetDataList(); // KeyValue<ID,int>**
 
-            //先计算有效条目数量，以便一次性为 mapping预分配空间
+            //先计算有效条目数，以便为 mapping 一次性分配
             int valid_count =0;
             for(int i=0;i<src_count;i++)
             {
@@ -159,7 +213,6 @@ namespace hgl
 
                 if(location <0) continue;
 
-                // 在 new_items 中扩展一个槽并复制数据（仅针对原生 POD 类型安全）
                 int dest = new_items.GetCount();
                 new_items.Expand(1);
                 memcpy(new_items.At(dest), item_list.At(location), sizeof(T));
@@ -179,21 +232,16 @@ namespace hgl
                 ++new_index;
             }
 
-            // 替换旧的数据结构
-            item_list = std::move(new_items);
-            id_location_map = std::move(new_id_location_map);
-            active_id_set = std::move(new_active_set);
-            free_location_set = std::move(new_free_set);
+            // 将新的映射应用到 locator
+            ID new_id_count = (new_index>0)? static_cast<ID>(new_index-1) : static_cast<ID>(-1);
+            locator.ApplyCompactResult(std::move(new_id_location_map), std::move(new_active_set), std::move(new_free_set), new_id_count);
 
-            // 更新 id_count
-            if(new_index >0)
-                id_count = static_cast<ID>(new_index -1);
-            else
-                id_count = -1;
+            // 替换数据区
+            item_list = std::move(new_items);
         }
 
     };//class DynamicMonoIDList
-}//namespace hgl
+}
 
 using namespace hgl;
 using namespace std;
