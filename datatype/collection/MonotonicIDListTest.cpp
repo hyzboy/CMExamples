@@ -14,15 +14,9 @@ namespace hgl
     */
     template<typename T,typename I = MonotonicID> class MonotonicIDList
     {
-        struct DataPair
-        {
-            I id;
-            T data;
-        };
-
         I next_id = 0;
 
-        DataArray<DataPair> data_array;
+        DataArray<T> data_array;
         Map<I,int32> id_to_location_map;
         Stack<int32> free_location;
 
@@ -32,7 +26,7 @@ namespace hgl
         {
             int location = -1;
 
-            if(free_index.IsEmpty())
+            if(free_location.IsEmpty())
             {
                 location = data_array.GetCount();
 
@@ -43,19 +37,18 @@ namespace hgl
                 free_location.Pop(location);
             }
 
-            DataPair *dp=data_array.At(location);
-            
-            dp->id=next_id;
+            T *p = data_array.At(location);
+
+            id_to_location_map.Add(next_id,location);
+
             ++next_id;
 
-            id_to_location_map.Add(dp->id,location);
-
-            return &(dp->data);
+            return p;
         }
 
         bool Add(const T &value)
         {
-            T *p=Add();
+            T *p = Add();
 
             if(!p)
                 return(false);
@@ -69,7 +62,7 @@ namespace hgl
         {
             int32 location;
 
-            if(!id_to_location_map.Delete(id,location))     //Map::Delete的作用是获取这个数据并删除
+            if(!id_to_location_map.Delete(id,location)) //Map::Delete的作用是获取这个数据并删除
                 return(false);
 
             free_location.Push(location);
@@ -79,7 +72,7 @@ namespace hgl
 
         bool Contains(const I &id)const
         {
-            return id_set.ContainsKey(id);
+            return id_to_location_map.ContainsKey(id);
         }
 
         T *Get(const I &id)
@@ -97,6 +90,53 @@ namespace hgl
 using namespace hgl;
 using namespace std;
 
+static void PrintRange(MonotonicIDList<int> &list,int begin_id,int end_id)
+{
+    for(int id = begin_id; id <= end_id; ++id)
+    {
+        cout << "ID " << id << ": ";
+        if(list.Contains(id))
+        {
+            int *v = list.Get(id);
+            if(v) cout << *v;
+            cout << '\n';
+        }
+        else
+        {
+            cout << "not found\n";
+        }
+    }
+}
+
 int main(int,char **)
 {
+    MonotonicIDList<int> list;
+
+    // 批量添加10个数据，ID0..9
+    for(int i = 0; i < 10; ++i)
+        list.Add(i * 10);
+
+    cout << "After initial insert (ID0..9):\n";
+    PrintRange(list,0,9);
+
+    // 删除多个ID
+    const int to_remove[] = { 1,3,5,8 };
+    for(int id : to_remove)
+        list.Remove(id);
+
+    cout << "After removing {1,3,5,8}:\n";
+    PrintRange(list,0,9);
+
+    // 再添加4个数据，ID10..13
+    for(int i = 0; i < 4; ++i)
+        list.Add(100 + i * 10);
+
+    cout << "After inserting 4 more (ID10..13):\n";
+    PrintRange(list,0,13);
+
+    // 测试删除一个不存在的ID
+    bool removed = list.Remove(42);
+    cout << "Remove ID42 result: " << (removed ? "true" : "false") << '\n';
+
+    return 0;
 }
