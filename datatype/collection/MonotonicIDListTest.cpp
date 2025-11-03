@@ -84,6 +84,16 @@ namespace hgl
 
             return data_array.At(location);
         }
+
+        int GetLocation(const I &id) const
+        {
+            int32 location;
+
+            if(!id_to_location_map.Get(id,location))
+                return -1;
+
+            return location;
+        }
     };//template<typename T,typename I = MonotonicID> class MonotonicIDList
 }//namespace hgl
 
@@ -98,7 +108,8 @@ static void PrintRange(MonotonicIDList<int> &list,int begin_id,int end_id)
         if(list.Contains(id))
         {
             int *v = list.Get(id);
-            if(v) cout << *v;
+            int location = list.GetLocation(id);
+            if(v) cout << *v << " (location: " << location << ")";
             cout << '\n';
         }
         else
