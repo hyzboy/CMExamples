@@ -94,6 +94,17 @@ namespace hgl
 
             return location;
         }
+
+        /**
+        * 收缩数据存储空间
+        */
+        int Shrink()
+        {
+            if(free_location.IsEmpty())
+                return 0;
+
+
+        }
     };//template<typename T,typename I = MonotonicID> class MonotonicIDList
 }//namespace hgl
 
