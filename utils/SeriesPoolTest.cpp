@@ -47,7 +47,7 @@ int os_main(int,os_char **)
     SeriesU8 series_pool(POOL_MAX_COUNT);       //序号池
     ArrayList<uint8> tmp_list;                       //临时序号列表
 
-    tmp_list.PreAlloc(POOL_MAX_COUNT);          //预分配空间(注：没有数据，只是预分配空间，减少未来内存分配次数而己)
+    tmp_list.Reserve(POOL_MAX_COUNT);          //预分配空间(注：没有数据，只是预分配空间，减少未来内存分配次数而己)
 
     cout<<"Series pool MaxCount="<<uint(series_pool.GetMaxCount())<<endl;
 

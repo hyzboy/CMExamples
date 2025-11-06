@@ -56,8 +56,8 @@ void TestListType(bool pre_alloc)
 
     if(pre_alloc)
     {
-        al.PreAlloc(MAX_LIST_COUNT);
-        il.PreAlloc(MAX_LIST_COUNT);
+        al.Reserve(MAX_LIST_COUNT);
+        il.Reserve(MAX_LIST_COUNT);
     }
 
     AutoDeleteArray<T> origin_data(MAX_LIST_COUNT);
