@@ -62,7 +62,7 @@ namespace hgl
         {
             int32 location;
 
-            if(!id_to_location_map.Delete(id,location)) //Map::Delete的作用是获取这个数据并删除
+            if(!id_to_location_map.GetAndDelete(id,location)) //Map::Delete的作用是获取这个数据并删除
                 return(false);
 
             free_location.Push(location);
