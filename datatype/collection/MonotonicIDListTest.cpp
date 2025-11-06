@@ -1,6 +1,6 @@
 #include<hgl/type/DataArray.h>
 #include<hgl/type/Stack.h>
-#include<hgl/type/Map.h>
+#include<hgl/type/SmallMap.h>
 
 #include<iostream>
 #include<vector>
@@ -17,7 +17,7 @@ namespace hgl
         I next_id = 0;
 
         DataArray<T> data_array;
-        Map<I,int32> id_to_location_map;
+        SmallMap<I,int32> id_to_location_map;
         Stack<int32> free_location;
 
     public:
