@@ -14,7 +14,7 @@ DataArray<int> da_list;
 
 void restart()
 {
-    da_list.SetCount(10);       //设定里面有10个值
+    da_list.Resize(10);       //设定里面有10个值
 
     for(int i=0;i<10;i++)
        da_list[i]=i;            //设置值
