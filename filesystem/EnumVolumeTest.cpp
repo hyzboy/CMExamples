@@ -21,7 +21,7 @@ void out_size(const os_char *front,const uint64 size)
 
 void out(const VolumeInfo &vi)
 {
-    constexpr os_char *DriverTypeName[(size_t)VolumeInfo::DriverType::RANGE_SIZE]=
+    constexpr const os_char *DriverTypeName[(size_t)VolumeInfo::DriverType::RANGE_SIZE]=
     {
         OS_TEXT("None"),
         OS_TEXT("Removable"),
@@ -57,7 +57,7 @@ void out(const VolumeInfo &vi)
     os_out<<endl<<endl;
 }
 
-void main()
+int os_main(int,os_char **)
 {
     os_out<<OS_TEXT("Enum Volumes")<<endl<<endl;
 
@@ -70,4 +70,6 @@ void main()
 
     for(auto vi:vil)
         out(vi);
+
+    return 0;
 }

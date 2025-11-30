@@ -39,8 +39,6 @@ cm_example_project("DataType/RAM" RuntimeAssetManagerTest  datatype/ram/RuntimeA
                                                            datatype/ram/RAM_TestClass.cpp)
 ####################################################################################################
 
-cm_example_project("DataType" TreeTest           datatype/TreeTest.cpp)
-
 ####################################################################################################
 cm_example_project("DataType/TypeInfo" TypeSizeof           datatype/TypeInfo/TypeSizeof.cpp)
 cm_example_project("DataType/TypeInfo" TypeCastTest         datatype/TypeInfo/TypeCastTest.cpp)
@@ -61,6 +59,8 @@ cm_example_project("DataType" Uint2HexStrTest       datatype/Uint2HexStrTest.cpp
 cm_example_project("DataType" ConstStringSetTest    datatype/ConstStringSetTest.cpp)
 cm_example_project("DataType" IDNameTest            datatype/IDNameTest.cpp)
 cm_example_project("DataType" IDObjectManagerTest   datatype/IDObjectManagerTest.cpp)
+
+cm_example_project("DataType" ECSTest               datatype/EcsTest.cpp)
 
 
 ####################################################################################################
@@ -83,7 +83,6 @@ cm_example_project("DataType/Collection" StackPoolTest   datatype/collection/Sta
 cm_example_project("DataType/Collection" DataChainTest   datatype/collection/DataChainTest.cpp)
 cm_example_project("DataType/Collection" DataChainTest2  datatype/collection/DataChainTest2.cpp)
 cm_example_project("DataType/Collection" ResManagerTest  datatype/collection/ResourceManagerTest.cpp)
-cm_example_project("DataType/Collection" HashSetTest     datatype/collection/HashSetTest.cpp)
 
 cm_example_project("DataType/Collection" MonotonicIDListTest datatype/collection/MonotonicIDListTest.cpp)
 ####################################################################################################
@@ -106,6 +105,9 @@ ENDIF(WIN32)
 
 ####################################################################################################
 cm_example_project("Hareware"   GetCpuInfo          GetCpuInfo.cpp)
+cm_example_project("Hareware"   BigLittleTaskScheduler BigLittleTaskScheduler.cpp)
+cm_example_project("Hareware"   ArchTest            ArchTest.cpp)
+####################################################################################################
 cm_example_project("Source"     CreateBinaryH       CreateBinaryH.cpp)
 cm_example_project("Image"      NormalCompressTest  NormalCompressTest.cpp)
 cm_example_project("os"         OSFontList          OSFontList.cpp)
