@@ -401,7 +401,7 @@ void StatStopCount(const BitmapU32 &count_bitmap)
     {
         const uint32 *cp32=count_bitmap.GetData();
 
-        hgl_zero(stop_count);
+        mem_zero(stop_count);
 
         for(uint i=0;i<count_bitmap.GetTotalPixels();i++)
         {
