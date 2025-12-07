@@ -8,6 +8,13 @@ struct UserInfo
     char name[8];
     bool sex;
     int age;
+
+public:
+
+    bool operator == (const UserInfo &ui)const
+    {
+        return (strcmp(name,ui.name)==0)&&(sex==ui.sex)&&(age==ui.age);
+    }    
 };
 
 static UserInfo user_info_array[]=
