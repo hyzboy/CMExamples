@@ -430,11 +430,9 @@ bool Test_MatrixCaching()
     
     uint32 v1 = t.GetVersion();
     
-    // 第一次GetMatrix会触发UpdateMatrix，会更新version
+    // GetMatrix不应该改变版本号（只是延迟计算）
     Matrix4f m1 = t.GetMatrix();
     uint32 v2 = t.GetVersion();
-    
-    // 后续的GetMatrix不应该改变版本号（证明使用了缓存）
     Matrix4f m2 = t.GetMatrix();
     uint32 v3 = t.GetVersion();
     Matrix4f m3 = t.GetMatrix();
@@ -442,10 +440,9 @@ bool Test_MatrixCaching()
     Matrix4f m4 = t.GetMatrix();
     uint32 v5 = t.GetVersion();
     
-    std::cout << "  First GetMatrix: v1=" << v1 << " -> v2=" << v2 << std::endl;
-    std::cout << "  Subsequent calls: v3=" << v3 << ", v4=" << v4 << ", v5=" << v5 << std::endl;
+    std::cout << "  All GetMatrix calls: v1=" << v1 << ", v2=" << v2 << ", v3=" << v3 << ", v4=" << v4 << ", v5=" << v5 << std::endl;
     
-    TEST_ASSERT(v2 == v3 && v3 == v4 && v4 == v5, "Subsequent GetMatrix calls use cache (version unchanged)");
+    TEST_ASSERT(v1 == v2 && v2 == v3 && v3 == v4 && v4 == v5, "GetMatrix never changes version (lazy evaluation)");
     
     // 修改后版本应该更新
     t.SetTranslation(Vector3f(1, 2, 3));

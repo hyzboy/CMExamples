@@ -1,5 +1,6 @@
 cm_example_project("DataType/Collection" LifetimeTest           LifetimeTest.cpp)
 cm_example_project("DataType/Collection" CollectionTest         CollectionTest.cpp)
+cm_example_project("DataType/Collection" CollectionTestComprehensive CollectionTestComprehensive.cpp)
 cm_example_project("DataType/Collection" DataArrayTest          DataArrayTest.cpp)
 cm_example_project("DataType/Collection" DataArrayTestEnhanced  DataArrayTestEnhanced.cpp)
 cm_example_project("DataType/Collection" ArrayListTest          ArrayListTest.cpp)
