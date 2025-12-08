@@ -1,3 +1,6 @@
 cm_example_project("Math" OutputEpsilon         OutputEpsilon.cpp)
 cm_example_project("Math" TransformBenchmark    TransformBenchmark.cpp)
+target_link_libraries(TransformBenchmark PRIVATE CMMath)
+cm_example_project("Math" TransformTest         TransformTest.cpp)
+target_link_libraries(TransformTest PRIVATE CMMath)
 cm_example_project("Math" RotateMatrix          RotateMatrix.cpp)

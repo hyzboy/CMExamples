@@ -4,6 +4,7 @@
 #include <random>
 
 using namespace hgl;
+using namespace hgl::math;
 
 constexpr const size_t TEST_COUNT=1000000;
 
