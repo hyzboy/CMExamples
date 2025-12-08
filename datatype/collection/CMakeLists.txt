@@ -17,6 +17,7 @@ cm_example_project("DataType/Collection" IndexedListTest        IndexedListTest.
 cm_example_project("DataType/Collection" MapTest                MapTest.cpp)
 cm_example_project("DataType/Collection" MultiMapTest           MultiMapTest.cpp)
 cm_example_project("DataType/Collection" StringSetTest          StringSetTest.cpp)
+cm_example_project("DataType/Collection" StringListTest         StringListTest.cpp)
 cm_example_project("DataType/Collection" SimpleSortedSetTest    SimpleSortedSetTest.cpp)
 cm_example_project("DataType/Collection" GetLastTest            GetLastTest.cpp)
 cm_example_project("DataType/Collection" StackPoolTest          StackPoolTest.cpp)
