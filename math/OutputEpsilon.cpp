@@ -1,18 +1,18 @@
 #include<iostream>
-#include<hgl/math/MathConst.h>
+#include<hgl/math/FloatPrecision.h>
 
 using namespace std;
 using namespace hgl;
 
 int main(int,char **)
 {
-    std::cout<<"float min:"<<HGL_FLOAT_MIN<<std::endl;
-    std::cout<<"float max:"<<HGL_FLOAT_MAX<<std::endl;
-    std::cout<<"float epsilon: "<<HGL_FLOAT_EPSILON<<std::endl;
+    std::cout<<"float min:"<<math::float_min<<std::endl;
+    std::cout<<"float max:"<<math::float_max<<std::endl;
+    std::cout<<"float epsilon: "<<math::float_epsilon<<std::endl;
 
-    std::cout<<"double min:"<<HGL_DOUBLE_MIN<<std::endl;
-    std::cout<<"double max:"<<HGL_DOUBLE_MAX<<std::endl;
-    std::cout<<"double epsilon: "<<HGL_DOUBLE_EPSILON<<std::endl;
+    std::cout<<"double min:"<<math::double_min<<std::endl;
+    std::cout<<"double max:"<<math::double_max<<std::endl;
+    std::cout<<"double epsilon: "<<math::double_epsilon<<std::endl;
 
     return 0;
 }

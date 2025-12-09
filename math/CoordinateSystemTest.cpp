@@ -203,14 +203,14 @@ void test_RayGeneration()
     Ray ray;
     ray.SetFromViewportPoint(center_screen, &ci, vp_size);
     
-    PrintVec3("射线起点", ray.GetOrigin());
-    PrintVec3("射线方向", ray.GetDirection());
+    PrintVec3("射线起点", ray.origin);
+    PrintVec3("射线方向", ray.direction);
     
     // 射线方向应该大致朝向+Y方向（摄像机朝向）
-    TEST_ASSERT(ray.GetDirection().y > 0.5f);
+    TEST_ASSERT(ray.direction.y > 0.5f);
     
     // 射线起点应该接近摄像机位置
-    float dist_to_camera = length(ray.GetOrigin() - ci.pos);
+    float dist_to_camera = length(ray.origin - ci.pos);
     std::cout << "  射线起点到摄像机距离: " << dist_to_camera << std::endl;
     TEST_ASSERT(dist_to_camera < 0.2f);  // 应该在近平面上
 }

@@ -50,6 +50,10 @@ cm_example_project("Math" CoordinateSystemTest  CoordinateSystemTest.cpp)
 target_link_libraries(CoordinateSystemTest PRIVATE CMMath)
 set_property(TARGET CoordinateSystemTest PROPERTY CXX_STANDARD 20)
 
+cm_example_project("Math" AngleTest             AngleTest.cpp)
+target_link_libraries(AngleTest PRIVATE CMMath)
+set_property(TARGET AngleTest PROPERTY CXX_STANDARD 20)
+
 # 保留原有的GeometryTest（包含所有测试和集成测试）
 cm_example_project("Math" GeometryTest          GeometryTest.cpp)
 target_link_libraries(GeometryTest PRIVATE CMMath)

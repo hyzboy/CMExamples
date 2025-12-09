@@ -645,7 +645,7 @@ bool test_AABB_Transformed() {
                 "缩放后最大点错误");
     
     // 旋转变换（绕Z轴旋转45度）
-    Matrix4f rotation = glm::rotate(Matrix4f(1.0f), glm::f32(HGL_PI / 4.0f), Vector3f(0, 0, 1));
+    Matrix4f rotation = glm::rotate(Matrix4f(1.0f), glm::f32(hgl::math::pi / 4.0f), Vector3f(0, 0, 1));
     AABB rotated = box.Transformed(rotation);
     
     // 旋转后AABB会扩大以包含所有顶点
