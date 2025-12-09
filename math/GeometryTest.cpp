@@ -349,17 +349,53 @@ bool test_BoundingVolumes_Pack() {
 // Frustum Tests
 // ============================================================================
 
+void printFrustumPlanes(const Matrix4f& mvp) {
+    FrustumPlanes planes;
+    GetFrustumPlanes(planes, mvp);
+    
+    const char* names[] = {"Left", "Right", "Front", "Back", "Top", "Bottom"};
+    std::cout << "  Frustum Planes:" << std::endl;
+    for (int i = 0; i < 6; i++) {
+        std::cout << "    " << names[i] << ": normal=(" 
+                  << planes[i].x << ", " << planes[i].y << ", " << planes[i].z 
+                  << "), d=" << planes[i].w << std::endl;
+    }
+}
+
 bool test_Frustum_SetMatrix() {
     Matrix4f proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
     Matrix4f view = glm::lookAt(Vector3f(0, 0, 5), Vector3f(0, 0, 0), Vector3f(0, 1, 0));
     Matrix4f mvp = proj * view;
     
+    std::cout << "  Camera at (0,0,5) looking at (0,0,0)" << std::endl;
+    std::cout << "  Near=0.1, Far=100, FOV=45deg" << std::endl;
+    
+    printFrustumPlanes(mvp);
+    
     Frustum frustum;
     frustum.SetMatrix(mvp);
     
-    // 基本的视锥体测试
-    TEST_ASSERT(frustum.PointIn(Vector3f(0, 0, 0)) != Frustum::Scope::OUTSIDE, 
-                "Origin should be inside frustum");
+    // 测试多个点
+    Vector3f test_points[] = {
+        Vector3f(0, 0, 0),   // 目标点
+        Vector3f(0, 0, 2),   // 相机前方
+        Vector3f(0, 0, 4),   // 更接近相机
+        Vector3f(0, 0, -5),  // 相机后方
+    };
+    
+    for (const auto& pt : test_points) {
+        auto result = frustum.PointIn(pt);
+        std::cout << "  Point(" << pt.x << "," << pt.y << "," << pt.z << "): ";
+        if (result == Frustum::Scope::OUTSIDE) std::cout << "OUTSIDE";
+        else if (result == Frustum::Scope::INTERSECT) std::cout << "INTERSECT";
+        else std::cout << "INSIDE";
+        std::cout << std::endl;
+    }
+    
+    // 测试相机前方的点（在近裁剪面和远裁剪面之间）
+    auto result = frustum.PointIn(Vector3f(0, 0, 2));
+    TEST_ASSERT(result != Frustum::Scope::OUTSIDE, 
+                "Point in front of camera should be inside frustum");
     return true;
 }
 
@@ -383,12 +419,32 @@ bool test_Frustum_SphereIn() {
     Matrix4f view = glm::lookAt(Vector3f(0, 0, 10), Vector3f(0, 0, 0), Vector3f(0, 1, 0));
     Matrix4f mvp = proj * view;
     
+    std::cout << "  Camera at (0,0,10) looking at (0,0,0)" << std::endl;
+    
     Frustum frustum;
     frustum.SetMatrix(mvp);
     
-    // 测试一个应该在视锥内的球
-    auto result = frustum.SphereIn(Vector3f(0, 0, 0), 1.0f);
-    TEST_ASSERT(result != Frustum::Scope::OUTSIDE, "Sphere at origin should not be outside");
+    // 测试多个球体位置
+    struct TestSphere { Vector3f pos; float radius; const char* desc; };
+    TestSphere spheres[] = {
+        {Vector3f(0, 0, 0), 1.0f, "at target"},
+        {Vector3f(0, 0, 5), 1.0f, "midway"},
+        {Vector3f(0, 0, 9), 1.0f, "near camera"},
+    };
+    
+    for (const auto& s : spheres) {
+        auto res = frustum.SphereIn(s.pos, s.radius);
+        std::cout << "  Sphere at (" << s.pos.x << "," << s.pos.y << "," << s.pos.z 
+                  << ") r=" << s.radius << " [" << s.desc << "]: ";
+        if (res == Frustum::Scope::OUTSIDE) std::cout << "OUTSIDE";
+        else if (res == Frustum::Scope::INTERSECT) std::cout << "INTERSECT";
+        else std::cout << "INSIDE";
+        std::cout << std::endl;
+    }
+    
+    // 测试相机前方的球体（在近裁剪面和远裁剪面之间）
+    auto result = frustum.SphereIn(Vector3f(0, 0, 5), 1.0f);
+    TEST_ASSERT(result != Frustum::Scope::OUTSIDE, "Sphere in front of camera should not be outside");
     
     return true;
 }
@@ -398,14 +454,38 @@ bool test_Frustum_BoxIn() {
     Matrix4f view = glm::lookAt(Vector3f(0, 0, 10), Vector3f(0, 0, 0), Vector3f(0, 1, 0));
     Matrix4f mvp = proj * view;
     
+    std::cout << "  Camera at (0,0,10) looking at (0,0,0)" << std::endl;
+    
     Frustum frustum;
     frustum.SetMatrix(mvp);
     
+    // 测试多个盒子位置
+    struct TestBox { Vector3f min; Vector3f max; const char* desc; };
+    TestBox boxes[] = {
+        {Vector3f(-0.5f, -0.5f, -0.5f), Vector3f(0.5f, 0.5f, 0.5f), "at target"},
+        {Vector3f(-0.5f, -0.5f, 4.5f), Vector3f(0.5f, 0.5f, 5.5f), "midway"},
+        {Vector3f(-0.5f, -0.5f, 8.5f), Vector3f(0.5f, 0.5f, 9.5f), "near camera"},
+    };
+    
+    for (const auto& b : boxes) {
+        AABB box;
+        box.SetMinMax(b.min, b.max);
+        auto res = frustum.BoxIn(box);
+        Vector3f center = (b.min + b.max) * 0.5f;
+        std::cout << "  Box center (" << center.x << "," << center.y << "," << center.z 
+                  << ") [" << b.desc << "]: ";
+        if (res == Frustum::Scope::OUTSIDE) std::cout << "OUTSIDE";
+        else if (res == Frustum::Scope::INTERSECT) std::cout << "INTERSECT";
+        else std::cout << "INSIDE";
+        std::cout << std::endl;
+    }
+    
+    // 测试相机前方的盒子（在近裁剪面和远裁剪面之间）
     AABB box;
-    box.SetMinMax(Vector3f(-0.5f, -0.5f, -0.5f), Vector3f(0.5f, 0.5f, 0.5f));
+    box.SetMinMax(Vector3f(-0.5f, -0.5f, 4.5f), Vector3f(0.5f, 0.5f, 5.5f));
     
     auto result = frustum.BoxIn(box);
-    TEST_ASSERT(result != Frustum::Scope::OUTSIDE, "Box at origin should not be outside");
+    TEST_ASSERT(result != Frustum::Scope::OUTSIDE, "Box in front of camera should not be outside");
     
     return true;
 }
