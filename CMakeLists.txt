@@ -14,7 +14,7 @@
         set_debugger_directory(${project_name} ${CMAKE_CURRENT_SOURCE_DIR})
 
         target_sources(${project_name} PRIVATE ${CM_MANIFEST})
-        
+
         if(MSVC)
             target_sources(${project_name} PRIVATE ${CM_NATVIS})
             SOURCE_GROUP("natvis" FILES ${CM_NATVIS})
@@ -30,9 +30,7 @@ endmacro()
 ####################################################################################################
 cm_example_project("Logger"    LoggerTest                  LoggerTest.cpp)
 cm_example_project("Hareware"  GetCpuInfo                  GetCpuInfo.cpp)
-cm_example_project("Hareware"  BigLittleTaskScheduler      BigLittleTaskScheduler.cpp)
 cm_example_project("Hareware"  ArchTest                    ArchTest.cpp)
-cm_example_project("Source"    CreateBinaryH               CreateBinaryH.cpp)
 cm_example_project("Image"     NormalCompressTest          NormalCompressTest.cpp)
 cm_example_project("os"        OSFontList                  OSFontList.cpp)
 
@@ -47,7 +45,7 @@ target_link_libraries(PlayerTraceChart2D PRIVATE CM2D)
 ####################################################################################################
 # Subdirectories
 ####################################################################################################
-add_subdirectory(debug)
+
 add_subdirectory(datatype)
 add_subdirectory(math)
 add_subdirectory(pick)

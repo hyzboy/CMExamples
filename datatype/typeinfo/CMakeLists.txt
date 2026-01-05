@@ -1,5 +1,4 @@
 cm_example_project("DataType/TypeInfo" TypeSizeof           TypeSizeof.cpp)
 cm_example_project("DataType/TypeInfo" TypeCastTest         TypeCastTest.cpp)
 cm_example_project("DataType/TypeInfo" TypeCheck            TypeCheck.cpp)
-cm_example_project("DataType/TypeInfo" ObjectRelationTest   ObjectRelationTest.cpp)
 cm_example_project("DataType/TypeInfo" InheritTest          InheritTest.cpp)

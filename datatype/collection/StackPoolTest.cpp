@@ -27,7 +27,9 @@ template<typename T> void out_series_pool(const SeriesPool<T> *sp)
 
 int os_main(int,os_char **)
 {
-    DataStackPool<UserInfo> dsp_userinfo(user_info_array_count);    //用户信息数据池
+    DataStackPool<UserInfo> dsp_userinfo;
+    
+    dsp_userinfo.Init(user_info_array_count);    //用户信息数据池
 
     #ifdef USE_RANDOM_SERIES_POOL
     {

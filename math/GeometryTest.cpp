@@ -4,12 +4,11 @@
 #include<hgl/math/geometry/BoundingVolumes.h>
 #include<hgl/math/geometry/Frustum.h>
 #include<hgl/math/geometry/Ray.h>
-#include<hgl/math/geometry/Sphere.h>
-#include<hgl/math/geometry/Capsule.h>
+#include<hgl/math/geometry/primitives/Sphere.h>
+#include<hgl/math/geometry/primitives/Capsule.h>
 #include<hgl/math/geometry/LineSegment.h>
 #include<hgl/math/geometry/Plane.h>
 #include<hgl/math/geometry/Triangle.h>
-#include<hgl/math/MathConstants.h>
 #include<glm/glm.hpp>
 #include<glm/ext/matrix_transform.hpp>
 #include<glm/ext/matrix_clip_space.hpp>
@@ -513,7 +512,7 @@ bool test_Sphere_Set() {
 bool test_Sphere_GetVolume() {
     Sphere sphere(Vector3f(0, 0, 0), 1.0f);
     float volume = sphere.GetVolume();
-    float expected = (4.0f/3.0f) * hgl::math::pi;
+    float expected = (4.0f/3.0f) * std::numbers::pi_v<float>;
     
     TEST_ASSERT(floatEqual(volume, expected, 0.01f), "Sphere volume calculation wrong");
     return true;
@@ -538,7 +537,7 @@ bool test_EllipseSphere_Construction() {
 bool test_EllipseSphere_GetVolume() {
     EllipseSphere sphere(Vector3f(0, 0, 0), Vector3f(1, 2, 3));
     float volume = sphere.GetVolume();
-    float expected = (4.0f/3.0f) * hgl::math::pi * 1.0f * 2.0f * 3.0f;
+    float expected = (4.0f/3.0f) * std::numbers::pi_v<float> * 1.0f * 2.0f * 3.0f;
     
     TEST_ASSERT(floatEqual(volume, expected, 0.01f), "Ellipse sphere volume wrong");
     return true;

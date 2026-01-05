@@ -1,5 +1,4 @@
 #include<hgl/math/geometry/BoundingSphere.h>
-#include<hgl/math/MathConstants.h>
 #include<iostream>
 #include<cassert>
 #include<cmath>

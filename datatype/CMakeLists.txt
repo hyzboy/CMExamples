@@ -1,3 +1,5 @@
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 cm_example_project("DataType" UbyteColor            color_test_example.cpp)
 cm_example_project("DataType" HalfFloatTest         HalfFloatTest.cpp)
 target_link_libraries(HalfFloatTest PRIVATE CMMath)
@@ -12,7 +14,6 @@ cm_example_project("DataType" Uint2HexStrTest       Uint2HexStrTest.cpp)
 cm_example_project("DataType" ConstStringSetTest    ConstStringSetTest.cpp)
 cm_example_project("DataType" IDNameTest            IDNameTest.cpp)
 cm_example_project("DataType" IDObjectManagerTest   IDObjectManagerTest.cpp)
-cm_example_project("DataType" ECSTest               EcsTest.cpp)
 
 cm_example_project("DataType/ActiveManager" 1_ActiveIDManagerTest           ActiveIDManagerTest.cpp)
 cm_example_project("DataType/ActiveManager" 2_ActiveMemoryBlockManagerTest  ActiveMemoryBlockManagerTest.cpp)

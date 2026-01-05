@@ -27,10 +27,10 @@ int make_rand_str()
     return len;
 }
 
-void main()
+int main(int,char **)
 {
     ConstAnsiStringSet cass;
-    ConstStringView<char> csv;
+    ConstAnsiStringView csv;
     int len;
     int id;
 
@@ -47,4 +47,6 @@ void main()
 
     SaveToTextFile(OS_TEXT("csv.txt"),&cass,false,true);
     SaveToTextFile(OS_TEXT("csv_id.txt"),&cass,true,true);
+
+    return 0;
 }

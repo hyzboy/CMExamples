@@ -1,14 +1,18 @@
 #include<hgl/type/DataType.h>
-#include<hgl/math/Math.h>
+#include<hgl/math/Vector.h>
+#include<hgl/math/MatrixTypes.h>
+#include<hgl/math/Quaternion.h>
+#include<hgl/math/transform/Transform.h>
 #include<hgl/type/RectScope.h>
 
 #include<iostream>
 
 using namespace hgl;
+using namespace hgl::math;
 
 #define OUTPUT_SIZEOF(type) std::cout<<" sizeof(" #type ") = "<<sizeof(type)<<std::endl;
 
-void main()
+int main(int,char **)
 {
     OUTPUT_SIZEOF(char)
     OUTPUT_SIZEOF(char8_t)
@@ -47,4 +51,6 @@ void main()
     OUTPUT_SIZEOF(Quatf)
 
     OUTPUT_SIZEOF(Transform)
+
+    return 0;
 }

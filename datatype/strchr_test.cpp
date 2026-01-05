@@ -29,15 +29,15 @@ int main(int,char **)
 
     hgl::AnsiString fn("C:\\1.txt");
 
-    out("ClipFilename",fn,hgl::filesystem::ClipFilename(fn));
+    out("ClipFilename",fn,hgl::filesystem::GetFilename(fn));
 
     hgl::AnsiString tp1("C:\\1\\2");
     hgl::AnsiString tp2("C:\\1\\2\\");
     hgl::AnsiString tp3("C:\\1\\2\\\\");
 
-    out("ClipLastPathname",tp1,hgl::filesystem::ClipLastPathname(tp1));
-    out("ClipLastPathname",tp2,hgl::filesystem::ClipLastPathname(tp2));
-    out("ClipLastPathname",tp3,hgl::filesystem::ClipLastPathname(tp3));
+    out("ClipLastPathname",tp1,hgl::filesystem::GetLastPathComponent(tp1));
+    out("ClipLastPathname",tp2,hgl::filesystem::GetLastPathComponent(tp2));
+    out("ClipLastPathname",tp3,hgl::filesystem::GetLastPathComponent(tp3));
 
     return 0;
 }

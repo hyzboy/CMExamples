@@ -37,11 +37,11 @@ void DebugAIMOutput(const char *hint,const ActiveIDManager &aim)
     cout<<endl;
 }
 
-void main()
+int main(int,char **)
 {
     ActiveIDManager aim;
 
-    aim.Alloc(1024);
+    aim.Reserve(1024);
 
     DebugAIMOutput("null",aim);
 
@@ -74,4 +74,6 @@ void main()
 
     aim.ReleaseAllActive();
     DebugAIMOutput("RelaseAllActive()",aim);
+
+    return 0;
 }

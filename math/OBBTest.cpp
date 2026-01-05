@@ -1,5 +1,4 @@
 #include<hgl/math/geometry/OBB.h>
-#include<hgl/math/MathConstants.h>
 #include<glm/glm.hpp>
 #include<glm/ext/matrix_transform.hpp>
 #include<iostream>

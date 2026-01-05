@@ -1,5 +1,5 @@
 #include<hgl/math/geometry/Ray.h>
-#include<hgl/math/geometry/Sphere.h>
+#include<hgl/math/geometry/primitives/Sphere.h>
 #include<iostream>
 #include<cassert>
 #include<cmath>

@@ -18,29 +18,31 @@ int main(int argc,char **argv)
         return 0;
     }
 
-    PAttribSet<char> pl_set;
+    PAttribSet<u8char> pl_set;
 
     //                                              属性名称        缺省值         最小值     最大值    小数位数
     //--------------------------------------------+-----------+---------------+--------+----------+------
-    auto *name  =pl_set.CreateStringAttrib(         "name",     "Anonymous");
-    auto *sex   =pl_set.CreateBoolAttrib(           "sex",      true);
-    auto *age   =pl_set.CreateNumberAttrib(         "age",      17,              1,         120);
-    auto *temp  =pl_set.CreateFloatAttrib<float>(   "temp",     36.5,           35,         42,     2);
+    auto *name  =pl_set.CreateStringAttrib(         u8"name",     u8"Anonymous");
+    auto *sex   =pl_set.CreateBoolAttrib(           u8"sex",      true);
+    auto *age   =pl_set.CreateNumberAttrib(         u8"age",      17,              1,         120);
+    auto *temp  =pl_set.CreateFloatAttrib<float>(   u8"temp",     36.5,           35,         42,     2);
 
     const char cmd=argv[1][0];
 
     if(cmd=='c'||cmd=='C')
     {
-        SaveToTextFile<char,ByteOrderMask::UTF8>(ToOSString(argv[2]),pl_set);
+        SaveToTextFile<u8char,ByteOrderMask::UTF8>(ToOSString(argv[2]),pl_set);
     }
     else
     {
-        LoadFromTextFile<char>(ToOSString(argv[2]),pl_set);
+        LoadFromTextFile<u8char>(ToOSString(argv[2]),pl_set);
 
         //lambda方式
-        pl_set.Enum([](const String<char> &key,PAttribBase<char> * &attr)
+        pl_set.Enum([](const String<u8char> &key,PAttribBase<u8char> * &attr)
         {
-            std::cout<<std::setw(8)<<key.c_str()<<":"<<attr->MakeToString().c_str()<<std::endl;
+            U8String str=key+u8":"+attr->MakeToString();
+
+            std::cout<<(char *)(str.c_str())<<std::endl;
         });
 
         //传统方式

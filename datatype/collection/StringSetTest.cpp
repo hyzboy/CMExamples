@@ -26,7 +26,7 @@ static int tests_failed = 0;
 struct ComplexData
 {
     int id;
-    std::string str_name;  // 使用 std::string 而不是 UTF8String
+    std::string str_name;  // 使用 std::string 而不是 U8String
     int* dynamic_data;
     
     static int construct_count;

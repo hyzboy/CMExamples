@@ -3,6 +3,7 @@
 #include"UserInfo.h"
 
 using namespace hgl;
+using namespace std;
 
 void DebugOutputArray(const char *hint,const int *id,const int count)
 {
@@ -83,7 +84,7 @@ int os_main(int,os_char **)
 
     ActiveDataManager<UserInfo> adm;
 
-    adm.Alloc(10);
+    adm.Reserve(10);
 
     int start=0;
 

@@ -5,6 +5,8 @@ int main(int,char **)
 {
     using namespace hgl;
 
+    HGL_DEFINE_ANSI_IDNAME(AIDName)
+
     AIDName id3("idA");
     AIDName id4("idB");
 

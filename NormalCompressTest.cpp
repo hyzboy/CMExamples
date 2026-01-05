@@ -1,12 +1,12 @@
-#include<hgl/graph/NormalData.h>
-#include<hgl/util/imgfmt/tga.h>
+#include<hgl/math/NormalData.h>
+#include<hgl/2d/TGA.h>
 #include<hgl/filesystem/FileSystem.h>
 #include<hgl/io/FileOutputStream.h>
 #include<iostream>
 
 using namespace hgl;
 using namespace hgl::filesystem;
-using namespace hgl::util;
+using namespace hgl::imgfmt;
 
 static uint8 *      file_data=nullptr;
 static int64        file_length=0;

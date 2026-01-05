@@ -28,9 +28,9 @@ void test_color3ub_basic()
     std::cout << "color3 (255,128,64): r=" << (int)color3.r << " g=" << (int)color3.g << " b=" << (int)color3.b << "\n";
     
     // 颜色设置方法测试
-    color1.Red();
-    color2.Green();
-    color3.Blue();
+    color1=hgl::RedColor3ub;
+    color2=hgl::GreenColor3ub;
+    color3=hgl::BlueColor3ub;
     
     std::cout << "After color operations:\n";
     std::cout << "color1.Red(): r=" << (int)color1.r << " g=" << (int)color1.g << " b=" << (int)color1.b << "\n";
@@ -52,10 +52,10 @@ void test_color4ub_basic()
     std::cout << "color3 (255,128,64,192): r=" << (int)color3.r << " g=" << (int)color3.g << " b=" << (int)color3.b << " a=" << (int)color3.a << "\n";
     
     // 测试32位颜色格式输出
-    std::cout << "color3.ToRGBA8(): 0x" << std::hex << color3.ToRGBA8() << std::dec << "\n";
-    std::cout << "color3.ToBGRA8(): 0x" << std::hex << color3.ToBGRA8() << std::dec << "\n";
-    std::cout << "color3.ToARGB8(): 0x" << std::hex << color3.ToARGB8() << std::dec << "\n";
-    std::cout << "color3.ToABGR8(): 0x" << std::hex << color3.ToABGR8() << std::dec << "\n";
+    std::cout << "color3.ToRGBA8(): 0x" << std::hex << color3.toRGBA8() << std::dec << "\n";
+    std::cout << "color3.ToBGRA8(): 0x" << std::hex << color3.toBGRA8() << std::dec << "\n";
+    std::cout << "color3.ToARGB8(): 0x" << std::hex << color3.toARGB8() << std::dec << "\n";
+    std::cout << "color3.ToABGR8(): 0x" << std::hex << color3.toABGR8() << std::dec << "\n";
 }
 
 void test_conversions()
@@ -64,23 +64,23 @@ void test_conversions()
     
     // Color3ub <-> Color3f 转换测试
     hgl::Color3ub ub3(255, 128, 64);
-    hgl::Color3f f3 = ub3.ToColor3f();
+    hgl::Color3f f3 = ub3.toColor3f();
     
     std::cout << "Color3ub(255,128,64) -> Color3f: r=" << f3.r << " g=" << f3.g << " b=" << f3.b << "\n";
     
     hgl::Color3f f3_input(1.0f, 0.5f, 0.25f);
-    hgl::Color3ub ub3_result = f3_input.ToColor3ub();
+    hgl::Color3ub ub3_result = f3_input.toColor3ub();
     
     std::cout << "Color3f(1.0,0.5,0.25) -> Color3ub: r=" << (int)ub3_result.r << " g=" << (int)ub3_result.g << " b=" << (int)ub3_result.b << "\n";
     
     // Color4ub <-> Color4f 转换测试
     hgl::Color4ub ub4(255, 128, 64, 192);
-    hgl::Color4f f4 = ub4.ToColor4f();
+    hgl::Color4f f4 = ub4.toColor4f();
     
     std::cout << "Color4ub(255,128,64,192) -> Color4f: r=" << f4.r << " g=" << f4.g << " b=" << f4.b << " a=" << f4.a << "\n";
     
     hgl::Color4f f4_input(1.0f, 0.5f, 0.25f, 0.75f);
-    hgl::Color4ub ub4_result = f4_input.ToColor4ub();
+    hgl::Color4ub ub4_result = f4_input.toColor4ub();
     
     std::cout << "Color4f(1.0,0.5,0.25,0.75) -> Color4ub: r=" << (int)ub4_result.r << " g=" << (int)ub4_result.g << " b=" << (int)ub4_result.b << " a=" << (int)ub4_result.a << "\n";
 }

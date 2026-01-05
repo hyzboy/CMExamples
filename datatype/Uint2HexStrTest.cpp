@@ -12,7 +12,7 @@ int main(int,char **)
     htos(str,32,a   );  std::cout<<"to uint : 0x"<<str<<std::endl;
     htos(str,32,b   );  std::cout<<"to uint : 0x"<<str<<std::endl;
     htos(str,32,str );  std::cout<<"str to uint : 0x"<<str<<std::endl;
-    htos(str,32,main);  std::cout<<"main to uint : 0x"<<str<<std::endl;
+    htos(str,32,&main);  std::cout<<"main to uint : 0x"<<str<<std::endl;
 
     return 0;
 }

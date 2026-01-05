@@ -11,7 +11,6 @@
  */
 
 #include<hgl/math/Angle.h>
-#include<hgl/math/MathConstants.h>
 #include<iostream>
 #include<iomanip>
 #include<cmath>
@@ -53,13 +52,13 @@ void test_BasicConstruction()
     TEST_ASSERT(a1.AsDegrees() == 0.0);
     
     // 从弧度构造 - 使用统一初始化避免 Most Vexing Parse
-    Angle a2{Radians(hgl::math::pi)};
-    TEST_ASSERT(nearly_equal(a2.AsRadians(), hgl::math::pi));
+    Angle a2{Radians(std::numbers::pi_v<float>)};
+    TEST_ASSERT(nearly_equal(a2.AsRadians(), std::numbers::pi_v<float>));
     TEST_ASSERT(nearly_equal(a2.AsDegrees(), 180.0));
     
     // 从角度构造
     Angle a3{Degrees(90.0)};
-    TEST_ASSERT(nearly_equal(a3.AsRadians(), hgl::math::pi / 2.0));
+    TEST_ASSERT(nearly_equal(a3.AsRadians(), std::numbers::pi_v<float> / 2.0));
     TEST_ASSERT(nearly_equal(a3.AsDegrees(), 90.0));
     
     std::cout << "  π rad = " << a2.AsDegrees() << "°" << std::endl;
@@ -71,11 +70,11 @@ void test_StaticFactoryMethods()
 {
     std::cout << "验证静态工厂方法..." << std::endl;
     
-    Angle from_rad = Angle::FromRadians(hgl::math::pi / 4.0);
+    Angle from_rad = Angle::FromRadians(std::numbers::pi_v<float> / 4.0);
     TEST_ASSERT(nearly_equal(from_rad.AsDegrees(), 45.0));
     
     Angle from_deg = Angle::FromDegrees(180.0);
-    TEST_ASSERT(nearly_equal(from_deg.AsRadians(), hgl::math::pi));
+    TEST_ASSERT(nearly_equal(from_deg.AsRadians(), std::numbers::pi_v<float>));
     
     std::cout << "  FromRadians(π/4) = " << from_rad.AsDegrees() << "°" << std::endl;
     std::cout << "  FromDegrees(180) = " << from_deg.AsRadians() << " rad" << std::endl;
@@ -204,7 +203,7 @@ void test_Literals()
     // 角度字面量
     auto angle_deg1 = 90.0_deg;
     TEST_ASSERT(nearly_equal(angle_deg1.AsDegrees(), 90.0));
-    TEST_ASSERT(nearly_equal(angle_deg1.AsRadians(), hgl::math::pi / 2.0));
+    TEST_ASSERT(nearly_equal(angle_deg1.AsRadians(), std::numbers::pi_v<float> / 2.0));
     
     auto angle_deg2 = 180_deg;
     TEST_ASSERT(nearly_equal(angle_deg2.AsDegrees(), 180.0));
@@ -227,15 +226,15 @@ void test_CommonAngles()
     
     TestCase cases[] = {
         {0.0,   0.0,              "0°"},
-        {30.0,  hgl::math::pi / 6.0,     "30°"},
-        {45.0,  hgl::math::pi / 4.0,     "45°"},
-        {60.0,  hgl::math::pi / 3.0,     "60°"},
-        {90.0,  hgl::math::pi / 2.0,     "90°"},
-        {120.0, 2.0 * hgl::math::pi / 3.0, "120°"},
-        {135.0, 3.0 * hgl::math::pi / 4.0, "135°"},
-        {180.0, hgl::math::pi,           "180°"},
-        {270.0, 3.0 * hgl::math::pi / 2.0, "270°"},
-        {360.0, 2.0 * hgl::math::pi,     "360°"}
+        {30.0,  std::numbers::pi_v<float> / 6.0,     "30°"},
+        {45.0,  std::numbers::pi_v<float> / 4.0,     "45°"},
+        {60.0,  std::numbers::pi_v<float> / 3.0,     "60°"},
+        {90.0,  std::numbers::pi_v<float> / 2.0,     "90°"},
+        {120.0, 2.0 * std::numbers::pi_v<float> / 3.0, "120°"},
+        {135.0, 3.0 * std::numbers::pi_v<float> / 4.0, "135°"},
+        {180.0, std::numbers::pi_v<float>,           "180°"},
+        {270.0, 3.0 * std::numbers::pi_v<float> / 2.0, "270°"},
+        {360.0, 2.0 * std::numbers::pi_v<float>,     "360°"}
     };
     
     for (const auto& tc : cases) {
@@ -258,10 +257,10 @@ void test_NegativeAngles()
     
     Angle neg_deg = Angle::FromDegrees(-90.0);
     TEST_ASSERT(nearly_equal(neg_deg.AsDegrees(), -90.0));
-    TEST_ASSERT(nearly_equal(neg_deg.AsRadians(), -hgl::math::pi / 2.0));
+    TEST_ASSERT(nearly_equal(neg_deg.AsRadians(), -std::numbers::pi_v<float> / 2.0));
     
-    Angle neg_rad = Angle::FromRadians(-hgl::math::pi);
-    TEST_ASSERT(nearly_equal(neg_rad.AsRadians(), -hgl::math::pi));
+    Angle neg_rad = Angle::FromRadians(-std::numbers::pi_v<float>);
+    TEST_ASSERT(nearly_equal(neg_rad.AsRadians(), -std::numbers::pi_v<float>));
     TEST_ASSERT(nearly_equal(neg_rad.AsDegrees(), -180.0));
     
     // 负角度运算
@@ -282,7 +281,7 @@ void test_LargeAngles()
     
     Angle large1 = Angle::FromDegrees(720.0);
     TEST_ASSERT(nearly_equal(large1.AsDegrees(), 720.0));
-    TEST_ASSERT(nearly_equal(large1.AsRadians(), 4.0 * hgl::math::pi));
+    TEST_ASSERT(nearly_equal(large1.AsRadians(), 4.0 * std::numbers::pi_v<float>));
     
     Angle large2 = Angle::FromDegrees(450.0);
     TEST_ASSERT(nearly_equal(large2.AsDegrees(), 450.0));
@@ -305,7 +304,7 @@ void test_MixedOperations()
     
     // 使用字面量进行复杂计算
     auto angle1 = 45.0_deg;
-    auto angle2 = Angle::FromRadians(hgl::math::pi / 4.0);
+    auto angle2 = Angle::FromRadians(std::numbers::pi_v<float> / 4.0);
     auto sum = angle1 + angle2;
     
     TEST_ASSERT(nearly_equal(sum.AsDegrees(), 90.0));
@@ -337,7 +336,7 @@ void test_ConstexprSupport()
     constexpr double deg_value = right_angle.AsDegrees();
     
     TEST_ASSERT(nearly_equal(deg_value, 90.0));
-    TEST_ASSERT(nearly_equal(rad_value, hgl::math::pi / 2.0));
+    TEST_ASSERT(nearly_equal(rad_value, std::numbers::pi_v<float> / 2.0));
     
     // 编译期运算
     constexpr Angle sum = right_angle + right_angle;

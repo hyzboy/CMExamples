@@ -75,11 +75,11 @@ void WriteUsernameToAIM(ActiveMemoryBlockManager &ambm,const int *id,const int c
         ambm.WriteData(user_info_array[start+i].name,id[i]);
 }
 
-void main()
+int main(int,char **)
 {
     ActiveMemoryBlockManager ambm(8);
 
-    ambm.Alloc(16);
+    ambm.Reserve(16);
 
     int start=0;
 
@@ -118,4 +118,6 @@ void main()
 
     ambm.ReleaseAllActive();
     DebugAIMOutput("RelaseAllActive()",ambm);
+
+    return 0;
 }

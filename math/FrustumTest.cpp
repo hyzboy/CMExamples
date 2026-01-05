@@ -1,6 +1,5 @@
 #include<hgl/math/geometry/Frustum.h>
 #include<hgl/math/geometry/AABB.h>
-#include<hgl/math/MathConstants.h>
 #include<glm/glm.hpp>
 #include<glm/ext/matrix_transform.hpp>
 #include<glm/ext/matrix_clip_space.hpp>

@@ -1,6 +1,6 @@
 #include<hgl/type/RectScope.h>
-#include<hgl/graph/Triangle.h>
-#include<hgl/graph/Ray.h>
+#include<hgl/math/geometry/Triangle.h>
+#include<hgl/math/geometry/Ray.h>
 #include<hgl/2d/TGA.h>
 #include<hgl/2d/Bitmap.h>
 #include<hgl/2d/BitmapSave.h>
